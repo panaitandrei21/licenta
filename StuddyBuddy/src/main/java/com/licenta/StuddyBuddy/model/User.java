@@ -22,7 +22,6 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String userEmail;
     private String firstName;
     private String lastName;
     private String password;
@@ -39,8 +38,9 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.userEmail;
+        return email;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {

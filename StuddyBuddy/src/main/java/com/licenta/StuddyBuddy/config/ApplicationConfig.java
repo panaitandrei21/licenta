@@ -1,6 +1,7 @@
 package com.licenta.StuddyBuddy.config;
 
 import com.licenta.StuddyBuddy.repository.UserRepository;
+import com.licenta.StuddyBuddy.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
