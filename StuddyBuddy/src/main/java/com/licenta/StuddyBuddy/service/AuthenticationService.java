@@ -7,7 +7,10 @@ import com.licenta.StuddyBuddy.enums.Role;
 import com.licenta.StuddyBuddy.model.User;
 import com.licenta.StuddyBuddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,18 +39,26 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse login(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+    public ResponseEntity<AuthenticationResponse> login(AuthenticationRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+        } catch (BadCredentialsException badCredentialsException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                    AuthenticationResponse.builder()
+                            .message("Authentication failed: email or password are wrong")
+                            .build()
+            );
+        }
         User user = userRepository.findByEmail(request.getEmail());
         String jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse
+        return ResponseEntity.ok(AuthenticationResponse
                 .builder()
                 .token(jwtToken)
-                .build();
+                .build());
     }
 }

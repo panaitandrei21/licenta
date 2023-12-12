@@ -11,6 +11,7 @@ import com.licenta.StuddyBuddy.dto.AuthenticationRequest;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@CrossOrigin
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     @PostMapping("/register")
@@ -24,6 +25,6 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> login(
             @RequestBody AuthenticationRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.login(request));
+        return authenticationService.login(request);
     }
 }
