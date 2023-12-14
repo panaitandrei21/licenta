@@ -18,7 +18,13 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> login(
             @RequestBody RegisterRequest request
     ) {
-    return ResponseEntity.ok(authenticationService.register(request));
+        AuthenticationResponse authenticationResponse = authenticationService.register(request);
+        if(authenticationResponse.getToken() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    authenticationResponse
+            );
+        }
+    return ResponseEntity.ok(authenticationResponse);
     }
 
     @PostMapping("/login")

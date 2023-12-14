@@ -1,6 +1,5 @@
 <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
     <p-card header="Login" [style]="{ width: '360px' }">
-    <div *ngIf="loginError" class="block p-error">Username or password is incorrect.</div>
       <div class="field">
         <label for="email">Email</label>
         <input

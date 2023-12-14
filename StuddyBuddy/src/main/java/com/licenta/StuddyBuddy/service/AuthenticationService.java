@@ -15,6 +15,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -24,15 +27,25 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     public AuthenticationResponse register(RegisterRequest request) {
+        if(userRepository.findByEmail(request.getEmail()) != null) {
+            return AuthenticationResponse
+                    .builder()
+                    .token(null)
+                    .message("Email-ul intrdus nu este valabil")
+                    .build();
+        }
         User user = User.builder()
-                .firstName(request.getFirstname())
-                .lastName(request.getLastname())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.STUDENT)
                 .build();
+        System.out.println(user);
         userRepository.save(user);
-        String jwtToken = jwtService.generateToken(user);
+        Map<String, Object> claims = new HashMap<String, Object>();
+        claims.put("role", user.getRole());
+        String jwtToken = jwtService.generateToken(claims, user);
         return AuthenticationResponse
                 .builder()
                 .token(jwtToken)
@@ -55,7 +68,9 @@ public class AuthenticationService {
             );
         }
         User user = userRepository.findByEmail(request.getEmail());
-        String jwtToken = jwtService.generateToken(user);
+        Map<String, Object> claims = new HashMap<String, Object>();
+        claims.put("role", user.getRole());
+        String jwtToken = jwtService.generateToken(claims, user);
         return ResponseEntity.ok(AuthenticationResponse
                 .builder()
                 .token(jwtToken)
