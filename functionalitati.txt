@@ -1,0 +1,2 @@
+admin : -adauga profesori/studenti
+	-adauga cursuri si asigneaza un profesor cursului

@@ -1,0 +1,89 @@
+<form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+  <p-card header="Add User" [style]="{ width: '360px' }">
+    <div *ngIf="loginError" class="block p-error">Email already in use.</div>
+    <div class="field">
+      <label for="firstName">FirstName</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="firstName"
+        class="w-full"
+        name="firstName"
+        placeholder="Type your name"
+      />
+      <small
+        *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
+        class="block p-error"
+      >
+        <div *ngIf="firstName.errors?.['required']">Name is required.</div>
+      </small>
+    </div>
+    <div class="field">
+      <label for="lastName">Last name</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="lastName"
+        class="w-full"
+        name="lastName"
+        placeholder="Type your name"
+      />
+      <small
+        *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)"
+        class="block p-error">
+        <div *ngIf="lastName.errors?.['required']">Name is required.</div>
+      </small>
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="email"
+        class="w-full"
+        name="email"
+        placeholder="Type your email"
+        (input)="resetRegisterError()"
+      />
+      <small
+        *ngIf="email.invalid && (email.dirty || email.touched)"
+        class="block p-error"
+      >
+        <div *ngIf="email.errors?.['required']">Email is required.</div>
+        <div *ngIf="email.errors?.['email']">Email should be valid</div>
+      </small>
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        pInputText
+        formControlName="password"
+        class="w-full"
+        name="password"
+        placeholder="Type your password"
+        (input)="resetRegisterError()"
+      />
+      <small
+        *ngIf="password.invalid && (password.dirty || password.touched)"
+        class="block p-error"
+      >
+        <div *ngIf="password.errors?.['required']">Password is required.</div>
+      </small>
+    </div>
+    <div class="field">
+      <label for="role">Role</label>
+      <br>
+      <p-dropdown [options]="roles" optionLabel="role" placeholder="Select a role"></p-dropdown>
+    </div>
+    <p-button
+      label="Register user"
+      styleClass="w-full"
+      [disabled]="registerForm.invalid"
+      type="submit"
+    ></p-button>
+
+
+
+  </p-card>
+</form>

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/auth';
+import {jwtDecode} from "jwt-decode";
 
 @Component({
   selector: 'app-login',
@@ -36,7 +37,7 @@ export class LoginComponent {
         email: email || '', // Provide a default empty string if email is null or undefined
         password: password || '' // Provide a default empty string if password is null or undefined
       };
-  
+
       this.authService.loginUser(user).subscribe(
         (response : any) => {
             const responseData = response;
@@ -45,20 +46,25 @@ export class LoginComponent {
               // Token received, indicating successful login
               // You can save the token in local storage or a cookie for future authenticated requests
               localStorage.setItem('token', responseData.token);
-  
-              // Redirect the user to the dashboard or another page
-              // You can use Angular's Router for navigation
-              // Example: this.router.navigate(['/dashboard']);
-              this.router.navigate(['/home']);
+              const tokenInfo = jwtDecode(responseData.token) as {role: string};
+              const role = tokenInfo.role;
+
+              if (role === 'ADMIN') {
+                this.router.navigate(['/admin'])
+              } else {
+                console.log(tokenInfo.role);
+                this.router.navigate(['/home']);
+              }
+
               console.log('Login successful. Token:', responseData.token);
-              
+
             } else {
               // No "token" property in the response, indicating incorrect username or password
               // You can display an error message to the user
               this.loginError = true;
               this.msgService.add({ severity: 'error', summary: 'Error', detail: 'email or password is wrong' });
             }
-          
+
         },
         (error) => {
           // Handle errors (e.g., show error message to the user)
