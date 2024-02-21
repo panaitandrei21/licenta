@@ -1,6 +1,5 @@
-<form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+<form [formGroup]="registerForm" (ngSubmit)="registerTeacher()">
   <p-card header="Add User" [style]="{ width: '360px' }">
-    <div *ngIf="loginError" class="block p-error">Email already in use.</div>
     <div class="field">
       <label for="firstName">FirstName</label>
       <input
@@ -43,7 +42,6 @@
         class="w-full"
         name="email"
         placeholder="Type your email"
-        (input)="resetRegisterError()"
       />
       <small
         *ngIf="email.invalid && (email.dirty || email.touched)"
@@ -62,7 +60,6 @@
         class="w-full"
         name="password"
         placeholder="Type your password"
-        (input)="resetRegisterError()"
       />
       <small
         *ngIf="password.invalid && (password.dirty || password.touched)"
@@ -70,11 +67,6 @@
       >
         <div *ngIf="password.errors?.['required']">Password is required.</div>
       </small>
-    </div>
-    <div class="field">
-      <label for="role">Role</label>
-      <br>
-      <p-dropdown [options]="roles" optionLabel="role" placeholder="Select a role"></p-dropdown>
     </div>
     <p-button
       label="Register user"

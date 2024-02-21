@@ -4,7 +4,9 @@ import com.licenta.StuddyBuddy.dto.AuthenticationRequest;
 import com.licenta.StuddyBuddy.dto.AuthenticationResponse;
 import com.licenta.StuddyBuddy.dto.RegisterRequest;
 import com.licenta.StuddyBuddy.enums.Role;
+import com.licenta.StuddyBuddy.model.Teacher;
 import com.licenta.StuddyBuddy.model.User;
+import com.licenta.StuddyBuddy.repository.TeacherRepository;
 import com.licenta.StuddyBuddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,12 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final TeacherRepository teacherRepository;
+
+
+    public boolean  checkUserLoggedIn(String token, UserDetails userDetails) {
+        return jwtService.isTokenValid(token, userDetails);
+    }
     public AuthenticationResponse register(RegisterRequest request) {
         if(userRepository.findByEmail(request.getEmail()) != null) {
             return AuthenticationResponse
@@ -41,7 +50,6 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.ROLE_STUDENT)
                 .build();
-        System.out.println(user);
         userRepository.save(user);
         Map<String, Object> claims = new HashMap<String, Object>();
         claims.put("role", user.getRole());
@@ -52,6 +60,32 @@ public class AuthenticationService {
                 .build();
     }
 
+    public AuthenticationResponse registerTeacher(RegisterRequest request) {
+        if(userRepository.findByEmail(request.getEmail()) != null) {
+            return AuthenticationResponse
+                    .builder()
+                    .token(null)
+                    .message("Email-ul intrdus nu este valabil")
+                    .build();
+        }
+        User user = User
+                .builder()
+                .firstName(request.getFirstName())
+                .email(request.getEmail())
+                .lastName(request.getLastName())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.ROLE_TEACHER)
+                .build();
+        Teacher teacher = Teacher
+                .builder()
+                .user(user)
+                .build();
+        teacherRepository.save(teacher);
+        return AuthenticationResponse
+                .builder()
+                .message("Teacher added succesfully")
+                .build();
+    }
     public ResponseEntity<AuthenticationResponse> login(AuthenticationRequest request) {
         try {
             authenticationManager.authenticate(

@@ -1,5 +1,6 @@
 package com.licenta.StuddyBuddy.controller;
 
+import com.licenta.StuddyBuddy.model.User;
 import com.licenta.StuddyBuddy.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,6 @@ import com.licenta.StuddyBuddy.dto.AuthenticationRequest;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     @PostMapping("/register")
@@ -32,5 +32,19 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request
     ) {
         return authenticationService.login(request);
+    }
+
+    @PostMapping("/validToken")
+    public ResponseEntity<String> checkUserLoggedIn(
+            @RequestParam("token") String token,
+            @RequestParam("user") User user
+            ) {
+       Boolean isAuthenticated = authenticationService.checkUserLoggedIn(token, user);
+       if (isAuthenticated) {
+           return ResponseEntity.ok("User is Logged in");
+       }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                "User is not logged in"
+        );
     }
 }

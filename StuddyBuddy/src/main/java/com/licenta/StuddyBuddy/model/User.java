@@ -20,13 +20,14 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private String userId;
 
     private String firstName;
     private String lastName;
     private String password;
 
     private String email;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -65,7 +66,7 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
+                "id='" + userId + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", password='" + password + '\'' +

@@ -1,10 +1,9 @@
 package com.licenta.StuddyBuddy.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.licenta.StuddyBuddy.enums.Role;
+import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @NoArgsConstructor
@@ -12,8 +11,12 @@ import lombok.*;
 @Getter
 @Builder
 @Setter
-public class Teacher {
+public class Teacher{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String teacherId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }

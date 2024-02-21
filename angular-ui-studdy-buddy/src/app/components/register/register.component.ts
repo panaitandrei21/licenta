@@ -58,7 +58,7 @@ export class RegisterComponent {
           if (responseData && responseData.token) {
             // Token received, indicating successful login
             // You can save the token in local storage or a cookie for future authenticated requests
-            localStorage.setItem('token', responseData.token);
+            localStorage.setItem('studdyBuddy_token', responseData.token);
 
             // Redirect the user to the dashboard or another page
             // You can use Angular's Router for navigation

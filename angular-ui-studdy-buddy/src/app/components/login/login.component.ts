@@ -34,22 +34,19 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       const user: User = {
-        email: email || '', // Provide a default empty string if email is null or undefined
-        password: password || '' // Provide a default empty string if password is null or undefined
+        email: email || '',
+        password: password || ''
       };
 
       this.authService.loginUser(user).subscribe(
         (response : any) => {
             const responseData = response;
-            // Check if the "token" property exists in the parsed response
             if (responseData && responseData.token) {
-              // Token received, indicating successful login
-              // You can save the token in local storage or a cookie for future authenticated requests
-              localStorage.setItem('token', responseData.token);
+              localStorage.setItem('studdyBuddy_token', responseData.token);
               const tokenInfo = jwtDecode(responseData.token) as {role: string};
               const role = tokenInfo.role;
 
-              if (role === 'ADMIN') {
+              if (role === 'ROLE_ADMIN') {
                 this.router.navigate(['/admin'])
               } else {
                 console.log(tokenInfo.role);
@@ -59,15 +56,12 @@ export class LoginComponent {
               console.log('Login successful. Token:', responseData.token);
 
             } else {
-              // No "token" property in the response, indicating incorrect username or password
-              // You can display an error message to the user
               this.loginError = true;
               this.msgService.add({ severity: 'error', summary: 'Error', detail: 'email or password is wrong' });
             }
 
         },
         (error) => {
-          // Handle errors (e.g., show error message to the user)
           this.loginError = true;
 
             this.msgService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong' });

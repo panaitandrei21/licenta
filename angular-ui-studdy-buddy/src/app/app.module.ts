@@ -10,12 +10,13 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { HttpClientModule } from '@angular/common/http';
+import {HttpClientModule, provideHttpClient, withInterceptors} from '@angular/common/http';
 import { ToastModule } from 'primeng/toast';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MessageService } from 'primeng/api';
 import { AdminComponent } from './components/admin/admin.component';
 import {DropdownModule} from "primeng/dropdown";
+import {authInterceptor} from "./components/interceptors/auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {DropdownModule} from "primeng/dropdown";
   ],
   providers: [
     provideClientHydration(),
-    MessageService
+    MessageService,
+    provideHttpClient(withInterceptors([authInterceptor]))
   ],
   bootstrap: [AppComponent]
 })

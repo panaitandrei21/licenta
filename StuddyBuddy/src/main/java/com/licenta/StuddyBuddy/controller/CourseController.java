@@ -28,9 +28,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class CourseController {
     public static final String DIRECTORY = "upload";
     @PostMapping("/upload")
-    @CrossOrigin
     public ResponseEntity<List<String>> uploadFiles(@RequestParam("files")List<MultipartFile> multipartFiles) throws IOException {
-        System.out.println(DIRECTORY);
         List<String> filenames = new ArrayList<>();
         for(MultipartFile file : multipartFiles) {
             String filename = StringUtils.cleanPath(file.getOriginalFilename());
@@ -43,7 +41,6 @@ public class CourseController {
 
 
     @GetMapping("download/{filename}")
-    @CrossOrigin
     public ResponseEntity<Resource> downloadFiles(@PathVariable("filename") String filename) throws IOException {
         Path filePath = get(DIRECTORY).toAbsolutePath().normalize().resolve(filename);
         if (Files.exists(filePath)) {

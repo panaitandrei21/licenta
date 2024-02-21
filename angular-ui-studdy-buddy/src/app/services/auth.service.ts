@@ -1,31 +1,51 @@
-import {Inject, Injectable, PLATFORM_ID, TransferState} from '@angular/core';
+import { Injectable} from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../interfaces/auth';
-import { Observable } from 'rxjs';
+import {CurrentUser} from "../interfaces/current-user";
+import {BehaviorSubject, tap} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  user!: CurrentUser | null;
+  private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
+  isLoggedIn$ = this._isLoggedIn$.asObservable();
 
-  private baseUrl = 'http://localhost:8080'; // Update with your actual server URL
+  private readonly TOKEN_NAME = 'studdyBuddy_token';
+  private baseUrl = 'http://localhost:8080';
 
-  constructor(private http: HttpClient,  @Inject(PLATFORM_ID) private platformId: any, private transferState: TransferState) { }
+  constructor(private http: HttpClient) {
+    this._isLoggedIn$.next(!!this.token);
+    this.user = this.getUser(this.token);
+  }
 
-  loginUser(userDetails: User) { // Accept a User object as an argument
+  get token(): any {
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem(this.TOKEN_NAME);
+    }
+    return null;
+  }
+  private getUser(token: string | null): CurrentUser | null {
+    if (!token) {
+      return null;
+    }
+    return JSON.parse(atob(token.split('.')[1])) as CurrentUser;
+  }
+  loginUser(userDetails: User) {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       }),
     };
 
-    return this.http.post(`${this.baseUrl}/api/auth/login`, userDetails, httpOptions);
-  }
-  isLoggedIn() {
-    if (typeof localStorage !== "undefined") {
-      return localStorage.getItem('token') != null;
-    }
-    return false;
+    return this.http.post(`${this.baseUrl}/api/auth/login`, userDetails, httpOptions).pipe(
+      tap((response: any) =>{
+        this._isLoggedIn$.next(true);
+        this.user = this.getUser(response.token);
+        console.log(this.user)
+      })
+    );
   }
 
   register(userDetails: User) {
@@ -36,5 +56,8 @@ export class AuthService {
     };
 
     return this.http.post(`${this.baseUrl}/api/auth/register`, userDetails, httpOptions);
+  }
+  addTeacher(userDetails: User) {
+    return this.http.post(`${this.baseUrl}/api/admin/add/teacher`, userDetails);
   }
 }
