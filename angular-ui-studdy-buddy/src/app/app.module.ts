@@ -17,6 +17,7 @@ import { MessageService } from 'primeng/api';
 import { AdminComponent } from './components/admin/admin.component';
 import {DropdownModule} from "primeng/dropdown";
 import {authInterceptor} from "./components/interceptors/auth.interceptor";
+import {AgGridAngular} from "ag-grid-angular";
 
 @NgModule({
   declarations: [
@@ -26,18 +27,19 @@ import {authInterceptor} from "./components/interceptors/auth.interceptor";
     HomeComponent,
     AdminComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    CardModule,
-    InputTextModule,
-    ReactiveFormsModule,
-    ButtonModule,
-    HttpClientModule,
-    ToastModule,
-    BrowserAnimationsModule,
-    DropdownModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        CardModule,
+        InputTextModule,
+        ReactiveFormsModule,
+        ButtonModule,
+        HttpClientModule,
+        ToastModule,
+        BrowserAnimationsModule,
+        DropdownModule,
+        AgGridAngular
+    ],
   providers: [
     provideClientHydration(),
     MessageService,

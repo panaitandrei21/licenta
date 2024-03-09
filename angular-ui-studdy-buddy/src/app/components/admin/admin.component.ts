@@ -4,13 +4,29 @@ import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {MessageService} from "primeng/api";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-
+import {UserDTO} from "../../interfaces/user-dto";
+import {ColDef, createGrid, GridApi, GridOptions} from 'ag-grid-community';
+import {AdminService} from "../../services/admin.service";
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })
 export class AdminComponent implements OnInit{
+  users: UserDTO[] | undefined;
+  gridApi: GridApi<UserDTO> | undefined;
+  gridOptions: GridOptions<UserDTO> = {
+    columnDefs: [
+      { field: "id", checkboxSelection: true, headerCheckboxSelection: true},
+      { field: "firstName", filter: true},
+      { field: "lastName", filter: true },
+      { field: "email", filter: true },
+      { field: "role", filter: true },
+    ],
+  };
+  removeUser(userId: number) {
+    console.log("remove user");
+  }
   registerForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
@@ -23,8 +39,19 @@ export class AdminComponent implements OnInit{
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private msgService: MessageService
+    private msgService: MessageService,
+    private adminService: AdminService
   ) { }
+  ngOnInit(): void {
+    this.adminService.getTeachers().subscribe(res => {
+      // console.log(res);
+      this.users = res as UserDTO[];
+    });
+  }
+  onGridReady() {
+
+  }
+
 
   get email() {
     return this.registerForm.controls['email'];
@@ -45,10 +72,10 @@ export class AdminComponent implements OnInit{
     if (this.registerForm.valid) {
       const { email, password, lastName, firstName } = this.registerForm.value;
       const user: { firstName: string; lastName: string; password: string; email: string } = {
-        firstName: firstName || '', // Provide a default empty string if password is null or undefined
-        lastName: lastName || '', // Provide a default empty string if password is null or undefined
-        email: email || '', // Provide a default empty string if email is null or undefined
-        password: password || '', // Provide a default empty string if password is null or undefined
+        firstName: firstName || '',
+        lastName: lastName || '',
+        email: email || '',
+        password: password || '',
       };
     console.log(user);
       this.authService.addTeacher(user).subscribe(
@@ -63,13 +90,6 @@ export class AdminComponent implements OnInit{
     }
   }
 
-  ngOnInit(): void {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    };
-    this.http.get(`http://localhost:8080/api/admin/add/teacher`, httpOptions).subscribe(res => console.log(res));
-  }
+
 
 }
