@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 import com.licenta.StuddyBuddy.model.Course;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, String > {
+
 }

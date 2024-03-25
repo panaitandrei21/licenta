@@ -13,11 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseService {
     private final CourseRepository courseRepository;
-    public void addCourse() {
-        List<FileNames> fileNames = new ArrayList<>();
-        fileNames.add(FileNames.builder().file("smecherie").build());
-        Course course = Course.builder().coursesFilenames(fileNames).build();
+    public void addCourse(Course course) {
         courseRepository.save(course);
     }
 
+    public List<Course> getAllCourses() {
+        return courseRepository.findAll();
+    }
 }

@@ -1,18 +1,3 @@
-<ag-grid-angular
-  [rowData]="users"
-  [gridOptions]="gridOptions"
-  class="ag-theme-quartz"
-  style="height: 500px; min-height: 300px;">
-  (gridReady)="onGridReady($event)"
-
-</ag-grid-angular>
-<!--<div class="example-wrapper">-->
-<!--  <div class="example-header">-->
-<!--    Selection:-->
-<!--    <span id="selectedRows"></span>-->
-<!--  </div>-->
-<!--  <div id="myGrid" class="ag-theme-quartz"  style="height: 500px; min-height: 300px;"></div>-->
-<!--</div>-->
 <form [formGroup]="registerForm" (ngSubmit)="registerTeacher()">
   <p-card header="Add User" [style]="{ width: '800px' }">
     <div class="field">
@@ -94,4 +79,31 @@
 
   </p-card>
 </form>
+<ag-grid-angular
+  [rowData]="users"
+  [gridOptions]="gridOptions"
+  class="ag-theme-quartz"
+  style="height: 80vh;"
+  (gridReady)="onGridReady($event)">
+</ag-grid-angular>
+<button pButton type="button" label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteUser()" [disabled]="!selectedData || selectedData.length === 0"></button>
 
+<form [formGroup]="courseForm" (ngSubmit)="onCreateCourse()">
+  <div>
+    <label for="courseName">Course Name:</label>
+    <input type="text" id="courseName" formControlName="courseName" required>
+  </div>
+
+  <div>
+    <label for="description">Description:</label>
+    <textarea id="description" formControlName="description"></textarea>
+  </div>
+
+  <div>
+    <label for="category">Category:</label>
+    <input type="text" id="category" formControlName="category" required>
+  </div>
+
+
+  <button type="submit" [disabled]="courseForm.invalid">Create Course</button>
+</form>

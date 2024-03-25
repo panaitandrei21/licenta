@@ -16,11 +16,16 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String courseId;
-    @OneToMany
-    private List<Homework> homeworkList;
-    @OneToOne
-    private Teacher teacher;
-    @OneToMany
-    private List<FileNames> coursesFilenames;
+
+    private String courseName;
+    private String description;
+
+    private String category;
     private String logo;
+
+    @ManyToMany
+    List<User> teachers;
+
+    @ManyToMany
+    List<User> students;
 }

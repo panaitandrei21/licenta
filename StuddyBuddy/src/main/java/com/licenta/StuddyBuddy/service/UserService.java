@@ -22,7 +22,7 @@ public class UserService {
     }
 
     public String deleteUser(String user) {
-        userRepository.delete(userRepository.findByEmail(user));
+        userRepository.delete(userRepository.findByUserId(user));
         return "User is deleted succesfully";
     }
 }

@@ -7,14 +7,19 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {UserDTO} from "../../interfaces/user-dto";
 import {ColDef, createGrid, GridApi, GridOptions} from 'ag-grid-community';
 import {AdminService} from "../../services/admin.service";
+import {Observable} from "rxjs";
+import {Course} from "../../interfaces/course";
+
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })
-export class AdminComponent implements OnInit{
+export class AdminComponent implements OnInit {
   users: UserDTO[] | undefined;
-  gridApi: GridApi<UserDTO> | undefined;
+  private gridApi!: GridApi;
+  private ChargridApi!: GridApi;
+  selectedData: UserDTO[] | undefined;
   gridOptions: GridOptions<UserDTO> = {
     columnDefs: [
       { field: "id", checkboxSelection: true, headerCheckboxSelection: true},
@@ -23,6 +28,8 @@ export class AdminComponent implements OnInit{
       { field: "email", filter: true },
       { field: "role", filter: true },
     ],
+    rowSelection: "multiple",
+    onRowSelected: event => this.getSelectedRows(), // Add this line
   };
   removeUser(userId: number) {
     console.log("remove user");
@@ -34,6 +41,11 @@ export class AdminComponent implements OnInit{
     lastName: ['', Validators.required],
     role: [''],
   })
+  courseForm = this.fb.group({
+    courseName: ['', [Validators.required, Validators.minLength(1)]], // Make sure it's initialized and required
+    description: [''],
+    category: ['', Validators.required],
+  });
 
   constructor( private http: HttpClient,
     private fb: FormBuilder,
@@ -43,13 +55,23 @@ export class AdminComponent implements OnInit{
     private adminService: AdminService
   ) { }
   ngOnInit(): void {
+    this.fetchUsers();
+  }
+  fetchUsers(): void {
     this.adminService.getTeachers().subscribe(res => {
-      // console.log(res);
       this.users = res as UserDTO[];
+      this.gridApi.refreshCells(); // Method to refresh the grid, if necessary.
     });
   }
-  onGridReady() {
 
+  getSelectedRows() {
+    this.selectedData = this.ChargridApi?.getSelectedRows();
+    console.log(this.selectedData);
+
+  }
+  onGridReady(params: any) {
+    this.ChargridApi = params.api;
+    this.gridApi = params.api;
   }
 
 
@@ -79,17 +101,39 @@ export class AdminComponent implements OnInit{
       };
     console.log(user);
       this.authService.addTeacher(user).subscribe(
-        (response : any) => {
-          console.log(response)
+        (response: any) => {
+          console.log(response);
+          this.fetchUsers(); // Refresh the user list
         },
         (error) => {
           this.msgService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong' });
-
         }
       );
     }
   }
 
 
+  deleteUser() {
+    this.adminService.deleteUsers(this.selectedData as UserDTO[]).subscribe(res => {
+      console.log(res);
+      this.fetchUsers(); // Refresh the user list
+    });
+  }
 
+  onCreateCourse() {
+    if (this.courseForm.valid) { // Check if the form is valid
+      const courseData: Course = {
+        courseName: this.courseForm.value.courseName!,
+        description: this.courseForm.value.description!,
+        category: this.courseForm.value.category!
+      };
+
+      this.adminService.createCourse(courseData).subscribe(
+        response => {
+          console.log(response);
+          // Handle successful course creation (e.g., display a success message or redirect)
+        }
+      );
+    }
+  }
 }

@@ -14,7 +14,7 @@ const routes: Routes = [
     role: 'ROLE_ADMIN',
     }},
   {path: 'home', component: HomeComponent, canActivate: [authGuard, hasRoleGuard],  data: {
-      role: 'ROLE_STUDENT',
+      role: ['ROLE_STUDENT'],
     }},
   {path: '', redirectTo: 'home', pathMatch: 'full'}
 ];

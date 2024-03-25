@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import {User} from "../interfaces/auth";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {UserDTO} from "../interfaces/user-dto";
+import {Course} from "../interfaces/course";
 
 @Injectable({
   providedIn: 'root'
@@ -11,5 +12,16 @@ export class AdminService {
   constructor(private http: HttpClient) { }
   getTeachers() {
     return this.http.get(`${this.baseUrl}/api/admin/getTeachers`);
+  }
+  deleteUsers(users: UserDTO[]) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+    return this.http.request('delete', `${this.baseUrl}/api/admin/deleteUsers`, { body: users });
+  }
+  createCourse(course: Course) {
+    return this.http.post( `${this.baseUrl}/api/admin/create/course`, course);
   }
 }

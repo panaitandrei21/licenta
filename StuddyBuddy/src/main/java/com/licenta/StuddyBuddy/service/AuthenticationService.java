@@ -4,9 +4,7 @@ import com.licenta.StuddyBuddy.dto.AuthenticationRequest;
 import com.licenta.StuddyBuddy.dto.AuthenticationResponse;
 import com.licenta.StuddyBuddy.dto.RegisterRequest;
 import com.licenta.StuddyBuddy.enums.Role;
-import com.licenta.StuddyBuddy.model.Teacher;
 import com.licenta.StuddyBuddy.model.User;
-import com.licenta.StuddyBuddy.repository.TeacherRepository;
 import com.licenta.StuddyBuddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,7 +27,6 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final TeacherRepository teacherRepository;
 
 
     public boolean  checkUserLoggedIn(String token, UserDetails userDetails) {
@@ -76,11 +73,8 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.ROLE_TEACHER)
                 .build();
-        Teacher teacher = Teacher
-                .builder()
-                .user(user)
-                .build();
-        teacherRepository.save(teacher);
+
+        userRepository.save(user);
         return AuthenticationResponse
                 .builder()
                 .message("Teacher added succesfully")

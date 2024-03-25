@@ -3,16 +3,18 @@ package com.licenta.StuddyBuddy.controller;
 import com.licenta.StuddyBuddy.dto.AuthenticationResponse;
 import com.licenta.StuddyBuddy.dto.RegisterRequest;
 import com.licenta.StuddyBuddy.dto.UserDTO;
-import com.licenta.StuddyBuddy.model.Teacher;
-import com.licenta.StuddyBuddy.repository.TeacherRepository;
+import com.licenta.StuddyBuddy.model.Course;
 import com.licenta.StuddyBuddy.service.AuthenticationService;
+import com.licenta.StuddyBuddy.service.CourseService;
 import com.licenta.StuddyBuddy.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ import java.util.List;
 public class AdminController {
     private final AuthenticationService authenticationService;
     private final UserService userService;
+    private final CourseService courseService;
     @GetMapping
     public String getAdmin() {
         return "admin aici";
@@ -36,11 +39,28 @@ public class AdminController {
 
     }
 
-    @DeleteMapping("/deleteUser")
-    public ResponseEntity<String> deleteUser(@RequestParam String user) {
-        String response = userService.deleteUser(user);
+    @DeleteMapping("/deleteUsers")
+    public ResponseEntity<?> deleteUser(@RequestBody List<UserDTO> users) {
+        for (UserDTO user : users) {
+            userService.deleteUser(user.getId());
+        }
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Users have been deleted successfully");
         return ResponseEntity.ok(response);
+    }
 
+    @PostMapping("/create/course")
+    public ResponseEntity<?> createCourse(@RequestBody Course course) {
+        courseService.addCourse(course);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Users have been deleted successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/get/courses")
+    public ResponseEntity<?> getAllCourses() {
+        List<Course> courses = courseService.getAllCourses();
+        return ResponseEntity.ok(courses);
     }
 
 }

@@ -6,10 +6,15 @@ export const hasRoleGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  const isAuthorized = authService.user?.role.includes(route.data['role']);
+  const requiredRoles = Array.isArray(route.data['role']) ? route.data['role'] : [route.data['role']];
+  console.log(requiredRoles);
+  console.log(authService.user?.role);
+
+  // Check if the user has any of the required roles
+  const isAuthorized = requiredRoles.some(role => authService.user?.role.includes(role));
+
+
   if (!isAuthorized) {
-    // redirect
-    // display a message
     window.alert('you are not authorized');
   }
 

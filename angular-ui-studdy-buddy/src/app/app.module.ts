@@ -18,6 +18,9 @@ import { AdminComponent } from './components/admin/admin.component';
 import {DropdownModule} from "primeng/dropdown";
 import {authInterceptor} from "./components/interceptors/auth.interceptor";
 import {AgGridAngular} from "ag-grid-angular";
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { EnrollComponent } from './components/enroll/enroll.component';
+import {MatListOption, MatSelectionList} from "@angular/material/list";
 
 @NgModule({
   declarations: [
@@ -25,25 +28,29 @@ import {AgGridAngular} from "ag-grid-angular";
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    AdminComponent
+    AdminComponent,
+    EnrollComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        CardModule,
-        InputTextModule,
-        ReactiveFormsModule,
-        ButtonModule,
-        HttpClientModule,
-        ToastModule,
-        BrowserAnimationsModule,
-        DropdownModule,
-        AgGridAngular
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    CardModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    HttpClientModule,
+    ToastModule,
+    BrowserAnimationsModule,
+    DropdownModule,
+    AgGridAngular,
+    MatSelectionList,
+    MatListOption
+  ],
   providers: [
     provideClientHydration(),
     MessageService,
-    provideHttpClient(withInterceptors([authInterceptor]))
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
 })
