@@ -1,11 +1,14 @@
 package com.licenta.StuddyBuddy.controller;
 
 import com.licenta.StuddyBuddy.dto.AuthenticationResponse;
+import com.licenta.StuddyBuddy.dto.EnrollRequest;
 import com.licenta.StuddyBuddy.dto.RegisterRequest;
 import com.licenta.StuddyBuddy.dto.UserDTO;
 import com.licenta.StuddyBuddy.model.Course;
+import com.licenta.StuddyBuddy.model.Enroll;
 import com.licenta.StuddyBuddy.service.AuthenticationService;
 import com.licenta.StuddyBuddy.service.CourseService;
+import com.licenta.StuddyBuddy.service.EnrollService;
 import com.licenta.StuddyBuddy.service.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +26,7 @@ public class AdminController {
     private final AuthenticationService authenticationService;
     private final UserService userService;
     private final CourseService courseService;
+    private final EnrollService enrollService;
     @GetMapping
     public String getAdmin() {
         return "admin aici";
@@ -62,5 +66,13 @@ public class AdminController {
         List<Course> courses = courseService.getAllCourses();
         return ResponseEntity.ok(courses);
     }
-
+    @PostMapping("/enroll-user-to-course")
+    public ResponseEntity<?> enrollUserToCourse(@RequestBody EnrollRequest enrollRequest) {
+        try {
+            enrollService.enrollUser(enrollRequest.getUserId(), enrollRequest.getCourseId());
+            return ResponseEntity.ok().body("User enrolled successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error enrolling user: " + e.getMessage());
+        }
+    }
 }

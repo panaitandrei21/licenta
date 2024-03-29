@@ -20,7 +20,7 @@ import {authInterceptor} from "./components/interceptors/auth.interceptor";
 import {AgGridAngular} from "ag-grid-angular";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { EnrollComponent } from './components/enroll/enroll.component';
-import {MatListOption, MatSelectionList} from "@angular/material/list";
+import {MatListModule, MatListOption, MatSelectionList} from "@angular/material/list";
 
 @NgModule({
   declarations: [

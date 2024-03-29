@@ -24,4 +24,14 @@ export class AdminService {
   createCourse(course: Course) {
     return this.http.post( `${this.baseUrl}/api/admin/create/course`, course);
   }
+
+  getAllCourses() {
+    return this.http.get( `${this.baseUrl}/api/admin/get/courses`);
+  }
+
+  enrollUser(userId: string, courseId: string | null) {
+    const requestBody = { userId, courseId };
+    console.log(requestBody)
+    return this.http.post(`${this.baseUrl}/api/admin/enroll-user-to-course`, requestBody)
+  }
 }

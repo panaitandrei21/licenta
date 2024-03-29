@@ -1,5 +1,7 @@
-<mat-selection-list #shoes [multiple]="true">
-  <mat-list-option *ngFor="let shoe of shoes" [value]="shoe.value">
-    {{shoe.viewValue}}
+<mat-selection-list [multiple]="false">
+  <mat-list-option *ngFor="let course of courses" [value]="course.courseId">
+    {{ course.courseName }}
+    <button mat-button (click)="enrollUserInCourse(course.courseId)">Enroll</button>
   </mat-list-option>
 </mat-selection-list>
+

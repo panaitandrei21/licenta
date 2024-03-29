@@ -87,7 +87,8 @@
   (gridReady)="onGridReady($event)">
 </ag-grid-angular>
 <button pButton type="button" label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteUser()" [disabled]="!selectedData || selectedData.length === 0"></button>
-
+<!-- In admin.component.html -->
+<button mat-button (click)="openDialog()">Open Selection List</button>
 <form [formGroup]="courseForm" (ngSubmit)="onCreateCourse()">
   <div>
     <label for="courseName">Course Name:</label>

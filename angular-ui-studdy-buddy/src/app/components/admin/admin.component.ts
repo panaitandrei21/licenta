@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
@@ -9,6 +9,9 @@ import {ColDef, createGrid, GridApi, GridOptions} from 'ag-grid-community';
 import {AdminService} from "../../services/admin.service";
 import {Observable} from "rxjs";
 import {Course} from "../../interfaces/course";
+import {MatDialog} from "@angular/material/dialog";
+import {EnrollComponent} from "../enroll/enroll.component";
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-admin',
@@ -31,9 +34,19 @@ export class AdminComponent implements OnInit {
     rowSelection: "multiple",
     onRowSelected: event => this.getSelectedRows(), // Add this line
   };
-  removeUser(userId: number) {
-    console.log("remove user");
+  openDialog(): void {
+    const dialogRef = this.dialog.open(EnrollComponent, {
+      width: '250px',
+      data: { userId: this.selectedData?.map(value => value.id) } // Pass the selected user ID to the dialog
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      // Handle the dialog close event and result here, such as refreshing data or showing a message
+    });
   }
+
+
   registerForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
@@ -52,7 +65,9 @@ export class AdminComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private msgService: MessageService,
-    private adminService: AdminService
+    private adminService: AdminService,
+               public dialog: MatDialog,
+               private cdr: ChangeDetectorRef
   ) { }
   ngOnInit(): void {
     this.fetchUsers();
@@ -123,6 +138,7 @@ export class AdminComponent implements OnInit {
   onCreateCourse() {
     if (this.courseForm.valid) { // Check if the form is valid
       const courseData: Course = {
+        courseId: null,
         courseName: this.courseForm.value.courseName!,
         description: this.courseForm.value.description!,
         category: this.courseForm.value.category!
@@ -131,7 +147,7 @@ export class AdminComponent implements OnInit {
       this.adminService.createCourse(courseData).subscribe(
         response => {
           console.log(response);
-          // Handle successful course creation (e.g., display a success message or redirect)
+           // Handle successful course creation (e.g., display a success message or redirect)
         }
       );
     }
