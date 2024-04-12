@@ -1,9 +1,6 @@
 package com.licenta.StuddyBuddy.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -17,7 +14,10 @@ public class Enroll {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String enrollmentId;
 
-    private String userId;
-    private String courseId;
+    @ManyToOne
+    private User user;
+
+    @ManyToOne
+    private Course course;
 
 }

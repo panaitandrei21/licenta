@@ -1,4 +1,4 @@
 export interface CurrentUser {
-  email: string;
+  sub: string;
   role: string[];
 }

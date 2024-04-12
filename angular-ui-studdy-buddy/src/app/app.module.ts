@@ -21,6 +21,7 @@ import {AgGridAngular} from "ag-grid-angular";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { EnrollComponent } from './components/enroll/enroll.component';
 import {MatListModule, MatListOption, MatSelectionList} from "@angular/material/list";
+import { CourseComponent } from './components/course/course.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import {MatListModule, MatListOption, MatSelectionList} from "@angular/material/
     RegisterComponent,
     HomeComponent,
     AdminComponent,
-    EnrollComponent
+    EnrollComponent,
+    CourseComponent
   ],
   imports: [
     BrowserModule,

@@ -1,10 +1,25 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Course} from "../../interfaces/course";
+import {CourseService} from "../../services/course.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  courses: Course[] = [];
 
+  constructor(private courseService: CourseService,
+              private authService: AuthService) { }
+
+  ngOnInit() {
+    console.log(this.authService.user)
+    const currentUser = this.authService.user!.sub
+    this.courseService.getCoursesForUser(currentUser).subscribe(data => {
+      console.log(data);
+      this.courses = data;
+    });
+  }
 }
