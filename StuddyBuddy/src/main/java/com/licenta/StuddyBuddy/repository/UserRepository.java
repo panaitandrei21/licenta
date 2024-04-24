@@ -14,4 +14,8 @@ public interface UserRepository extends JpaRepository<User, String> {
     public User findByUserId(String id);
     @Query("SELECT new com.licenta.StuddyBuddy.dto.UserDTO(u.userId ,u.firstName, u.lastName, u.email, u.role) FROM User u")
     List<UserDTO> getAllUsers();
+
+    @Query("SELECT new com.licenta.StuddyBuddy.dto.UserDTO(u.userId ,u.firstName, u.lastName, u.email, u.role) FROM User u where u.email = :email")
+    public UserDTO getUserByEmail(String email);
+
 }

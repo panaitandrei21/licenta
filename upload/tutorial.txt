@@ -1,0 +1,57 @@
+--- curs 3:
+Upload script: in SQL Workshop -> SQL Scripts -> Upload si RUN
+	Verificare ca s-au creat tabelele din script: SQL Workshop -> Object Browser -> in stanga Tables
+
+SQL Workshop -> Utilities -> Query Builder -> 
+	- join: selectez tabelele pe care le vreau, pt a le relationa click in patratatetul din dreapta al campului tabelei 1 si apoi click in patratatetul din dreapta al campului tabelei 2
+	- select: bifam in stanga campurile dorite
+
+SQL Workshop -> Utilities -> Data Workshop (pentru import/export date cu excel/text)
+
+--- curs 4:
+App builder -> Create (buton verde dreapta) sau se poate folosi cea existenta de laborator
+	- Creare pagina: Create page (dreapta verde)
+		- Faceted Search: adaugare criterii cautare (bife in stanga): la P8_SEARCH click dreapta -> Create facet -> configurare in dreapta (LOV cu range valori, selectare coloana sursa)
+		- Smart Filters: adaugare criterii de filtrare/cautare (la search bar are dropdown)
+		- Classic Report: poate include si un form (la final rezulta 2 obiecte, trebuie sa le dau nume la fiecare)
+				Source 2 variante:	- Table (selectezi doar 1 tabela)
+					 		- SQL Query (scris cod sql sau apasat pe ciocan si selectezi ca la Query Builder)
+
+--- curs 5:
+Pagini:
+	- Interactive grid: se pot adauga filtre, grafice de la Actions
+	- Interactive Report: 
+		- LOV: selectare iconita cu cerc, triunghi, patrat din stanga -> click dreapta pe List of Values -> create -> From Scratch -> alegere tabela
+			- se selecteaza coloana dorita, la Identification Type trebuie pus "Plain Text (based on List of Values)"
+			- la List of Values se selecteaza LOV-ul creat anterior
+		- Group by: de la Actions
+		- Pivot: de la Actions
+		- Highlight
+
+--- curs 6:
+Pagini:
+	- Master Detail:
+		- Stacked: 
+			- eroare cu galben la run: modificat DATA la Identification in Date picker si la Source in Varchar2
+			- LOV: pentru a afisat in loc de ex Id_furnizor = 11 sa fie numele lui;
+				- selectam la LOV tabela unde se gasesc numele furnizorilor;
+				- adaugam la campul id_furnizor din tabela master
+				- Identification type punem Popup LOV/Radio Group/Checkbox Group si la List of Values type Shared Component si selectam LOV creat anterior
+		- Side by Side: se selecteaza tabela pentru master, apoi pentru detail
+
+--- curs 7:
+Pagini:
+	- Master Detail:
+		- Drill Down:
+			- la master alegem doar 1 coloana pt primary key !! altfel da eroare (zice el)
+			- la detail creeaza 2 form-uri: 1 lucreaza doar cu master, 1 lucreaza si cu master si cu detail
+			- la Run afiseaza la inceput doar master, pentru a vedea detail, se apasa pe Edit la o factura
+			- am creat LOV al detail, selectand SQL Query (nu Table)
+			- am adaugat 1 coloana noua DEN_PRODUS de type Select list, la LOV am selectat Shared Component si lov-ul creat, iar la Source type SQL Expression si am pus coloana cu care se asociaza (id_prod) -> acest lov a facut a corelat id_prod cu den_prod, ca sa apara numele si nu id
+
+			-> la Actions: Filter, Chart, Group By, Pivot, Highlight
+	- Form: folosit doar pt inserare
+
+--- Extra
+Format data: 'MM/DD/YYYY'
+Uneori ID_DEP sau ID_ANG sunt hidden, se selecteaza si din dreapta la Identification se selecteaza Plain text sau Number field (in loc de hidden)

@@ -1,5 +1,7 @@
 package com.licenta.StuddyBuddy.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,9 +25,7 @@ public class Course {
     private String category;
     private String logo;
 
-    @ManyToMany
-    List<User> teachers;
-
-    @ManyToMany
-    List<User> students;
+    @OneToMany(mappedBy = "course")
+    @JsonManagedReference
+    private List<Module> modules;
 }

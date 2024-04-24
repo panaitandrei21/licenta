@@ -22,6 +22,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { EnrollComponent } from './components/enroll/enroll.component';
 import {MatListModule, MatListOption, MatSelectionList} from "@angular/material/list";
 import { CourseComponent } from './components/course/course.component';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { ModuleformComponent } from './components/moduleform/moduleform.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +34,10 @@ import { CourseComponent } from './components/course/course.component';
     HomeComponent,
     AdminComponent,
     EnrollComponent,
-    CourseComponent
+    CourseComponent,
+    NavBarComponent,
+    ProfileComponent,
+    ModuleformComponent
   ],
   imports: [
     BrowserModule,

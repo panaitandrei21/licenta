@@ -1,8 +1,9 @@
 import { Injectable} from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { User } from '../interfaces/auth';
 import {CurrentUser} from "../interfaces/current-user";
-import {BehaviorSubject, tap} from "rxjs";
+import {BehaviorSubject, Observable, tap} from "rxjs";
+import {UserDTO} from "../interfaces/user-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,11 @@ export class AuthService {
       })
     );
   }
+  logoutUser() {
+    localStorage.removeItem(this.TOKEN_NAME);
+    this._isLoggedIn$.next(false);
+    this.user = null;
+  }
 
   register(userDetails: User) {
     const httpOptions = {
@@ -59,5 +65,19 @@ export class AuthService {
   }
   addTeacher(userDetails: User) {
     return this.http.post(`${this.baseUrl}/api/admin/add/teacher`, userDetails);
+  }
+  getUserProfile(email: string): Observable<any> {
+    const params = new HttpParams().set('email', email);
+    return this.http.get<any>(`${this.baseUrl}/api/profile/details`, { params });
+  }
+
+  updateUserProfile(updateUser: UserDTO) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    return this.http.put(`${this.baseUrl}/api/profile/update`, updateUser, httpOptions);
   }
 }

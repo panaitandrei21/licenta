@@ -1,1 +1,37 @@
-<p>course works!</p>
+<app-nav-bar></app-nav-bar>
+<div class="container mt-5">
+  <!-- Course details -->
+  <div *ngIf="showModuleForm">
+    <app-moduleform [courseId]="courseId"></app-moduleform>
+  </div>
+  <button class="btn btn-primary mt-3" (click)="toggleModuleForm()">Add Module</button>
+
+  <h2 class="mt-4">Course Modules</h2>
+  <div *ngIf="fileStatus.status === 'progress' || fileStatus.status === 'done'" class="progress">
+    <div class="progress-bar progress-bar-animated bg-info" role="progressbar"
+         [style.width.%]="fileStatus.percent"
+         [attr.aria-valuenow]="fileStatus.percent"
+         aria-valuemin="0" aria-valuemax="100">
+      {{ fileStatus.requestType }} {{ fileStatus.percent }}%
+    </div>
+  </div>
+  <div *ngIf="fileStatus.status === 'done'">
+    <p class="text-success">Operation completed successfully!</p>
+  </div>
+  <div *ngFor="let module of modules" class="card mt-3">
+    <div class="card-header">
+      <h3 class="card-title">{{ module.title }}</h3>
+    </div>
+    <div class="card-body">
+      <p>{{ module.description }}</p>
+      <input type="file" id="file{{module.moduleId}}" (change)="onFileSelected($event, module.moduleId)" style="display: none;">
+      <label for="file{{module.moduleId}}" class="btn btn-primary">Choose File</label>
+      <div *ngFor="let filepath of module.filePath">
+        <a (click)="downloadFile(filepath.filePath)" class="list-group-item list-group-item-success" style="cursor: pointer;">
+          {{filepath.filePath}}
+        </a><br>
+      </div>
+    </div>
+  </div>
+
+</div>

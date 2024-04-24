@@ -1,0 +1,58 @@
+<app-nav-bar></app-nav-bar>
+<form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+  <p-card header="Edit Profile" [style]="{width: '360px'}">
+    <div *ngIf="profileError" class="block p-error">Failed to update profile. Please try again.</div>
+
+    <!-- First Name Field -->
+    <div class="field">
+      <label for="firstName">First Name</label>
+      <input type="text" pInputText formControlName="firstName" class="w-full" placeholder="Enter your first name" />
+      <small *ngIf="profileForm.get('firstName')?.invalid && (profileForm.get('firstName')?.dirty || profileForm.get('firstName')?.touched)" class="block p-error">
+        <div *ngIf="profileForm.get('firstName')?.errors?.['required']">First name is required.</div>
+      </small>
+    </div>
+
+    <!-- Last Name Field -->
+    <div class="field">
+      <label for="lastName">Last Name</label>
+      <input type="text" pInputText formControlName="lastName" class="w-full" placeholder="Enter your last name" />
+      <small *ngIf="profileForm.get('lastName')?.invalid && (profileForm.get('lastName')?.dirty || profileForm.get('lastName')?.touched)" class="block p-error">
+        <div *ngIf="profileForm.get('lastName')?.errors?.['required']">Last name is required.</div>
+      </small>
+    </div>
+
+    <!-- Email Field -->
+    <div class="field">
+      <label for="email">Email</label>
+      <input type="email" pInputText formControlName="email" class="w-full" placeholder="Enter your email" />
+      <small *ngIf="profileForm.get('email')?.invalid && (profileForm.get('email')?.dirty || profileForm.get('email')?.touched)" class="block p-error">
+        <div *ngIf="profileForm.get('email')?.errors?.['required']">Email is required.</div>
+        <div *ngIf="profileForm.get('email')?.errors?.['email']">Enter a valid email.</div>
+      </small>
+    </div>
+
+    <!-- Phone Number Field -->
+    <div class="field">
+      <label for="phoneNumber">Phone Number</label>
+      <input type="text" pInputText formControlName="phoneNumber" class="w-full" placeholder="Enter your phone number" />
+      <small *ngIf="profileForm.get('phoneNumber')?.invalid && (profileForm.get('phoneNumber')?.dirty || profileForm.get('phoneNumber')?.touched)" class="block p-error">
+        <div *ngIf="profileForm.get('phoneNumber')?.errors?.['required']">Phone number is required.</div>
+      </small>
+    </div>
+
+    <!-- Address Fields -->
+    <div class="field">
+      <label>Address</label>
+      <div formGroupName="address">
+        <input type="text" pInputText formControlName="street" class="w-full" placeholder="Street" />
+        <input type="text" pInputText formControlName="city" class="w-full" placeholder="City" />
+        <input type="text" pInputText formControlName="zipCode" class="w-full" placeholder="Zip Code" />
+        <input type="text" pInputText formControlName="country" class="w-full" placeholder="Country" />
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <p-button label="Update Profile" styleClass="w-full" [disabled]="profileForm.invalid" type="submit"></p-button>
+    <p-button label="Cancel" styleClass="w-full" (click)="loadUserProfile()" type="button"></p-button>
+  </p-card>
+</form>

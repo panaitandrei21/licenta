@@ -1,0 +1,10 @@
+create table EMP1 AS
+select ename, empno, sal + nvl(comm, 0) VENIT
+from emp
+where 
+nvl(comm, 0) = 0;
+
+select * from EMP1;
+
+
+drop table EMP1;
