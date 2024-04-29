@@ -1,7 +1,7 @@
 import {UserDTO} from "./user-dto";
 
 export interface Course {
-courseId: string | null;
+courseId: string;
 courseName: string;
 description: string | null;
 
