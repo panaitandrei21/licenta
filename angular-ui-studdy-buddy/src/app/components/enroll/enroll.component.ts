@@ -17,11 +17,10 @@ export class EnrollComponent implements OnInit{
   fetchCourses(): void {
     this.adminService.getAllCourses().subscribe(
       (res) => {
-        this.courses = res as Course[]; // Populate the courses property with the fetched courses
+        this.courses = res as Course[];
       },
       error => {
         console.error('Error fetching courses', error);
-        // Handle errors here, such as displaying an error message to the user
       }
     );
   }
@@ -29,16 +28,14 @@ export class EnrollComponent implements OnInit{
     this.fetchCourses();
   }
   enrollUserInCourse(courseId: string | null) {
-    // Assuming you have a method in your adminService to handle enrollment
     console.log(courseId)
     this.adminService.enrollUser(this.data.userId[0], courseId).subscribe(
       (response) => {
         console.log('User enrolled successfully', response);
-        this.dialogRef.close(true); // Close the dialog and indicate success
+        this.dialogRef.close(true);
       },
       (error) => {
         console.log('Error enrolling user', error);
-        // Handle error case
       }
     );
   }

@@ -36,10 +36,14 @@ public class UserService {
         User existingUser = userRepository.findByEmail(updatedUser.getEmail());
 
         if (existingUser != null) {
-            existingUser.setFirstName(updatedUser.getFirstName());
-            existingUser.setLastName(updatedUser.getLastName());
-            existingUser.setEmail(updatedUser.getEmail());
-            System.out.println(existingUser);
+            if (!existingUser.getEmail().equals(updatedUser.getFirstName()))
+                existingUser.setFirstName(updatedUser.getFirstName());
+            if (!existingUser.getLastName().equals(updatedUser.getLastName()))
+                existingUser.setLastName(updatedUser.getLastName());
+            if (!existingUser.getEmail().equals(updatedUser.getEmail()))
+                existingUser.setEmail(updatedUser.getEmail());
+            if (!existingUser.getRole().equals(updatedUser.getRole()))
+                existingUser.setRole(updatedUser.getRole());
             userRepository.save(existingUser);
 
             return "User updated succesfully";
@@ -47,4 +51,5 @@ public class UserService {
             return "User was not updated";
         }
     }
+
 }

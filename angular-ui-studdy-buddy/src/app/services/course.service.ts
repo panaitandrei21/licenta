@@ -8,6 +8,7 @@ import {Observable} from "rxjs";
 export class CourseService {
 
   private baseUrl = 'http://localhost:8080';
+  // private baseUrl = 'http://panaitandrei21.go.ro:8080';
 
   constructor(private http: HttpClient) { }
 
@@ -24,10 +25,11 @@ export class CourseService {
     const params = new HttpParams().set('courseId', courseId);
     return this.http.get(url, { params });
   }
-  uploadFile(file: File, moduleId: string): Observable<any> {
+  uploadFile(file: File, moduleId: string, courseId: string): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('moduleId', moduleId);
+    formData.append('courseId', courseId); // Include courseId in the FormData
 
     const url = `${this.baseUrl}/api/course/upload`;
     return this.http.post(url, formData, {
@@ -35,7 +37,8 @@ export class CourseService {
       observe: 'events'
     });
   }
-  downloadFile(filename: String): Observable<any> {
+
+  downloadFile(filename: String, courseId: String): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/course/download/${filename}`, {
       observe: 'response',
       responseType: 'blob' as 'json',

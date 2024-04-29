@@ -1,0 +1,93 @@
+--sa se selecteze toti angajatii care nu fac parte din departamentul research afisand numele ang
+--numele sefului sau, gradul sau salarial si venitul sau.
+
+SELECT e.ENAME, m.ENAME AS MANAGER_NAME, s.GRADE, e.SAL
+FROM emp e
+JOIN emp m ON e.MGR = m.EMPNO
+JOIN salgrade s ON e.SAL BETWEEN s.LOSAL AND s.HISAL
+JOIN dept d ON e.DEPTNO = d.DEPTNO
+WHERE d.DNAME != 'RESEARCH'
+ORDER BY e.ENAME;
+
+
+SELECT a.ename, b.ename, c.grade, a.sal + NVL(a.comm, 0) AS venit
+FROM emp a 
+JOIN emp b ON a.mgr = b.empno
+JOIN salgrade c ON a.sal BETWEEN c.losal AND c.hisal
+WHERE a.deptno NOT IN (SELECT deptno FROM dept WHERE dname = 'RESEARCH');
+
+--sa se afiseze toti angajatii din departamentul sales care castiga mai mult decat media veniturilor
+--din departamentul sales
+
+select a.ename, a.sal + nvl(a.comm, 0) venit
+from emp a
+where
+a.deptno = (select deptno from dept where dname = 'SALES')
+and sal > (select avg(sal) from emp where deptno = (select deptno from dept where dname = 'SALES'));
+
+--pentru toti angajatii care au venit in firma dupa cel mai vechi angajat din accounting sa se 
+--afiseze numele angajatului, denumire departament din care face parte si data angajarii.
+
+SELECT e.ename, d.dname, e.hiredate
+FROM emp e
+JOIN dept d ON e.deptno = d.deptno
+WHERE e.hiredate > (SELECT MIN(hiredate) FROM emp WHERE deptno = (SELECT deptno FROM dept WHERE dname = 'ACCOUNTING'));
+
+--pentru toti angajatii care castiga mai mult decat media veniturilor din departamentul lor sa se afiseze
+--numele ang denumirea departement si venitul angajatului
+
+
+SELECT a.ename, b.dname, a.sal + NVL(a.comm, 0) AS venit
+FROM emp a
+JOIN dept b ON a.deptno = b.deptno
+WHERE a.sal + NVL(a.comm, 0) > (
+  SELECT AVG(c.sal + NVL(c.comm, 0))
+  FROM emp c
+  WHERE c.deptno = a.deptno
+);
+
+--sa se selecteze pentru fiecare departament denumirea sa numele caruia castiga cel mai mult in acel departament
+--si venitul acestuia 
+SELECT d.dname, e.ename, e.sal + NVL(e.comm, 0) venit
+FROM dept d
+JOIN (
+  SELECT deptno, MAX(sal + NVL(comm, 0)) max_sal
+  FROM emp
+  GROUP BY deptno
+) max_salaries ON d.deptno = max_salaries.deptno
+JOIN emp e ON d.deptno = e.deptno AND e.sal + NVL(e.comm, 0) = max_salaries.max_sal;
+
+select a.ename, a.sal 
+from emp a
+where
+4 = (select count(distinct b.sal) from emp b where b.sal > a.sal);
+
+--sa se selecteze angajatii care fac parte din departamentul SALES si care au salariile nr 2 si 3 din acest departament
+
+SELECT a.ename, a.sal 
+FROM emp a
+WHERE 4 >= (
+  SELECT COUNT(DISTINCT b.sal)
+  FROM emp b
+  WHERE b.sal > a.sal
+);
+
+--pentru toti angajatii care castiga mai mult decat sefii lor sa se afiseze numele ang numele sefului si
+--salariul max din firma 
+
+
+--pentru toti angajatii care au venit in firma dupa 'BLAKE' sa se selecteze numele ang denumire departament
+--salariul sau, venitul lui blake si denumirea departamentului lui blake
+
+select a.ename, b.dname, a.sal,
+from emp a, dept b, (select c.hiredate, c.sal + nvl(c.comm) venit, d.dname from emp c )
+
+--sa se afiseze toti angajatii departamentelor sales si research care au venit in firma cu cel puti inainte
+--de seful lor direct afisand pt fiecare angajat urmatoarele nume angajat nume sef, data angajarii angajatului
+--data angajarii sefului, numar intreg de luni dintre cele 2 date, traducerea denumirii departamentului,
+--salariul maxim din firma
+
+--pentru fiecare angajat care nu face parte din departamentul angajatului cu cel mai mic salariu din firma
+--si nu a venit in firma in luna februarie indiferent de an selectati numele denumirea departamentului
+--din care face parte numele sefului, luna angajarii, diferenta dintre venitul sefului si venitul sau si gradul salarial 
+--al angajatului

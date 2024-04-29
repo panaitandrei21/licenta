@@ -50,7 +50,8 @@ public class CourseController {
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("moduleId") String moduleId) throws IOException {
+            @RequestParam("moduleId") String moduleId,
+            @RequestParam("courseId") String courseId) throws IOException {
 
         String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         if (filename.contains("..")) {
@@ -58,19 +59,20 @@ public class CourseController {
         }
 
         try {
-            Path targetLocation = DIRECTORY.resolve(filename);
+            String uniqueFilename = courseId + "_" + filename;
+            Path targetLocation = DIRECTORY.resolve(uniqueFilename);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
             String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/download/")
-                    .path(filename)
+                    .path(uniqueFilename)
                     .toUriString();
-            System.out.println(fileDownloadUri);
+
             Optional<Module> optionalModule = moduleService.getModuleByModuleId(moduleId);
             if (optionalModule.isPresent()) {
                 Module module = optionalModule.get();
                 FileDescriptions fileDescriptions = descriptionsService.saveFileDescription(FileDescriptions.builder()
-                        .filePath(filename)
+                        .filePath(uniqueFilename)
                         .module(module)
                         .build());
                 module.getFilePath().add(fileDescriptions);

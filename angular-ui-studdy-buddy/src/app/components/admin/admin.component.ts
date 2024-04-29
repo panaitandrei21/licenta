@@ -1,17 +1,16 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {MessageService} from "primeng/api";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {UserDTO} from "../../interfaces/user-dto";
-import {ColDef, createGrid, GridApi, GridOptions} from 'ag-grid-community';
+import {GridApi, GridOptions} from 'ag-grid-community';
 import {AdminService} from "../../services/admin.service";
-import {Observable} from "rxjs";
 import {Course} from "../../interfaces/course";
 import {MatDialog} from "@angular/material/dialog";
 import {EnrollComponent} from "../enroll/enroll.component";
-import { ChangeDetectorRef } from '@angular/core';
+import {SeeUserCoursesComponent} from "../see-user-courses/see-user-courses.component";
 
 @Component({
   selector: 'app-admin',
@@ -26,23 +25,23 @@ export class AdminComponent implements OnInit {
   gridOptions: GridOptions<UserDTO> = {
     columnDefs: [
       { field: "id", checkboxSelection: true, headerCheckboxSelection: true},
-      { field: "firstName", filter: true},
-      { field: "lastName", filter: true },
-      { field: "email", filter: true },
-      { field: "role", filter: true },
+      { field: "firstName", filter: true, editable: true },
+      { field: "lastName", filter: true, editable: true },
+      { field: "email", filter: true, editable: true },
+      { field: "role", filter: true, editable: true },
     ],
     rowSelection: "multiple",
-    onRowSelected: event => this.getSelectedRows(), // Add this line
+    onRowSelected: event => this.getSelectedRows(),
+    onCellValueChanged: event => this.handleCellValueChange(event),
   };
   openDialog(): void {
     const dialogRef = this.dialog.open(EnrollComponent, {
-      width: '250px',
-      data: { userId: this.selectedData?.map(value => value.id) } // Pass the selected user ID to the dialog
+      width: 'fit-content',
+      data: { userId: this.selectedData?.map(value => value.id) }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
-      // Handle the dialog close event and result here, such as refreshing data or showing a message
     });
   }
 
@@ -66,8 +65,7 @@ export class AdminComponent implements OnInit {
     private router: Router,
     private msgService: MessageService,
     private adminService: AdminService,
-               public dialog: MatDialog,
-               private cdr: ChangeDetectorRef
+    public dialog: MatDialog
   ) { }
   ngOnInit(): void {
     this.fetchUsers();
@@ -75,7 +73,7 @@ export class AdminComponent implements OnInit {
   fetchUsers(): void {
     this.adminService.getTeachers().subscribe(res => {
       this.users = res as UserDTO[];
-      this.gridApi.refreshCells(); // Method to refresh the grid, if necessary.
+      this.gridApi.refreshCells();
     });
   }
 
@@ -105,6 +103,13 @@ export class AdminComponent implements OnInit {
   get lastName() {
     return this.registerForm.controls['lastName'];
   }
+  get courseName() {
+    return this.courseForm.get('courseName');
+  }
+
+  get category() {
+    return this.courseForm.get('category');
+  }
   registerTeacher() {
     if (this.registerForm.valid) {
       const { email, password, lastName, firstName } = this.registerForm.value;
@@ -118,7 +123,7 @@ export class AdminComponent implements OnInit {
       this.authService.addTeacher(user).subscribe(
         (response: any) => {
           console.log(response);
-          this.fetchUsers(); // Refresh the user list
+          this.fetchUsers();
         },
         (error) => {
           this.msgService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong' });
@@ -131,14 +136,14 @@ export class AdminComponent implements OnInit {
   deleteUser() {
     this.adminService.deleteUsers(this.selectedData as UserDTO[]).subscribe(res => {
       console.log(res);
-      this.fetchUsers(); // Refresh the user list
+      this.fetchUsers();
     });
   }
 
   onCreateCourse() {
-    if (this.courseForm.valid) { // Check if the form is valid
+    if (this.courseForm.valid) {
       const courseData: Course = {
-        courseId: null,
+        courseId: '',
         courseName: this.courseForm.value.courseName!,
         description: this.courseForm.value.description!,
         category: this.courseForm.value.category!
@@ -147,9 +152,40 @@ export class AdminComponent implements OnInit {
       this.adminService.createCourse(courseData).subscribe(
         response => {
           console.log(response);
-           // Handle successful course creation (e.g., display a success message or redirect)
         }
       );
     }
   }
+
+  getCoursesForUserSelected() {
+    if (this.selectedData && this.selectedData.length > 0) {
+      const selectedUser = this.selectedData[0];
+      const dialogRef = this.dialog.open(SeeUserCoursesComponent, {
+        width: 'fit-content',
+        data: { user: selectedUser }
+      });
+      console.log(dialogRef)
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed', result);
+      });
+    }
+  }
+
+  handleCellValueChange(event: any) {
+    if (event.newValue !== event.oldValue) {
+      this.adminService.updateUser(event.data).subscribe(
+        response => {
+          console.log('Update successful', response);
+          this.msgService.add({severity: 'success', summary: 'Success', detail: 'User updated successfully'});
+        },
+        error => {
+          console.log('Update failed', error);
+          this.msgService.add({severity: 'error', summary: 'Error', detail: 'Update failed'});
+        }
+      );
+      console.log(event.newValue)
+    }
+  }
+
 }

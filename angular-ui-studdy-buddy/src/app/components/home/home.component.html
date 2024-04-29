@@ -3,15 +3,11 @@
 <div class="container mt-3">
   <div class="row">
     <div class="col-12">
-      <p>Home works!</p>
-    </div>
-    <div class="col-12">
       <div class="course-grid row">
         <div *ngFor="let course of courses" class="col-md-4 mb-4">
-          <div class="card" [routerLink]="['/course', course.courseId]"> <!-- course.id should be the unique identifier -->
+          <div class="card" [routerLink]="['/course', course.courseId]" style="cursor: pointer;">
             <div class="card-body">
               <h5 class="card-title">{{ course.courseName }}</h5>
-              <!-- Additional course details -->
             </div>
           </div>
         </div>
@@ -19,4 +15,3 @@
     </div>
   </div>
 </div>
-<img src="/assets/poza_mea.jpg" alt="image">

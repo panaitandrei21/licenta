@@ -12,6 +12,7 @@ import com.licenta.StuddyBuddy.service.EnrollService;
 import com.licenta.StuddyBuddy.service.UserService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,6 +74,31 @@ public class AdminController {
             return ResponseEntity.ok().body("User enrolled successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error enrolling user: " + e.getMessage());
+        }
+    }
+    @PutMapping("/update/user")
+    public ResponseEntity<?> updateUser(@RequestBody UserDTO user) {
+
+        try {
+            userService.updateUserProfile(user);
+            return ResponseEntity.ok().body("User profile updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("User profile updated: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/users/{userId}/courses/{courseId}")
+    public ResponseEntity<?> removeUserFromCourse(@PathVariable String userId, @PathVariable String courseId) {
+        try {
+            int deletedCount = enrollService.removeUserFromCourse(userId, courseId);
+            if (deletedCount > 0) {
+                Map<String, String> response = new HashMap<>();
+                response.put("message", "Course successfully removed from user");
+                return ResponseEntity.ok().body(response);
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No enrollment record found for the specified user and course.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error removing course from user: " + e.getMessage());
         }
     }
 }

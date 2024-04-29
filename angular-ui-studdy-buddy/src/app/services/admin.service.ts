@@ -8,6 +8,7 @@ import {Course} from "../interfaces/course";
 })
 export class AdminService {
   private baseUrl = 'http://localhost:8080';
+  // private baseUrl = 'http://panaitandrei21.go.ro:8080';
 
   constructor(private http: HttpClient) { }
   getTeachers() {
@@ -32,6 +33,14 @@ export class AdminService {
   enrollUser(userId: string, courseId: string | null) {
     const requestBody = { userId, courseId };
     console.log(requestBody)
-    return this.http.post(`${this.baseUrl}/api/admin/enroll-user-to-course`, requestBody)
+    return this.http.post(`${this.baseUrl}/api/admin/enroll-user-to-course`, requestBody);
+  }
+
+  updateUser(user: UserDTO) {
+    return this.http.put(`${this.baseUrl}/api/admin/update/user`, user);
+  }
+
+  removeUserFromCourse(courseId: string, userId: string) {
+    return this.http.delete(`${this.baseUrl}/api/admin/users/${userId}/courses/${courseId}`);
   }
 }

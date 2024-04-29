@@ -15,7 +15,7 @@ export class AuthService {
 
   private readonly TOKEN_NAME = 'studdyBuddy_token';
   private baseUrl = 'http://localhost:8080';
-
+  //   private baseUrl = 'http://panaitandrei21.go.ro:8080';
   constructor(private http: HttpClient) {
     this._isLoggedIn$.next(!!this.token);
     this.user = this.getUser(this.token);

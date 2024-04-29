@@ -20,11 +20,12 @@ import {authInterceptor} from "./components/interceptors/auth.interceptor";
 import {AgGridAngular} from "ag-grid-angular";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { EnrollComponent } from './components/enroll/enroll.component';
-import {MatListModule, MatListOption, MatSelectionList} from "@angular/material/list";
+import {MatList, MatListItem, MatListModule, MatListOption, MatSelectionList} from "@angular/material/list";
 import { CourseComponent } from './components/course/course.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ModuleformComponent } from './components/moduleform/moduleform.component';
+import { SeeUserCoursesComponent } from './components/see-user-courses/see-user-courses.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { ModuleformComponent } from './components/moduleform/moduleform.componen
     CourseComponent,
     NavBarComponent,
     ProfileComponent,
-    ModuleformComponent
+    ModuleformComponent,
+    SeeUserCoursesComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +54,9 @@ import { ModuleformComponent } from './components/moduleform/moduleform.componen
     DropdownModule,
     AgGridAngular,
     MatSelectionList,
-    MatListOption
+    MatListOption,
+    MatList,
+    MatListItem
   ],
   providers: [
     provideClientHydration(),

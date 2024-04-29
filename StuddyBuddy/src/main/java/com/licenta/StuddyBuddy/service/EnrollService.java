@@ -29,4 +29,8 @@ public class EnrollService {
     public List<Course> getCoursesForUser(String userEmail) {
         return enrollRepository.findCoursesByUserEmail(userEmail);
     }
+
+    public int removeUserFromCourse(String userId, String courseId) {
+        return enrollRepository.deleteByUserIdAndCourseId(userId, courseId);
+    }
 }

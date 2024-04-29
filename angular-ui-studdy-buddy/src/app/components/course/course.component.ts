@@ -45,14 +45,14 @@ export class CourseComponent implements OnInit{
   onFileSelected(event: any, moduleId: string): void {
     const file: File = event.target.files[0];
     if (file) {
-      this.courseService.uploadFile(file, moduleId).subscribe(event => {
+      this.courseService.uploadFile(file, moduleId, this.courseId).subscribe(event => {
         this.resportProgress(event);
       }, error => console.error('Error uploading file!', error));
     }
   }
 
   downloadFile(filename: string) {
-    this.courseService.downloadFile(filename).subscribe(
+    this.courseService.downloadFile(filename, this.courseId).subscribe(
       event => {
         this.resportProgress(event);
       },
@@ -104,4 +104,11 @@ export class CourseComponent implements OnInit{
     this.fileStatus.percent = Math.round(100 * loaded / total);
   }
 
+  editModule(module: any) {
+
+  }
+
+  deleteModule(module: any) {
+
+  }
 }
