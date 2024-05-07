@@ -1,7 +1,0 @@
---Sa se creeze o tabela numita ultimii_veniti care sa contina in ea toti angajatii care au venit ultimii in
---firma in departamentul lor, nu se va tine cont de angajatii care au venit in firma in lunile de primavara
---creeati aceasta tabela, cu ajutorul lui alter table adaugati constrangeri de cheie primara pe tabela si 
---adaugati coloana venit, adaugati alta constrangele pe coloana sal, constrangere de tip check care sa impuna
---ca valorile de pe coloana sal sa fie <= 7000, cu un update actualizati coloana venit pentru toti angajatii
---calculand acolo venitul lor, apoi incercati sa introduceti inca o inregistrare in care sall sa fie 7500 si in final
---drop tabela ultimii veniti

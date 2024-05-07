@@ -61,7 +61,7 @@ public class ModuleService {
 
     public String editModule(ModuleResponse moduleResponse) throws Exception {
         Optional<Module> optionalModule = moduleRepository.findById(moduleResponse.getModuleId());
-        if (!optionalModule.isPresent()) {
+        if (optionalModule.isEmpty()) {
             throw new Exception("Module not found");
         }
         Module module = optionalModule.get();
@@ -71,7 +71,7 @@ public class ModuleService {
         return "Module updated Succesfully";
     }
     @Transactional
-    public void deleteModule(String moduleId) {
+    public void deleteModule(String moduleId) throws Exception {
         descriptionsService.deleteFileDescriptions(moduleId);
         moduleRepository.deleteById(moduleId);
     }

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpEvent, HttpEventType} from "@angular/common/http";
 import {CourseService} from "../../services/course.service";
 import {ActivatedRoute} from "@angular/router";
-import {ModuleRequest} from "../../interfaces/module-request";
+import {FilePath, ModuleRequest} from "../../interfaces/module-request";
 import { saveAs } from 'file-saver'; // First, install file-saver using `npm install file-saver`
 
 @Component({
@@ -50,7 +50,22 @@ export class CourseComponent implements OnInit{
     if (file) {
       this.courseService.uploadFile(file, moduleId, this.courseId).subscribe(event => {
         this.resportProgress(event);
+
+        if (event.type === HttpEventType.Response) {
+          this.updateModuleFiles(moduleId, event.body);
+        }
+
       }, error => console.error('Error uploading file!', error));
+    }
+  }
+
+  private updateModuleFiles(moduleId: string, moduleData: ModuleRequest): void {
+    let index = this.modules.findIndex(mod => mod.moduleId === moduleId);
+    if (index !== -1) {
+      this.modules[index] = moduleData;
+    } else {
+      // Optionally handle the case where the module isn't found
+      console.error('Module not found:', moduleId);
     }
   }
 
@@ -76,7 +91,6 @@ export class CourseComponent implements OnInit{
         this.fileStatus.requestType = 'Completed';
 
         if (httpEvent.body instanceof Blob) {
-          // Handling Blob for downloads
           const filename = httpEvent.headers.get('File-Name')?.valueOf();
           console.log(filename);
           saveAs(new File([httpEvent.body!], httpEvent.headers.get('File-Name')!,
@@ -124,7 +138,23 @@ export class CourseComponent implements OnInit{
     });
   }
 
-  deleteFile(moduleId: any, filePath: string, i: number) {
-
+  deleteFile(filePath: FilePath, moduleId: string) {
+    this.courseService.deleteFile(filePath.fileDescriptionsId).subscribe(
+      {
+        next: (res) => {
+          const module = this.modules.find(m => m.moduleId === moduleId);
+          if (module) {
+            const index = module.filePath.findIndex(f => f.fileDescriptionsId === filePath.fileDescriptionsId);
+            if (index !== -1) {
+              module.filePath.splice(index, 1);
+            }
+          }
+          console.log('File deleted successfully', res);
+        },
+        error: (error) => {
+          console.error('Failed to delete module:', error);
+        }
+      }
+    );
   }
 }

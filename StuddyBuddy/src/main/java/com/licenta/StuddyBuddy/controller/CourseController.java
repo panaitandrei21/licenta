@@ -79,11 +79,11 @@ public class CourseController {
                         .module(module)
                         .build());
                 module.getFilePath().add(fileDescriptions);
-                moduleService.saveModule(module);
-                Map<String, String> response = new HashMap<>();
-                response.put("message", "File uploaded successfully");
-                response.put("fileUri", fileDownloadUri);
-                return ResponseEntity.ok().body(response);
+                Module updatedModule = moduleService.saveModule(module);
+//                Map<String, String> response = new HashMap<>();
+//                response.put("message", "File uploaded successfully");
+//                response.put("fileUri", fileDownloadUri);
+                return ResponseEntity.ok().body(updatedModule);
             } else {
                 return ResponseEntity.notFound().header("Module with ID " + moduleId + " not found!").build();
             }
@@ -99,8 +99,7 @@ public class CourseController {
         return ResponseEntity.ok().body(response);
     }
     @GetMapping("/get/modules")
-    public ResponseEntity<?> getAllModules(@RequestParam String courseId) throws ChangeSetPersister.NotFoundException {
-
+    public ResponseEntity<?> getAllModules(@RequestParam String courseId) {
         return ResponseEntity.ok().body(moduleService.getAllModules(courseId));
     }
 
@@ -124,8 +123,16 @@ public class CourseController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
     @DeleteMapping("/delete/module/{moduleId}")
-    public ResponseEntity<?> deleteModule(@PathVariable String moduleId) {
+    public ResponseEntity<?> deleteModule(@PathVariable String moduleId) throws Exception {
         moduleService.deleteModule(moduleId);
+        Map<String, String> response = new HashMap<>();
+        response.put("response", "Module deleted succesfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/delete/file/{fileId}")
+    public ResponseEntity<?> deleteFile(@PathVariable String fileId) throws Exception {
+        descriptionsService.deleteFileDescription(fileId);
         Map<String, String> response = new HashMap<>();
         response.put("response", "Module deleted succesfully");
         return ResponseEntity.ok(response);

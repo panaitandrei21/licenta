@@ -66,4 +66,8 @@ export class CourseService {
   deleteModule(moduleId: string) {
     return this.http.delete(`${this.baseUrl}/api/course/delete/module/${moduleId}`);
   }
+
+  deleteFile(fileDescriptionsId: string) {
+    return this.http.delete(`${this.baseUrl}/api/course/delete/file/${fileDescriptionsId}`);
+  }
 }

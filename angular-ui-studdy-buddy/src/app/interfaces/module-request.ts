@@ -15,6 +15,6 @@ export interface Module {
 
 }
 export interface FilePath {
-  fipeDescriptionsId: string;
+  fileDescriptionsId: string;
   filePath: string;
 }

@@ -14,10 +14,6 @@ import com.licenta.StuddyBuddy.dto.AuthenticationRequest;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-    @GetMapping("/bunaandreea")
-    public String bunaAndreea() {
-        return "Buna cea mai frumoasa fata din lumee. Eu tu inima";
-    }
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> login(
             @RequestBody RegisterRequest request

@@ -34,7 +34,7 @@
         <a (click)="downloadFile(filepath.filePath)" class="link" style="cursor: pointer;">
           {{ filepath.filePath | removeUUID }}
         </a>
-        <button class="btn btn-outline-danger btn-sm" (click)="deleteFile(module.moduleId, filepath.filePath, i)">
+        <button class="btn btn-outline-danger btn-sm" (click)="deleteFile(filepath, module.moduleId)">
           <i class="bi bi-trash"></i>
         </button>
       </div>
