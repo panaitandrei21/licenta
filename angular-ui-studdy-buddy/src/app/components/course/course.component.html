@@ -21,7 +21,6 @@
     <p class="text-success">Operation completed successfully!</p>
   </div>
 
-  <!-- Module Cards -->
   <div *ngFor="let module of modules" class="card mt-3">
     <div class="card-header">
       <h3 class="card-title">{{ module.title }}</h3>
@@ -30,13 +29,16 @@
       <p>{{ module.description }}</p>
       <input type="file" id="file{{module.moduleId}}" (change)="onFileSelected($event, module.moduleId)" style="display: none;">
       <label for="file{{module.moduleId}}" class="btn btn-primary">Choose File</label>
-      <div *ngFor="let filepath of module.filePath">
+      <div *ngFor="let filepath of module.filePath; let i = index" class="d-flex justify-content-between align-items-center mt-2">
         <a (click)="downloadFile(filepath.filePath)" class="link" style="cursor: pointer;">
           {{filepath.filePath}}
-        </a><br>
+        </a>
+        <button class="btn btn-outline-danger btn-sm" (click)="deleteFile(module.moduleId, filepath.filePath, i)">
+          <i class="bi bi-trash"></i>
+        </button>
       </div>
       <div class="card-footer d-flex justify-content-end">
-        <button class="btn btn-info mr-2" (click)="editModule(module)">Edit</button>
+        <button class="btn btn-info mr-2" [routerLink]="['/edit/module', module.moduleId]" (click)="editModule(module)">Edit</button>
         <button class="btn btn-danger" (click)="deleteModule(module)">Delete</button>
       </div>
     </div>

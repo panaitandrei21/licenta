@@ -29,8 +29,11 @@ export class CourseComponent implements OnInit{
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.courseId = params['id']; // 'id' must match the name of the parameter in the route configuration
-      // this.loadCourseDetails();
+      const id = params['id'];
+      this.courseService.setCurrentCourseId(id);
+    });
+    this.route.params.subscribe(params => {
+      this.courseId = params['id'];
       this.loadModules();
     });
   }
@@ -108,7 +111,20 @@ export class CourseComponent implements OnInit{
 
   }
 
-  deleteModule(module: any) {
+  deleteModule(module: ModuleRequest): void {
+    this.courseService.deleteModule(module.moduleId).subscribe({
+      next: (response) => {
+        console.log('Module deleted:', response);
+
+        this.modules = this.modules.filter(m => m.moduleId !== module.moduleId);
+      },
+      error: (error) => {
+        console.error('Failed to delete module:', error);
+      }
+    });
+  }
+
+  deleteFile(moduleId: any, filePath: string, i: number) {
 
   }
 }

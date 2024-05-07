@@ -26,6 +26,7 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ModuleformComponent } from './components/moduleform/moduleform.component';
 import { SeeUserCoursesComponent } from './components/see-user-courses/see-user-courses.component';
+import { EditModuleComponent } from './components/edit-module/edit-module.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { SeeUserCoursesComponent } from './components/see-user-courses/see-user-
     NavBarComponent,
     ProfileComponent,
     ModuleformComponent,
-    SeeUserCoursesComponent
+    SeeUserCoursesComponent,
+    EditModuleComponent
   ],
   imports: [
     BrowserModule,

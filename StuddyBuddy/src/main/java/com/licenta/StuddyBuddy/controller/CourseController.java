@@ -1,9 +1,9 @@
 package com.licenta.StuddyBuddy.controller;
 
 import com.licenta.StuddyBuddy.dto.ModuleRequest;
+import com.licenta.StuddyBuddy.dto.ModuleResponse;
 import com.licenta.StuddyBuddy.model.FileDescriptions;
 import com.licenta.StuddyBuddy.model.Module;
-import com.licenta.StuddyBuddy.service.CourseService;
 import com.licenta.StuddyBuddy.service.EnrollService;
 import com.licenta.StuddyBuddy.service.FileDescriptionsService;
 import com.licenta.StuddyBuddy.service.ModuleService;
@@ -23,13 +23,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 import static java.nio.file.Paths.get;
-import static java.nio.file.Files.copy;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 
 @RestController
@@ -39,9 +36,15 @@ public class CourseController {
     public static final Path DIRECTORY = Path.of("upload");
 
     private final EnrollService enrollService;
-    private final CourseService courseService;
     private final ModuleService moduleService;
     private final FileDescriptionsService descriptionsService;
+
+    @PutMapping("/edit/module")
+    public ResponseEntity<?> editModule(@RequestBody ModuleResponse moduleResponse) throws Exception {
+        Map<String, String> response = new HashMap<>();
+        response.put("response", moduleService.editModule(moduleResponse));
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/users/{userEmail}/courses")
     public ResponseEntity<?> getCoursesForUser(@PathVariable String userEmail) {
@@ -51,7 +54,7 @@ public class CourseController {
     public ResponseEntity<?> uploadFile(
             @RequestParam("file") MultipartFile file,
             @RequestParam("moduleId") String moduleId,
-            @RequestParam("courseId") String courseId) throws IOException {
+            @RequestParam("courseId") String courseId) {
 
         String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         if (filename.contains("..")) {
@@ -111,5 +114,18 @@ public class CourseController {
         httpHeaders.add(CONTENT_DISPOSITION, "attachment;File-Name=" + resource.getFilename());
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(Files.probeContentType(filePath)))
                 .headers(httpHeaders).body(resource);
+    }
+    @GetMapping("get/module/{moduleId}")
+    public ResponseEntity<?> getModule(@PathVariable String moduleId) {
+        return moduleService.getModuleByModuleId(moduleId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @DeleteMapping("/delete/module/{moduleId}")
+    public ResponseEntity<?> deleteModule(@PathVariable String moduleId) {
+        moduleService.deleteModule(moduleId);
+        Map<String, String> response = new HashMap<>();
+        response.put("response", "Module deleted succesfully");
+        return ResponseEntity.ok(response);
     }
 }

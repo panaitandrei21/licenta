@@ -38,7 +38,8 @@ public class ModuleService {
         List<Module> modules = moduleRepository.findByCourseCourseId(courseId);
         return modules.stream()
                 .map(this::convertToModuleResponse)
-                .collect(Collectors.toList());    }
+                .collect(Collectors.toList());
+    }
 
     private ModuleResponse convertToModuleResponse(Module module) {
         return new ModuleResponse(
@@ -55,5 +56,21 @@ public class ModuleService {
 
     public Module saveModule(Module module) {
         return moduleRepository.save(module);
+    }
+
+    public String editModule(ModuleResponse moduleResponse) throws Exception {
+        Optional<Module> optionalModule = moduleRepository.findById(moduleResponse.getModuleId());
+        if (!optionalModule.isPresent()) {
+            throw new Exception("Module not found");
+        }
+        Module module = optionalModule.get();
+        module.setTitle(moduleResponse.getTitle());
+        module.setDescription(moduleResponse.getDescription());
+        moduleRepository.save(module);
+        return "Module updated Succesfully";
+    }
+
+    public void deleteModule(String moduleId) {
+        moduleRepository.deleteById(moduleId);
     }
 }

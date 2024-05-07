@@ -7,6 +7,13 @@ export interface ModuleRequest {
 
 }
 
+export interface Module {
+  moduleId: string;
+  title: string;
+  description: string;
+  filePath: FilePath[];
+
+}
 export interface FilePath {
   fipeDescriptionsId: string;
   filePath: string;
