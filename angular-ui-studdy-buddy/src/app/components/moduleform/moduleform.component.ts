@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {CourseService} from "../../services/course.service";
 import {ModuleRequest} from "../../interfaces/module-request";
@@ -12,6 +12,8 @@ export class ModuleformComponent implements OnInit {
   moduleForm!: FormGroup;
   showModuleForm: boolean = false;
   @Input() courseId!: string;
+  @Output() moduleAdded = new EventEmitter<ModuleRequest>();
+
   constructor(private fb: FormBuilder, private courseService: CourseService) { }
 
   ngOnInit(): void {
@@ -21,10 +23,13 @@ export class ModuleformComponent implements OnInit {
     });
   }
   addModule(module: ModuleRequest) {
-    const moduleWithCourseId = {...module, courseId: this.courseId};
+    const moduleWithCourseId = { ...module, courseId: this.courseId };
     this.courseService.addModuleToCourse(moduleWithCourseId).subscribe(
-      res => console.log(res)
-    )
+      (res: ModuleRequest) => {
+        console.log(res);
+        this.moduleAdded.emit(res);
+      }
+    );
   }
   submitModule(): void {
     if (this.moduleForm.valid) {

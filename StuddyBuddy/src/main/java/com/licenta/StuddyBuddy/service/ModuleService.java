@@ -5,6 +5,7 @@ import com.licenta.StuddyBuddy.dto.ModuleResponse;
 import com.licenta.StuddyBuddy.model.Course;
 import com.licenta.StuddyBuddy.model.Module;
 import com.licenta.StuddyBuddy.repository.ModuleRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
@@ -69,8 +70,9 @@ public class ModuleService {
         moduleRepository.save(module);
         return "Module updated Succesfully";
     }
-
+    @Transactional
     public void deleteModule(String moduleId) {
+        descriptionsService.deleteFileDescriptions(moduleId);
         moduleRepository.deleteById(moduleId);
     }
 }

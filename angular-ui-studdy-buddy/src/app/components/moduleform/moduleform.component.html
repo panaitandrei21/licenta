@@ -1,6 +1,3 @@
-<p>moduleform works!</p>
-
-<!-- moduleform.component.html -->
 <div class="popup-container">
   <div class="popup">
     <form [formGroup]="moduleForm" (ngSubmit)="submitModule()">
@@ -13,7 +10,6 @@
           <label for="description">Description</label>
           <textarea pInputTextarea formControlName="description" class="w-full" placeholder="Enter module description"></textarea>
         </div>
-        <!-- Add other fields as needed -->
 
         <p-button label="Add Module" styleClass="w-full" [disabled]="moduleForm.invalid" type="submit"></p-button>
         <p-button label="Cancel" styleClass="w-full" (click)="closePopup()"></p-button>

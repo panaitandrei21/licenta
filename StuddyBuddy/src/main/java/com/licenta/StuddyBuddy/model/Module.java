@@ -20,9 +20,8 @@ public class Module {
 
     private String title;
     private String description;
-    @OneToMany
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FileDescriptions> filePath;
-
     @ManyToOne
     @JsonBackReference
     private Course course;

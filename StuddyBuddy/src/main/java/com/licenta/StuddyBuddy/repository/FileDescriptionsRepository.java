@@ -9,4 +9,7 @@ import java.util.List;
 public interface FileDescriptionsRepository extends JpaRepository<FileDescriptions, String> {
 
     public List<FileDescriptions> findAllByModule(Module module);
+    public List<FileDescriptions> findAllByModule_ModuleId(String moduleId);
+
+
 }

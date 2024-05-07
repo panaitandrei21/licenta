@@ -4,6 +4,7 @@ import com.licenta.StuddyBuddy.model.FileDescriptions;
 import com.licenta.StuddyBuddy.model.Module;
 import com.licenta.StuddyBuddy.repository.FileDescriptionsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,4 +22,12 @@ public class FileDescriptionsService {
     public List<FileDescriptions> getFileDescriptions(Module module) {
         return fileDescriptionsRepository.findAllByModule(module);
     }
+
+    public void deleteFileDescriptions(String moduleId) {
+
+        List<FileDescriptions> files = fileDescriptionsRepository.findAllByModule_ModuleId(moduleId);
+        fileDescriptionsRepository.deleteAll(files);
+
+    }
+
 }

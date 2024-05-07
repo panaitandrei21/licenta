@@ -27,6 +27,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { ModuleformComponent } from './components/moduleform/moduleform.component';
 import { SeeUserCoursesComponent } from './components/see-user-courses/see-user-courses.component';
 import { EditModuleComponent } from './components/edit-module/edit-module.component';
+import { RemoveUUIDPipe } from './pipe/remove-uuid.pipe';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { EditModuleComponent } from './components/edit-module/edit-module.compon
     ProfileComponent,
     ModuleformComponent,
     SeeUserCoursesComponent,
-    EditModuleComponent
+    EditModuleComponent,
+    RemoveUUIDPipe
   ],
   imports: [
     BrowserModule,

@@ -94,7 +94,9 @@ public class CourseController {
     @PostMapping("/add/module")
     public ResponseEntity<?> addModule(@RequestBody ModuleRequest moduleRequest) throws ChangeSetPersister.NotFoundException {
         moduleService.addModuleToCourse(moduleRequest);
-        return ResponseEntity.ok().body("success");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Module added successfully");
+        return ResponseEntity.ok().body(response);
     }
     @GetMapping("/get/modules")
     public ResponseEntity<?> getAllModules(@RequestParam String courseId) throws ChangeSetPersister.NotFoundException {
