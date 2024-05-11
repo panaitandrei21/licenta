@@ -1,11 +1,10 @@
 package com.licenta.StuddyBuddy.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.nio.file.Files;
+import java.sql.Blob;
 import java.util.List;
 
 @Entity
@@ -23,7 +22,8 @@ public class Course {
     private String description;
 
     private String category;
-    private String logo;
+    @Lob
+    private byte[] logo;
 
     @OneToMany(mappedBy = "course")
     @JsonManagedReference

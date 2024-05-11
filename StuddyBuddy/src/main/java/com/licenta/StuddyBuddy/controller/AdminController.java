@@ -5,13 +5,11 @@ import com.licenta.StuddyBuddy.dto.EnrollRequest;
 import com.licenta.StuddyBuddy.dto.RegisterRequest;
 import com.licenta.StuddyBuddy.dto.UserDTO;
 import com.licenta.StuddyBuddy.model.Course;
-import com.licenta.StuddyBuddy.model.Enroll;
 import com.licenta.StuddyBuddy.service.AuthenticationService;
 import com.licenta.StuddyBuddy.service.CourseService;
 import com.licenta.StuddyBuddy.service.EnrollService;
 import com.licenta.StuddyBuddy.service.UserService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

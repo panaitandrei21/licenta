@@ -1,15 +1,15 @@
 <div class="container mt-5">
   <app-nav-bar></app-nav-bar>
 
-  <div *ngIf="showModuleForm">
+  <div *ngIf="showModuleForm && userRole === 'ROLE_TEACHER'">
     <app-moduleform [courseId]="courseId" (moduleAdded)="loadModules()"></app-moduleform>
   </div>
 
-  <button class="btn btn-primary mt-3" (click)="toggleModuleForm()">
+  <button *ngIf="userRole === 'ROLE_TEACHER'" class="btn btn-primary mt-3" (click)="toggleModuleForm()">
     {{ showModuleForm ? 'Close Module Form' : 'Add Module' }}
   </button>
 
-  <h2 class="mt-4">Course Modules</h2>
+  <h2 class="mt-4">{{courseDetails?.courseName}}</h2>
   <div *ngIf="fileStatus.status === 'progress' || fileStatus.status === 'done'" class="progress">
     <div class="progress-bar progress-bar-animated bg-info" role="progressbar"
          [style.width.%]="fileStatus.percent"
@@ -28,17 +28,17 @@
     </div>
     <div class="card-body">
       <p>{{ module.description }}</p>
-      <input type="file" id="file{{module.moduleId}}" (change)="onFileSelected($event, module.moduleId)" style="display: none;">
-      <label for="file{{module.moduleId}}" class="btn btn-primary">Choose File</label>
+      <input  type="file" id="file{{module.moduleId}}" (change)="onFileSelected($event, module.moduleId)" style="display: none;">
+      <label *ngIf="userRole === 'ROLE_TEACHER'" for="file{{module.moduleId}}" class="btn btn-primary">Choose File</label>
       <div *ngFor="let filepath of module.filePath; let i = index" class="d-flex justify-content-between align-items-center mt-2">
         <a (click)="downloadFile(filepath.filePath)" class="link" style="cursor: pointer;">
           {{ filepath.filePath | removeUUID }}
         </a>
-        <button class="btn btn-outline-danger btn-sm" (click)="deleteFile(filepath, module.moduleId)">
+        <button *ngIf="userRole === 'ROLE_TEACHER'" class="btn btn-outline-danger btn-sm" (click)="deleteFile(filepath, module.moduleId)">
           <i class="bi bi-trash"></i>
         </button>
       </div>
-      <div class="card-footer d-flex justify-content-end">
+      <div *ngIf="userRole === 'ROLE_TEACHER'" class="card-footer d-flex justify-content-end">
         <button class="btn btn-info mr-2" [routerLink]="['/edit/module', module.moduleId]" (click)="editModule(module)">Edit</button>
         <button class="btn btn-danger" (click)="deleteModule(module)">Delete</button>
       </div>

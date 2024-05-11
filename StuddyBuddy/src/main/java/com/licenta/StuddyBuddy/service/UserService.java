@@ -4,7 +4,6 @@ import com.licenta.StuddyBuddy.dto.UserDTO;
 import com.licenta.StuddyBuddy.model.User;
 import com.licenta.StuddyBuddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 

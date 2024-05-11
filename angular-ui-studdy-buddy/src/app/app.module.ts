@@ -20,7 +20,7 @@ import {authInterceptor} from "./components/interceptors/auth.interceptor";
 import {AgGridAngular} from "ag-grid-angular";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { EnrollComponent } from './components/enroll/enroll.component';
-import {MatList, MatListItem, MatListModule, MatListOption, MatSelectionList} from "@angular/material/list";
+import {MatList, MatListItem, MatListOption, MatSelectionList} from "@angular/material/list";
 import { CourseComponent } from './components/course/course.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { ProfileComponent } from './components/profile/profile.component';
@@ -28,6 +28,14 @@ import { ModuleformComponent } from './components/moduleform/moduleform.componen
 import { SeeUserCoursesComponent } from './components/see-user-courses/see-user-courses.component';
 import { EditModuleComponent } from './components/edit-module/edit-module.component';
 import { RemoveUUIDPipe } from './pipe/remove-uuid.pipe';
+import { EditCourseComponent } from './components/edit-course/edit-course.component';
+import { AdminHandleUserComponent } from './components/admin-handle-user/admin-handle-user.component';
+import { AdminHandleCoursesComponent } from './components/admin-handle-courses/admin-handle-courses.component';
+import {MatOption} from "@angular/material/autocomplete";
+import {MatSelect} from "@angular/material/select";
+import {MatToolbar} from "@angular/material/toolbar";
+import { AdminUserCourseDetailsComponent } from './components/admin-user-course-details/admin-user-course-details.component';
+import { AddProblemsComponent } from './components/add-problems/add-problems.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +51,12 @@ import { RemoveUUIDPipe } from './pipe/remove-uuid.pipe';
     ModuleformComponent,
     SeeUserCoursesComponent,
     EditModuleComponent,
-    RemoveUUIDPipe
+    RemoveUUIDPipe,
+    EditCourseComponent,
+    AdminHandleUserComponent,
+    AdminHandleCoursesComponent,
+    AdminUserCourseDetailsComponent,
+    AddProblemsComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,7 +73,10 @@ import { RemoveUUIDPipe } from './pipe/remove-uuid.pipe';
     MatSelectionList,
     MatListOption,
     MatList,
-    MatListItem
+    MatListItem,
+    MatOption,
+    MatSelect,
+    MatToolbar,
   ],
   providers: [
     provideClientHydration(),

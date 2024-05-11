@@ -13,7 +13,6 @@ import {AdminService} from "../../services/admin.service";
 export class SeeUserCoursesComponent implements OnInit {
   user: UserDTO = this.data.user;
   courses: Course[] = [];
-
   constructor(private courseService: CourseService,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private adminService: AdminService) {}

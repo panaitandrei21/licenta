@@ -1,150 +1,31 @@
-<form [formGroup]="registerForm" (ngSubmit)="registerTeacher()">
-  <p-card header="Add User" [style]="{ width: '800px' }">
-    <div class="field">
-      <label for="firstName">FirstName</label>
-      <input
-        type="text"
-        pInputText
-        formControlName="firstName"
-        class="w-full"
-        name="firstName"
-        placeholder="Type your name"
-      />
-      <small
-        *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
-        class="block p-error"
-      >
-        <div *ngIf="firstName.errors?.['required']">Name is required.</div>
-      </small>
-    </div>
-    <div class="field">
-      <label for="lastName">Last name</label>
-      <input
-        type="text"
-        pInputText
-        formControlName="lastName"
-        class="w-full"
-        name="lastName"
-        placeholder="Type your name"
-      />
-      <small
-        *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)"
-        class="block p-error">
-        <div *ngIf="lastName.errors?.['required']">Name is required.</div>
-      </small>
-    </div>
-    <div class="field">
-      <label for="email">Email</label>
-      <input
-        type="text"
-        pInputText
-        formControlName="email"
-        class="w-full"
-        name="email"
-        placeholder="Type your email"
-      />
-      <small
-        *ngIf="email.invalid && (email.dirty || email.touched)"
-        class="block p-error"
-      >
-        <div *ngIf="email.errors?.['required']">Email is required.</div>
-        <div *ngIf="email.errors?.['email']">Email should be valid</div>
-      </small>
-    </div>
-    <div class="field">
-      <label for="password">Password</label>
-      <input
-        type="password"
-        pInputText
-        formControlName="password"
-        class="w-full"
-        name="password"
-        placeholder="Type your password"
-      />
-      <small
-        *ngIf="password.invalid && (password.dirty || password.touched)"
-        class="block p-error"
-      >
-        <div *ngIf="password.errors?.['required']">Password is required.</div>
-      </small>
-    </div>
-    <p-button
-      label="Register user"
-      styleClass="w-full"
-      [disabled]="registerForm.invalid"
-      type="submit"
-    ></p-button>
+<app-nav-bar></app-nav-bar>
 
-
-
-  </p-card>
-</form>
-<ag-grid-angular
-  [rowData]="users"
-  [gridOptions]="gridOptions"
-  class="ag-theme-quartz"
-  style="height: 80vh;"
-  (gridReady)="onGridReady($event)">
-</ag-grid-angular>
-<button pButton type="button" label="Delete" icon="pi pi-trash" class="p-button-danger me-3" (click)="deleteUser()" [disabled]="!selectedData || selectedData.length === 0"></button>
-
-<button pButton type="button" label="Enroll to course" icon="pi pi-sign-in" class="p-button me-3" (click)="openDialog()" [disabled]="!selectedData || selectedData.length === 0"></button>
-
-<button pButton type="button" label="See courses for selected user" icon="pi pi-search" class="p-button me-3" (click)="getCoursesForUserSelected()" [disabled]="!selectedData || selectedData.length === 0"></button>
-
-<form [formGroup]="courseForm" (ngSubmit)="onCreateCourse()">
-  <p-card header="Create Course" [style]="{ width: '800px' }">
-    <div class="field">
-      <label for="courseName">Course Name:</label>
-      <input
-        type="text"
-        pInputText
-        formControlName="courseName"
-        class="w-full"
-        name="courseName"
-        placeholder="Enter course name"
-      />
-      <small
-        *ngIf="courseName?.invalid && (courseName?.dirty || courseName?.touched)"
-        class="block p-error"
-      >
-        <div *ngIf="courseName?.errors?.['required']">Course name is required.</div>
-      </small>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 py-4 ml-4" >
+      <div class="mt-4">
+        <button class="btn btn-primary w-100 mb-3 ml-8" (click)="selectedOption = 'courses'">Courses</button>
+        <button class="btn btn-primary w-100 mb-3 ml-8" (click)="selectedOption = 'users'">Add Users</button>
+        <button class="btn btn-primary w-100 mb-3 ml-8" (click)="selectedOption = 'handle-users'">Handle Users</button>
+        <button class="btn btn-primary w-100 ml-8" (click)="selectedOption = 'add-problems'">Add Problems</button>
+      </div>
     </div>
-    <div class="field">
-      <label for="description">Description:</label>
-      <textarea
-        id="description"
-        pInputTextarea
-        formControlName="description"
-        class="w-full"
-        name="description"
-        placeholder="Enter course description"
-      ></textarea>
-    </div>
-    <div class="field">
-      <label for="category">Category:</label>
-      <input
-        type="text"
-        pInputText
-        formControlName="category"
-        class="w-full"
-        name="category"
-        placeholder="Enter course category"
-      />
-      <small
-        *ngIf="category?.invalid && (category?.dirty || category?.touched)"
-        class="block p-error"
-      >
-        <div *ngIf="category?.errors?.['required']">Category is required.</div>
-      </small>
-    </div>
-    <p-button
-      label="Create Course"
-      styleClass="w-full"
-      [disabled]="courseForm.invalid"
-      type="submit"
-    ></p-button>
-  </p-card>
-</form>
 
+    <div class="col-md-9 py-4">
+      <div *ngIf="selectedOption === 'courses'">
+        <app-admin-handle-courses></app-admin-handle-courses>
+      </div>
+
+      <div *ngIf="selectedOption === 'users'">
+        <app-admin-handle-user></app-admin-handle-user>
+      </div>
+
+      <div *ngIf="selectedOption === 'handle-users'">
+        <app-admin-user-course-details></app-admin-user-course-details>
+      </div>
+      <div *ngIf="selectedOption === 'handle-users'">
+        <app-add-problems></app-add-problems>
+      </div>
+    </div>
+  </div>
+</div>

@@ -6,5 +6,6 @@ courseName: string;
 description: string | null;
 
 category: string;
+logo?: Blob;
 
 }

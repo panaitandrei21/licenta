@@ -1,10 +1,7 @@
 package com.licenta.StuddyBuddy.dto;
 
 import com.licenta.StuddyBuddy.enums.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder

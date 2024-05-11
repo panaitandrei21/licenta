@@ -1,0 +1,13 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="container mt-3">
+  <h2>Edit Course</h2>
+  <div>
+    <label for="courseImage" class="form-label">Upload Image</label>
+    <input type="file" class="form-control" id="courseImage" (change)="onFileSelect($event)" formControlName="image">
+    <!-- Conditionally display image preview with Bootstrap styling -->
+    <img *ngIf="imagePreview" [src]="imagePreview" class="img-fluid mt-2 rounded" alt="Preview">
+  </div>
+
+  <button class="btn btn-primary mt-3" (click)="saveImage()">Save Image</button>
+</div>

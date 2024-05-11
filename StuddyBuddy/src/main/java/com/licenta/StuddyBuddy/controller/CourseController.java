@@ -1,12 +1,12 @@
 package com.licenta.StuddyBuddy.controller;
 
+import com.licenta.StuddyBuddy.dto.AssignmentDTO;
+import com.licenta.StuddyBuddy.dto.CourseImageDTO;
 import com.licenta.StuddyBuddy.dto.ModuleRequest;
 import com.licenta.StuddyBuddy.dto.ModuleResponse;
 import com.licenta.StuddyBuddy.model.FileDescriptions;
 import com.licenta.StuddyBuddy.model.Module;
-import com.licenta.StuddyBuddy.service.EnrollService;
-import com.licenta.StuddyBuddy.service.FileDescriptionsService;
-import com.licenta.StuddyBuddy.service.ModuleService;
+import com.licenta.StuddyBuddy.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -14,6 +14,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +39,16 @@ public class CourseController {
     private final EnrollService enrollService;
     private final ModuleService moduleService;
     private final FileDescriptionsService descriptionsService;
+    private final CourseService courseService;
+    private final AssignmentService assignmentService;
 
+    @PostMapping("/add/assignment")
+    public ResponseEntity<?> addAssignment(@RequestBody AssignmentDTO assignmentDTO) throws ChangeSetPersister.NotFoundException {
+        assignmentService.addAssignment(assignmentDTO);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Module added successfully");
+        return ResponseEntity.ok().body(response);
+    }
     @PutMapping("/edit/module")
     public ResponseEntity<?> editModule(@RequestBody ModuleResponse moduleResponse) throws Exception {
         Map<String, String> response = new HashMap<>();
@@ -80,9 +90,6 @@ public class CourseController {
                         .build());
                 module.getFilePath().add(fileDescriptions);
                 Module updatedModule = moduleService.saveModule(module);
-//                Map<String, String> response = new HashMap<>();
-//                response.put("message", "File uploaded successfully");
-//                response.put("fileUri", fileDownloadUri);
                 return ResponseEntity.ok().body(updatedModule);
             } else {
                 return ResponseEntity.notFound().header("Module with ID " + moduleId + " not found!").build();
@@ -122,7 +129,12 @@ public class CourseController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+    @GetMapping("get/course/details/{courseId}")
+    public ResponseEntity<?> getCourseDetails(@PathVariable String courseId) {
+        return ResponseEntity.ok(courseService.getCourseByCourseId(courseId));
+    }
     @DeleteMapping("/delete/module/{moduleId}")
+    @Secured("ROLE_TEACHER")
     public ResponseEntity<?> deleteModule(@PathVariable String moduleId) throws Exception {
         moduleService.deleteModule(moduleId);
         Map<String, String> response = new HashMap<>();
@@ -137,4 +149,10 @@ public class CourseController {
         response.put("response", "Module deleted succesfully");
         return ResponseEntity.ok(response);
     }
+    @PostMapping("/photo/{courseId}")
+    public ResponseEntity<?> addPhotoToCourse(@PathVariable String courseId, @RequestParam("imageData") MultipartFile imageData) throws IOException {
+        courseService.updateCourseImage(courseId, imageData);
+        return ResponseEntity.ok("Saved");
+    }
+
 }

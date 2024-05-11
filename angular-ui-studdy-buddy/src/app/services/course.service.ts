@@ -70,4 +70,12 @@ export class CourseService {
   deleteFile(fileDescriptionsId: string) {
     return this.http.delete(`${this.baseUrl}/api/course/delete/file/${fileDescriptionsId}`);
   }
+
+  getCourseDetails(courseId: string) {
+    return this.http.get(`${this.baseUrl}/api/course/get/course/details/${courseId}`)
+  }
+
+  updateCourseImage(courseId: string, imageData: FormData): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/course/photo/${courseId}`, imageData);
+  }
 }

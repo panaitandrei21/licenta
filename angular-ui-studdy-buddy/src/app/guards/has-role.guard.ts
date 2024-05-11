@@ -10,7 +10,6 @@ export const hasRoleGuard: CanActivateFn = (route, state) => {
   console.log(requiredRoles);
   console.log(authService.user?.role);
 
-  // Check if the user has any of the required roles
   const isAuthorized = requiredRoles.some(role => authService.user?.role.includes(role));
 
 

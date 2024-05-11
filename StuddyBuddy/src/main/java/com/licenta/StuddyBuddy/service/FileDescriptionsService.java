@@ -3,17 +3,13 @@ package com.licenta.StuddyBuddy.service;
 import com.licenta.StuddyBuddy.model.FileDescriptions;
 import com.licenta.StuddyBuddy.model.Module;
 import com.licenta.StuddyBuddy.repository.FileDescriptionsRepository;
-import jakarta.persistence.Transient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-
-import static java.nio.file.Paths.get;
 
 @Service
 @RequiredArgsConstructor

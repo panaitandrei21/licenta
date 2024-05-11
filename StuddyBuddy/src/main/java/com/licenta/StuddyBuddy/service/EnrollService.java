@@ -2,7 +2,6 @@ package com.licenta.StuddyBuddy.service;
 
 import com.licenta.StuddyBuddy.model.Course;
 import com.licenta.StuddyBuddy.model.Enroll;
-import com.licenta.StuddyBuddy.model.User;
 import com.licenta.StuddyBuddy.repository.CourseRepository;
 import com.licenta.StuddyBuddy.repository.EnrollRepository;
 import com.licenta.StuddyBuddy.repository.UserRepository;

@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpEvent, HttpEventType} from "@angular/common/http";
+import {HttpClient, HttpEvent, HttpEventType} from "@angular/common/http";
 import {CourseService} from "../../services/course.service";
 import {ActivatedRoute} from "@angular/router";
 import {FilePath, ModuleRequest} from "../../interfaces/module-request";
-import { saveAs } from 'file-saver'; // First, install file-saver using `npm install file-saver`
-
+import { saveAs } from 'file-saver';
+import {Course} from "../../interfaces/course";
+import {AuthService} from "../../services/auth.service";
 @Component({
   selector: 'app-course',
   templateUrl: './course.component.html',
@@ -12,6 +13,8 @@ import { saveAs } from 'file-saver'; // First, install file-saver using `npm ins
 })
 export class CourseComponent implements OnInit{
   showModuleForm: boolean = false;
+  courseDetails: Course | undefined;
+  userRole: string = this.authService.user!.role;
   courseId!: string;
   fileStatus = {
     status: '',
@@ -21,13 +24,14 @@ export class CourseComponent implements OnInit{
   };
   modules!: ModuleRequest[];
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private courseService: CourseService) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient, private courseService: CourseService, private authService: AuthService) {}
 
   toggleModuleForm(): void {
     this.showModuleForm = !this.showModuleForm;
   }
 
   ngOnInit(): void {
+    console.log(this.authService.user?.role)
     this.route.params.subscribe(params => {
       const id = params['id'];
       this.courseService.setCurrentCourseId(id);
@@ -40,6 +44,9 @@ export class CourseComponent implements OnInit{
 
 
   loadModules() {
+    this.courseService.getCourseDetails(this.courseId).subscribe(
+      res => this.courseDetails = res as Course
+    );
     this.courseService.getModuleForCourse(this.courseId).subscribe(modules => {
       this.modules = modules;
     });

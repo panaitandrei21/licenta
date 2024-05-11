@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.File;
 import java.util.List;
 
 @Entity
@@ -25,4 +24,6 @@ public class Module {
     @ManyToOne
     @JsonBackReference
     private Course course;
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Assignment> assignments;
 }
