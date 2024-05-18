@@ -1,0 +1,40 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <form [formGroup]="assignmentForm" (ngSubmit)="onCreateAssignment()">
+        <div class="card">
+          <div class="card-header">Create Assignment</div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="title" class="form-label">Title:</label>
+              <input type="text" class="form-control form-control-lg" formControlName="title" id="title" placeholder="Enter title">
+              <small *ngIf="title?.invalid && (title?.dirty || title?.touched)" class="form-text text-danger">
+                <div *ngIf="title?.errors?.['required']">Title is required.</div>
+              </small>
+            </div>
+            <div class="mb-3">
+              <label for="content" class="form-label">Content:</label> <br>
+              <quill-editor
+                #editor
+                [formControl]="assignmentForm.controls['content']"
+                [style.height.px]="300"
+                [modules]="modules">
+              </quill-editor>
+            </div>
+            <div class="mb-3">
+              <label for="dueDate" class="form-label">Due Date:</label>
+              <input type="datetime-local" class="form-control form-control-lg" formControlName="dueDate" id="dueDate">
+            </div>
+            <div class="mb-3">
+              <label for="category" class="form-label">Category:</label>
+              <input type="category" class="form-control form-control-lg" formControlName="category" id="category">
+            </div>
+          </div>
+          <div class="card-footer text-center">
+            <button type="submit" class="btn btn-primary" [disabled]="assignmentForm.invalid">Create Assignment</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

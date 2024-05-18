@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {ModuleRequest} from "../interfaces/module-request";
+import {Assignment} from "../interfaces/course";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Params} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +40,7 @@ export class CourseService {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('moduleId', moduleId);
-    formData.append('courseId', courseId); // Include courseId in the FormData
+    formData.append('courseId', courseId);
 
     const url = `${this.baseUrl}/api/course/upload`;
     return this.http.post(url, formData, {
@@ -77,5 +80,34 @@ export class CourseService {
 
   updateCourseImage(courseId: string, imageData: FormData): Observable<any> {
     return this.http.post(`${this.baseUrl}/api/course/photo/${courseId}`, imageData);
+  }
+  addAssignment(assgnmentDTO: Assignment) {
+    const formData = this.buildMultipart(assgnmentDTO);
+    return this.http.post(`${this.baseUrl}/api/course/add/assignment`, formData);
+
+  }
+  private buildMultipart(assignment: Assignment) {
+    let formData = new FormData();
+    const assignmentObj = {
+      title: assignment?.title,
+      dueDate: assignment?.dueDate,
+      category: assignment?.category,
+    }
+    console.log(assignment);
+    const content = assignment?.content;
+    formData.append("assignment", new Blob([JSON.stringify(assignmentObj)], {type: 'application/json'}));
+    if (content) {
+      formData.append("files", new Blob([JSON.stringify(content.toString())], {type: 'text/html'}));
+    }
+    return formData;
+  }
+
+  searchAssignments(searchParams: Params) {
+    let httpParams = new HttpParams();
+    for (const key of Object.keys(searchParams)) {
+      httpParams = httpParams.append(key, searchParams[key]);
+    }
+    return this.http.get(`${this.baseUrl}/api/course/get/assignments`, {params: httpParams});
+
   }
 }

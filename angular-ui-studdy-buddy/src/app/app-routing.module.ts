@@ -10,6 +10,7 @@ import {CourseComponent} from "./components/course/course.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import {EditModuleComponent} from "./components/edit-module/edit-module.component";
 import {EditCourseComponent} from "./components/edit-course/edit-course.component";
+import {EditAssignmentComponent} from "./components/edit-assignment/edit-assignment.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -32,6 +33,9 @@ const routes: Routes = [
     }},
   { path: 'edit-course/:id', component: EditCourseComponent, canActivate: [authGuard, hasRoleGuard],  data: {
       role: ['ROLE_STUDENT', 'ROLE_TEACHER'],
+    }},
+  { path: 'edit-assignment/:id', component: EditAssignmentComponent,canActivate: [authGuard, hasRoleGuard],  data: {
+      role: ['ROLE_ADMIN', 'ROLE_TEACHER'],
     }},
 ];
 

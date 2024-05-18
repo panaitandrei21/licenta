@@ -36,6 +36,10 @@ import {MatSelect} from "@angular/material/select";
 import {MatToolbar} from "@angular/material/toolbar";
 import { AdminUserCourseDetailsComponent } from './components/admin-user-course-details/admin-user-course-details.component';
 import { AddProblemsComponent } from './components/add-problems/add-problems.component';
+import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
+import {QuillModule} from "ngx-quill";
+import { ViewProblemsComponent } from './components/view-problems/view-problems.component';
+import { EditAssignmentComponent } from './components/edit-assignment/edit-assignment.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +61,8 @@ import { AddProblemsComponent } from './components/add-problems/add-problems.com
     AdminHandleCoursesComponent,
     AdminUserCourseDetailsComponent,
     AddProblemsComponent,
+    ViewProblemsComponent,
+    EditAssignmentComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,12 +83,15 @@ import { AddProblemsComponent } from './components/add-problems/add-problems.com
     MatOption,
     MatSelect,
     MatToolbar,
+    EditorModule,
+    QuillModule.forRoot(),
   ],
   providers: [
     provideClientHydration(),
     MessageService,
     provideHttpClient(withInterceptors([authInterceptor])),
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' }
   ],
   bootstrap: [AppComponent]
 })

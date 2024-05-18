@@ -1,5 +1,6 @@
 package com.licenta.StuddyBuddy.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,10 +21,9 @@ public class AssignmentSubmission {
     private LocalDateTime submissionDate;
 
     @ManyToOne
+    @JsonBackReference
     private Assignment assignment;
 
-    @ManyToOne
-    private User student;
 
     private String grade;
     private String feedback;

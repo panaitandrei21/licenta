@@ -1,0 +1,80 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-20">
+      <div class="card">
+        <div class="card-body">
+          <!-- Form Section -->
+          <form [formGroup]="searchTableForm">
+            <div class="container-fluid">
+              <div class="row my-4">
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                  <label for="assignmentId" class="fw-bold form-label">Assignment ID:</label>
+                  <input name="assignmentId" id="assignmentId" class="form-control" formControlName="assignmentId">
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                  <label for="category" class="fw-bold form-label">Category:</label>
+                  <input name="category" id="category" class="form-control" formControlName="category">
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                  <label for="createdBy" class="fw-bold form-label">Created By:</label>
+                  <input name="createdBy" id="createdBy" class="form-control" formControlName="createdBy">
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                  <label for="title" class="fw-bold form-label">Title:</label>
+                  <input name="title" id="title" class="form-control" formControlName="title">
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                  <label for="createdDate" class="fw-bold form-label">Created Date:</label>
+                  <input name="createdDate" id="createdDate" class="form-control" type="date" formControlName="createdDate">
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-end mb-3">
+                  <button type="submit" class="btn btn-primary w-100" (click)="search()">Search</button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <!-- Divider -->
+          <hr>
+
+          <!-- Table Section -->
+          <div class="row mt-4">
+            <div class="col-12">
+              <table *ngIf="searchResults" class="table table-striped table-hover">
+                <thead>
+                <tr>
+                  <th scope="col" style="width: 20%">Assignment ID</th>
+                  <th scope="col" style="width: 15%">Title</th>
+                  <th scope="col" style="width: 20%">Created By</th>
+                  <th scope="col" style="width: 15%">Created Date</th>
+                  <th scope="col" style="width: 20%">Category</th>
+                  <th scope="col" style="width: 10%">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let assignment of searchResults.assignments; let i = index">
+                  <td>{{ assignment.assignmentId }}</td>
+                  <td>{{ assignment.title }}</td>
+                  <td>{{ assignment.createdBy }}</td>
+                  <td>{{ assignment.createdDate | date: 'dd-MM-yyyy' }}</td>
+                  <td>{{ assignment.category }}</td>
+                  <td>
+                    <div class="d-flex justify-content-center">
+                      <button type="button" class="btn btn-primary action-btn mr-2" title="Edit" (click)="navigateToEdit(assignment.assignmentId!)">
+                        <i class="bi bi-pencil-square" style="font-size: 15px;"></i>
+                      </button>
+                      <button type="button" class="btn btn-danger action-btn" title="Delete" (click)="deleteItem()">
+                        <i class="bi bi-trash" style="font-size: 15px;"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

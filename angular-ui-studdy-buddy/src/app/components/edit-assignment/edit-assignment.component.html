@@ -1,0 +1,44 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h3>Edit Assignment</h3>
+          <form [formGroup]="editForm" (ngSubmit)="saveChanges()">
+            <div class="mb-3">
+              <label for="editAssignmentId" class="form-label">Assignment ID</label>
+              <input type="text" class="form-control" id="editAssignmentId" formControlName="assignmentId" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="editTitle" class="form-label">Title</label>
+              <input type="text" class="form-control" id="editTitle" formControlName="title" placeholder="Enter title">
+              <small *ngIf="title?.invalid && (title?.dirty || title?.touched)" class="form-text text-danger">
+                <div *ngIf="title?.errors?.['required']">Title is required.</div>
+              </small>
+            </div>
+            <div class="mb-3">
+              <label for="editCreatedBy" class="form-label">Created By</label>
+              <input type="text" class="form-control" id="editCreatedBy" formControlName="createdBy" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="editCreatedDate" class="form-label">Created Date</label>
+              <input type="date" class="form-control" id="editCreatedDate" formControlName="createdDate" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="editCategory" class="form-label">Category</label>
+              <input type="text" class="form-control" id="editCategory" formControlName="category">
+            </div>
+            <div class="mb-3">
+              <label for="editContent" class="form-label">Content</label>
+              <quill-editor formControlName="files" [modules]="modules" [style]="{'height':'300px'}" [sanitize]="true"></quill-editor>
+            </div>
+            <div class="d-flex justify-content-between">
+              <button type="submit" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-secondary" (click)="goBack()">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

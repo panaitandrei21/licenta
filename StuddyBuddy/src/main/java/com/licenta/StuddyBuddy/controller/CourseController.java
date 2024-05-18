@@ -1,27 +1,28 @@
 package com.licenta.StuddyBuddy.controller;
 
-import com.licenta.StuddyBuddy.dto.AssignmentDTO;
-import com.licenta.StuddyBuddy.dto.CourseImageDTO;
-import com.licenta.StuddyBuddy.dto.ModuleRequest;
-import com.licenta.StuddyBuddy.dto.ModuleResponse;
+import com.licenta.StuddyBuddy.dto.*;
 import com.licenta.StuddyBuddy.model.FileDescriptions;
 import com.licenta.StuddyBuddy.model.Module;
 import com.licenta.StuddyBuddy.service.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -41,13 +42,49 @@ public class CourseController {
     private final FileDescriptionsService descriptionsService;
     private final CourseService courseService;
     private final AssignmentService assignmentService;
-
+    private final JwtService jwtService;
+    public void printInputStreamContent(InputStream inputStream) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (Exception e) {
+            System.out.println("Error reading from the InputStream");
+            e.printStackTrace();
+        }
+    }
+    @GetMapping("/get/assignment/{assignmentId}")
+    public AssignmentDTO getAssignmentById(@PathVariable String assignmentId) {
+        AssignmentDTO assignmentDTO = assignmentService.getAssignmentMetadata(assignmentId);
+        try (InputStream assignmentContent = assignmentService.getAssignmentContent(assignmentId)) {
+            assignmentDTO.setContent(assignmentContent != null ? IOUtils.toByteArray(assignmentContent) : new byte[]{});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return assignmentDTO;
+    }
     @PostMapping("/add/assignment")
-    public ResponseEntity<?> addAssignment(@RequestBody AssignmentDTO assignmentDTO) throws ChangeSetPersister.NotFoundException {
-        assignmentService.addAssignment(assignmentDTO);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Module added successfully");
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<?> addAssignment(
+            @RequestPart("assignment") AssignmentDTO assignmentDTO,
+            @RequestPart(value = "files", required = false) MultipartFile file) throws IOException {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();;
+        return ResponseEntity.status(HttpStatus.CREATED).body(assignmentService.addAssignment(assignmentDTO, file, userDetails));
+    }
+    @GetMapping ("/get/assignments")
+    ResponseEntity<?> getAssignments(
+            @RequestParam(name = "page", required = false, defaultValue = "0") Long page,
+            @ModelAttribute SearchAssignmentsDTO searchAssignmentsDTO) {
+        System.out.println(searchAssignmentsDTO);
+        long totalRecords = assignmentService.countAssignments(searchAssignmentsDTO);
+        long totalPages = (totalRecords + 100 - 1) / 100;
+        System.out.println(searchAssignmentsDTO);
+        SearchResultsPageDTO searchResultsPageDTO = new SearchResultsPageDTO();
+        List<AssignmentDTO> searchResults = assignmentService.getAllAssignments(searchAssignmentsDTO, page, 100L);
+        searchResultsPageDTO.setTotalPages(totalPages);
+        searchResultsPageDTO.setAssignments(searchResults);
+        return ResponseEntity.ok(searchResultsPageDTO);
+
     }
     @PutMapping("/edit/module")
     public ResponseEntity<?> editModule(@RequestBody ModuleResponse moduleResponse) throws Exception {
@@ -154,5 +191,6 @@ public class CourseController {
         courseService.updateCourseImage(courseId, imageData);
         return ResponseEntity.ok("Saved");
     }
+
 
 }

@@ -30,6 +30,9 @@ public class UserService {
     public UserDTO getUserDetails(String user) {
         return userRepository.getUserByEmail(user);
     }
+    public User findUser(String user) {
+        return userRepository.findByEmail(user);
+    }
 
     public String updateUserProfile(UserDTO updatedUser) {
         User existingUser = userRepository.findByEmail(updatedUser.getEmail());

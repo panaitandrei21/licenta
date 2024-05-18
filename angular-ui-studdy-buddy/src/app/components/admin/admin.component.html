@@ -1,31 +1,44 @@
 <app-nav-bar></app-nav-bar>
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-2 py-4 ml-4" >
-      <div class="mt-4">
-        <button class="btn btn-primary w-100 mb-3 ml-8" (click)="selectedOption = 'courses'">Courses</button>
-        <button class="btn btn-primary w-100 mb-3 ml-8" (click)="selectedOption = 'users'">Add Users</button>
-        <button class="btn btn-primary w-100 mb-3 ml-8" (click)="selectedOption = 'handle-users'">Handle Users</button>
-        <button class="btn btn-primary w-100 ml-8" (click)="selectedOption = 'add-problems'">Add Problems</button>
-      </div>
-    </div>
+<div class="container-fluid" *ngIf="selectedOption !== 'view-problems'">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8 py-4">
+      <div class="row">
+        <div class="col-md-3 py-4">
+          <div class="mt-4">
+            <button class="btn btn-primary w-100 mb-3" (click)="selectedOption = 'courses'">Courses</button>
+            <button class="btn btn-primary w-100 mb-3" (click)="selectedOption = 'users'">Add Users</button>
+            <button class="btn btn-primary w-100 mb-3" (click)="selectedOption = 'handle-users'">Handle Users</button>
+            <button class="btn btn-primary w-100 mb-3" (click)="selectedOption = 'add-problems'">Add Problems</button>
+            <button class="btn btn-primary w-100" (click)="selectedOption = 'view-problems'">View Problems</button>
+          </div>
+        </div>
 
-    <div class="col-md-9 py-4">
-      <div *ngIf="selectedOption === 'courses'">
-        <app-admin-handle-courses></app-admin-handle-courses>
-      </div>
-
-      <div *ngIf="selectedOption === 'users'">
-        <app-admin-handle-user></app-admin-handle-user>
-      </div>
-
-      <div *ngIf="selectedOption === 'handle-users'">
-        <app-admin-user-course-details></app-admin-user-course-details>
-      </div>
-      <div *ngIf="selectedOption === 'handle-users'">
-        <app-add-problems></app-add-problems>
+        <div class="col-md-9 py-4">
+          <div *ngIf="selectedOption === 'courses'">
+            <app-admin-handle-courses></app-admin-handle-courses>
+          </div>
+          <div *ngIf="selectedOption === 'users'">
+            <app-admin-handle-user></app-admin-handle-user>
+          </div>
+          <div *ngIf="selectedOption === 'handle-users'">
+            <app-admin-user-course-details></app-admin-user-course-details>
+          </div>
+          <div *ngIf="selectedOption === 'add-problems'">
+            <app-add-problems></app-add-problems>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<div *ngIf="selectedOption === 'view-problems'" class="container-fluid vh-100 d-flex flex-column">
+  <div class="d-flex justify-content-end p-3">
+    <button class="btn btn-secondary" (click)="exitViewProblems()">Exit</button>
+  </div>
+  <div class="flex-grow-1">
+    <app-view-problems></app-view-problems>
+  </div>
+</div>
+

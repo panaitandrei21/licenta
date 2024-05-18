@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,6 +23,11 @@ public class JwtService {
    // @Value("$my.secret.key")
     private static final String SECRET_KEY = "58bc3281da67834c1cb0286e38c895d7fe6a90a7ac15f3514da6c9c2bdcbc31c";
     public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+    public String extractUsernameDirect() {
+        String authHeader = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+        String token = authHeader.substring(7);
         return extractClaim(token, Claims::getSubject);
     }
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

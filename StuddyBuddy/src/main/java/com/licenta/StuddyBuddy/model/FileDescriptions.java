@@ -19,9 +19,5 @@ public class FileDescriptions {
     @ManyToOne
     @JsonBackReference
     private Module module;
-    @Transient
-    public String getCleanFilePath() {
-        int underscoreIndex = this.filePath.indexOf('_');
-        return underscoreIndex > -1 ? this.filePath.substring(underscoreIndex + 1) : this.filePath;
-    }
+
 }

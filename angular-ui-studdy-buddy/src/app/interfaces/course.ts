@@ -9,3 +9,14 @@ category: string;
 logo?: Blob;
 
 }
+
+export interface Assignment {
+  assignmentId?: string;
+  moduleId?: string;
+  title?: string;
+  content?: any[];
+  dueDate?: string;
+  createdBy?: string;
+  createdDate?: Date;
+  category?: string;
+}
