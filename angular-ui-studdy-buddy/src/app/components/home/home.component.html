@@ -7,7 +7,7 @@
         <div *ngFor="let course of courses" class="col-md-4 mb-4 d-flex">
           <div class="card flex-fill" style="position: relative; cursor: pointer;">
             <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-              <img [src]="course.logo || 'https://mdbcdn.b-cdn.net/img/new/standard/nature/111.webp'" class="img-fluid"/>
+              <img [src]="course.logo || 'https://mdbcdn.b-cdn.net/img/new/standard/nature/111.webp'" class="img-thumbnail" />
               <a>
                 <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
               </a>
