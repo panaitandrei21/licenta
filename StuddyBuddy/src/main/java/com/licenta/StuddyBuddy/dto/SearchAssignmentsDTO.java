@@ -3,8 +3,9 @@ package com.licenta.StuddyBuddy.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -14,5 +15,6 @@ public class SearchAssignmentsDTO {
     private String category;
     private String title;
     private String createdBy;
-    private LocalDate createdDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date createdDate;
 }

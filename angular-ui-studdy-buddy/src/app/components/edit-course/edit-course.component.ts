@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CourseService } from "../../services/course.service";
 import { ActivatedRoute } from "@angular/router";
-import { FormGroup, FormBuilder } from "@angular/forms";
+import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 
 @Component({
   selector: 'app-edit-course',
@@ -20,33 +20,43 @@ export class EditCourseComponent implements OnInit {
       this.courseId = params['id'];
     });
 
+    // Initialize the form group and define the form control 'image'
     this.imageForm = this.fb.group({
-      image: ['']
+      image: new FormControl(null) // Use null as initial value
     });
   }
 
   onFileSelect(event: Event): void {
     const target = event.target as HTMLInputElement;
-    const file: File = (target.files as FileList)[0];
-    if (file) {
+    if (target.files && target.files.length > 0) {
+      const file = target.files[0];
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result;
       };
       reader.readAsDataURL(file);
+
+      // Update the form control with the file
+      this.imageForm.patchValue({
+        image: file
+      });
+      this.imageForm.get('image')!.updateValueAndValidity(); // Ensure the control validity is updated
     }
   }
 
-  saveImage() {
+  saveImage(): void {
     const formData = new FormData();
-    const file = this.imageForm.get('image')!.value;
+    const file = this.imageForm.get('image')!.value;  // Ensure this retrieves the file correctly
 
-    formData.append('imageData', file);
+    if (file) {
+      formData.append('imageData', file);
 
-    this.courseService.updateCourseImage(this.courseId, formData).subscribe({
-      next: (response) => console.log('Image saved successfully!'),
-      error: (error) => console.error('Error saving image', error)
-    });
+      this.courseService.updateCourseImage(this.courseId, formData).subscribe({
+        next: (response) => console.log('Image saved successfully!'),
+        error: (error) => console.error('Error saving image', error)
+      });
+    } else {
+      console.error('No file selected');
+    }
   }
-
 }

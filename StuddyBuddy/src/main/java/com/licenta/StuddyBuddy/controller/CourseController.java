@@ -21,8 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -42,18 +43,6 @@ public class CourseController {
     private final FileDescriptionsService descriptionsService;
     private final CourseService courseService;
     private final AssignmentService assignmentService;
-    private final JwtService jwtService;
-    public void printInputStreamContent(InputStream inputStream) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (Exception e) {
-            System.out.println("Error reading from the InputStream");
-            e.printStackTrace();
-        }
-    }
     @GetMapping("/get/assignment/{assignmentId}")
     public AssignmentDTO getAssignmentById(@PathVariable String assignmentId) {
         AssignmentDTO assignmentDTO = assignmentService.getAssignmentMetadata(assignmentId);

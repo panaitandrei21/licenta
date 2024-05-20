@@ -1,7 +1,7 @@
 package com.licenta.StuddyBuddy.repository;
 
-import com.licenta.StuddyBuddy.model.Assignment;
 import com.licenta.StuddyBuddy.dto.SearchAssignmentsDTO;
+import com.licenta.StuddyBuddy.model.Assignment;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
@@ -10,7 +10,12 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -27,23 +32,24 @@ public class CustomAssignmentRepositoryImpl implements CustomAssignmentRepositor
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if (dto.getAssignmentId() != null && !dto.getAssignmentId().equals("")) {
+        if (dto.getAssignmentId() != null && !dto.getAssignmentId().isEmpty()) {
             predicates.add(cb.equal(assignment.get("assignmentId"), dto.getAssignmentId()));
         }
-        if (dto.getCategory() != null && !dto.getCategory().equals("")) {
+        if (dto.getCategory() != null && !dto.getCategory().isEmpty()) {
             predicates.add(cb.equal(assignment.get("category"), dto.getCategory()));
         }
-        if (dto.getTitle() != null && !dto.getTitle().equals("")) {
+        if (dto.getTitle() != null && !dto.getTitle().isEmpty()) {
             predicates.add(cb.equal(assignment.get("title"), dto.getTitle()));
         }
-        if (dto.getCreatedBy() != null && !dto.getCreatedBy().equals("")) {
+        if (dto.getCreatedBy() != null && !dto.getCreatedBy().isEmpty()) {
             predicates.add(cb.equal(assignment.get("createdBy"), dto.getCreatedBy()));
         }
-        if (dto.getCreatedDate() != null && !dto.getCreatedDate().equals("")) {
-            predicates.add(cb.equal(assignment.get("createdDate"), dto.getCreatedDate()));
+        if (dto.getCreatedDate() != null) {
+            // Convert Date to LocalDate
+            LocalDate createdDateLocal = dto.getCreatedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            predicates.add(cb.equal(cb.function("date", LocalDate.class, assignment.get("createdDate")), createdDateLocal));
         }
 
-        // Apply predicates if there are any
         if (!predicates.isEmpty()) {
             query.where(predicates.toArray(new Predicate[0]));
         }
@@ -67,20 +73,22 @@ public class CustomAssignmentRepositoryImpl implements CustomAssignmentRepositor
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if (dto.getAssignmentId() != null && !dto.getAssignmentId().equals("")) {
+        if (dto.getAssignmentId() != null && !dto.getAssignmentId().isEmpty()) {
             predicates.add(cb.equal(assignment.get("assignmentId"), dto.getAssignmentId()));
         }
-        if (dto.getCategory() != null && !dto.getCategory().equals("")) {
+        if (dto.getCategory() != null && !dto.getCategory().isEmpty()) {
             predicates.add(cb.equal(assignment.get("category"), dto.getCategory()));
         }
-        if (dto.getTitle() != null && !dto.getTitle().equals("")) {
+        if (dto.getTitle() != null && !dto.getTitle().isEmpty()) {
             predicates.add(cb.equal(assignment.get("title"), dto.getTitle()));
         }
-        if (dto.getCreatedBy() != null && !dto.getCreatedBy().equals("")) {
+        if (dto.getCreatedBy() != null && !dto.getCreatedBy().isEmpty()) {
             predicates.add(cb.equal(assignment.get("createdBy"), dto.getCreatedBy()));
         }
-        if (dto.getCreatedDate() != null && !dto.getCreatedDate().equals("")) {
-            predicates.add(cb.equal(assignment.get("createdDate"), dto.getCreatedDate()));
+        if (dto.getCreatedDate() != null) {
+            // Convert Date to LocalDate
+            LocalDate createdDateLocal = dto.getCreatedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            predicates.add(cb.equal(cb.function("date", LocalDate.class, assignment.get("createdDate")), createdDateLocal));
         }
 
         query.select(cb.count(assignment)).where(predicates.toArray(new Predicate[0]));

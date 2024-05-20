@@ -23,6 +23,7 @@ public class Course {
 
     private String category;
     @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] logo;
 
     @OneToMany(mappedBy = "course")

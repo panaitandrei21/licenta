@@ -32,6 +32,7 @@ export class ViewProblemsComponent implements OnInit {
   search() {
     this.page = 0;
     this.searchParams = this.searchTableForm.value;
+    console.log(this.searchParams);
     this.searchAssignments();
   }
 
