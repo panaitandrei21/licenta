@@ -90,14 +90,17 @@ export class CourseService {
     let formData = new FormData();
     const assignmentObj = {
       title: assignment?.title,
-      dueDate: assignment?.dueDate,
       category: assignment?.category,
     }
     console.log(assignment);
     const content = assignment?.content;
+    const solution = assignment?.solution
     formData.append("assignment", new Blob([JSON.stringify(assignmentObj)], {type: 'application/json'}));
     if (content) {
       formData.append("files", new Blob([JSON.stringify(content.toString())], {type: 'text/html'}));
+    }
+    if (solution) {
+      formData.append("solutionFiles", new Blob([JSON.stringify(solution.toString())], {type: 'text/html'}));
     }
     return formData;
   }

@@ -14,7 +14,7 @@ export class AddProblemsComponent implements OnInit{
   assignmentForm = this.fb.group({
     title: ['', Validators.required],
     content: [''],
-    dueDate: [''],
+    solution:[''],
     category: [''],
 
   });

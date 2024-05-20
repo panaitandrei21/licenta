@@ -1,4 +1,5 @@
-<form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+<div class="d-flex vh-100 justify-content-center align-items-center">
+  <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
   <p-card header="Register" [style]="{ width: '360px' }">
     <div *ngIf="loginError" class="block p-error">Email already in use.</div>
     <div class="field">
@@ -80,3 +81,4 @@
     <div class="mt-2">Already a member ? <a routerLink="/login">Login</a></div>
   </p-card>
 </form>
+</div>

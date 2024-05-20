@@ -13,9 +13,11 @@ import java.util.List;
 
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, String>, CustomAssignmentRepository {
-    @Query("SELECT new com.licenta.StuddyBuddy.dto.AssignmentDTO(c.assignmentId, c.category, c.title, c.createdby, c.dueDate, c.createdDate) FROM Assignment c where c.assignmentId = :assignmentId")
+    @Query("SELECT new com.licenta.StuddyBuddy.dto.AssignmentDTO(c.assignmentId, c.category, c.title, c.createdby, c.createdDate) FROM Assignment c where c.assignmentId = :assignmentId")
     AssignmentDTO getAssignmentMetadata(String assignmentId);
 
     @Query("SELECT c.content FROM Assignment c where c.assignmentId = :assignmentId")
     byte[] getAssignmentContent(String assignmentId);
+    @Query("SELECT c.solution FROM Assignment c where c.assignmentId = :assignmentId")
+    byte[] getAssignmentSolution(String assignmentId);
 }

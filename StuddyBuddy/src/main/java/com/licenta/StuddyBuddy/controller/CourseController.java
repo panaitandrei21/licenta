@@ -51,14 +51,20 @@ public class CourseController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        try (InputStream assignmentSolution = assignmentService.getAssignmentSolution(assignmentId)) {
+            assignmentDTO.setSolution(assignmentSolution != null ? IOUtils.toByteArray(assignmentSolution) : new byte[]{});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return assignmentDTO;
     }
     @PostMapping("/add/assignment")
     public ResponseEntity<?> addAssignment(
             @RequestPart("assignment") AssignmentDTO assignmentDTO,
-            @RequestPart(value = "files", required = false) MultipartFile file) throws IOException {
+            @RequestPart(value = "files", required = false) MultipartFile file,
+            @RequestPart(value = "solutionFiles", required = false) MultipartFile solutionFiles) throws IOException {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();;
-        return ResponseEntity.status(HttpStatus.CREATED).body(assignmentService.addAssignment(assignmentDTO, file, userDetails));
+        return ResponseEntity.status(HttpStatus.CREATED).body(assignmentService.addAssignment(assignmentDTO, file, userDetails, solutionFiles));
     }
     @GetMapping ("/get/assignments")
     ResponseEntity<?> getAssignments(

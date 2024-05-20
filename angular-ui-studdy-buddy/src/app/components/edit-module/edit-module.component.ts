@@ -8,7 +8,7 @@ import {Observable} from "rxjs";
 @Component({
   selector: 'app-edit-module',
   templateUrl: './edit-module.component.html',
-  styleUrl: './edit-module.component.css'
+  styleUrls: ['./edit-module.component.css']
 })
 export class EditModuleComponent implements OnInit {
   moduleForm!: FormGroup;
@@ -51,7 +51,8 @@ export class EditModuleComponent implements OnInit {
   onSubmit(): void {
     if (this.moduleForm.valid) {
       const updatedModule: ModuleRequest = {
-        ...this.moduleForm.value
+        ...this.moduleForm.value,
+        moduleId: this.moduleId
       };
       this.updateModule(updatedModule);
     } else {
@@ -61,7 +62,6 @@ export class EditModuleComponent implements OnInit {
 
   updateModule(module: ModuleRequest): void {
     if (this.moduleId) {
-      module.moduleId = this.moduleId;
       this.courseService.updateModule(module).subscribe({
         next: () => this.router.navigate(['/course', this.courseService.getCurrentCourseId()]),
         error: error => console.error('Failed to update module:', error)
@@ -69,5 +69,13 @@ export class EditModuleComponent implements OnInit {
     } else {
       console.error('Module ID is undefined; cannot update module');
     }
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/course', this.courseService.getCurrentCourseId()]);
+  }
+
+  get title() {
+    return this.moduleForm.get('title');
   }
 }

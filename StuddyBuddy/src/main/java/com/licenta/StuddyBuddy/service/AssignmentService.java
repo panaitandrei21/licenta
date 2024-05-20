@@ -31,12 +31,12 @@ public class AssignmentService {
     private final ModuleService moduleService;
 
     @Transactional
-    public Assignment addAssignment(AssignmentDTO assignmentDTO, MultipartFile file, UserDetails userDetails) throws IOException {
+    public Assignment addAssignment(AssignmentDTO assignmentDTO, MultipartFile file, UserDetails userDetails, MultipartFile solutionFiles) throws IOException {
             Assignment assignment = Assignment.builder()
                     .title(assignmentDTO.getTitle())
                     .content(file.getBytes())
                     .createdDate(Instant.now())
-                    .dueDate(assignmentDTO.getDueDate())
+                    .solution(solutionFiles.getBytes())
                     .category(assignmentDTO.getCategory())
                     .createdby(userService.findUser(userDetails.getUsername()))
                     .build();
@@ -82,5 +82,11 @@ public class AssignmentService {
 
     public InputStream getAssignmentContent(String assignmentDTO) {
         byte[] contentBytes = assignmentRepository.getAssignmentContent(assignmentDTO);
-        return new ByteArrayInputStream(contentBytes);    }
+        return new ByteArrayInputStream(contentBytes);
+    }
+
+    public InputStream getAssignmentSolution(String assignmentId) {
+        byte[] contentBytes = assignmentRepository.getAssignmentSolution(assignmentId);
+        return new ByteArrayInputStream(contentBytes);
+    }
 }

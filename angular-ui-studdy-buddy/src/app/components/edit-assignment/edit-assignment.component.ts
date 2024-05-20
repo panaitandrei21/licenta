@@ -1,4 +1,3 @@
-// Import the QuillEditorComponent if not already imported
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import { QuillEditorComponent } from 'ngx-quill';
 import {Assignment} from "../../interfaces/course";
@@ -14,7 +13,6 @@ import {AssignmentService} from "../../services/assignment.service";
 export class EditAssignmentComponent implements OnInit {
   editForm: FormGroup;
   @ViewChild(QuillEditorComponent, { static: true }) editor!: QuillEditorComponent;
-  imageData = '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAAmCAYAAABDClKtAAAAo0lEQVRYCe2WsQnDQBRD/wKeLht4AA+QMiNkA48U3JiAIemuTBVXueciC6gyKnRwneDEkw5UGJ4y9ERMqamEVEipBFRdOhVSKgFVV8P0w+3GlJpISIWUSkDVpVMhpRJQdelUSKkEVF29np2L2XypHWhLt9pUdV9hfZiZUnM+U1dt64w3r0lcH2B/m8U3N+DbuRr9wD+pzYyUZafO/FXqW5Yr4QAQAz+Xfmku5gAAAABJRU5ErkJggg==">';
 
   modules = {
     syntax: true,
@@ -38,12 +36,10 @@ export class EditAssignmentComponent implements OnInit {
     private assignmentService: AssignmentService
   ) {
     this.editForm = this.fb.group({
-      assignmentId: [''],
       title: ['', Validators.required],
-      createdBy: [''],
-      createdDate: [''],
       category: [''],
-      files: []
+      files: [],
+      solutionFiles: []
     });
   }
 
@@ -51,19 +47,28 @@ export class EditAssignmentComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.assignmentService.getAssignmentById(id).subscribe((assignment: Assignment) => {
-        console.log(assignment.content)
+        console.log(assignment.createdDate);
+        assignment.createdDate ? this.formatDate(assignment.createdDate) : '';
         this.editForm.patchValue({
-          assignmentId: assignment.assignmentId,
           title: assignment.title,
-          createdBy: assignment.createdBy,
-          createdDate: assignment.createdDate,
           category: assignment.category,
-          files: this.b64DecodeUnicode(assignment.content)
+          files: this.b64DecodeUnicode(assignment.content),
+          solutionFiles: this.b64DecodeUnicode(assignment.solution),
         });
       });
     }
   }
 
+  private formatDate(dateString: Date): string {
+    if (!dateString) {
+      return '';
+    }
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
   saveChanges(): void {
     if (this.editForm.valid) {
       // this.assignmentService.updateAssignment(this.editForm.value).subscribe(() => {
@@ -72,19 +77,11 @@ export class EditAssignmentComponent implements OnInit {
     }
   }
 
-  // b64DecodeUnicode(str: any): string {
-  //   const shit = decodeURIComponent((atob(str).split('').map(function(c) {
-  //     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  //   }).join('')));
-  //   console.log(shit);
-  //   return shit;
-  // }
   b64DecodeUnicode(str: any): string {
     const decoded = decodeURIComponent(Array.from(atob(str), (c) =>
       '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
 
     const cleaned = decoded.replace(/\\/g, '');
-    console.log("Decoded and cleaned content:", cleaned);
     return cleaned;
   }
 

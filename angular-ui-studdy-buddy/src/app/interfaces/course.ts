@@ -15,6 +15,7 @@ export interface Assignment {
   moduleId?: string;
   title?: string;
   content?: any[];
+  solution?: any[];
   dueDate?: string;
   createdBy?: string;
   createdDate?: Date;

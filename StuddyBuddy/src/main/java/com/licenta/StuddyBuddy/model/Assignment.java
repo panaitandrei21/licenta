@@ -25,7 +25,9 @@ public class Assignment {
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private byte[] content;
-    private LocalDateTime dueDate;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] solution;
 
     @ManyToOne
     @JsonBackReference

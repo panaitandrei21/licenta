@@ -1,4 +1,5 @@
 <app-nav-bar></app-nav-bar>
+<div class="d-flex vh-100 justify-content-center align-items-center">
 <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
   <p-card header="Edit Profile" [style]="{width: '360px'}">
     <div *ngIf="profileError" class="block p-error">Failed to update profile. Please try again.</div>
@@ -31,28 +32,16 @@
       </small>
     </div>
 
-    <!-- Phone Number Field -->
-    <div class="field">
-      <label for="phoneNumber">Phone Number</label>
-      <input type="text" pInputText formControlName="phoneNumber" class="w-full" placeholder="Enter your phone number" />
-      <small *ngIf="profileForm.get('phoneNumber')?.invalid && (profileForm.get('phoneNumber')?.dirty || profileForm.get('phoneNumber')?.touched)" class="block p-error">
-        <div *ngIf="profileForm.get('phoneNumber')?.errors?.['required']">Phone number is required.</div>
-      </small>
-    </div>
 
-    <!-- Address Fields -->
-    <div class="field">
-      <label>Address</label>
-      <div formGroupName="address">
-        <input type="text" pInputText formControlName="street" class="w-full" placeholder="Street" />
-        <input type="text" pInputText formControlName="city" class="w-full" placeholder="City" />
-        <input type="text" pInputText formControlName="zipCode" class="w-full" placeholder="Zip Code" />
-        <input type="text" pInputText formControlName="country" class="w-full" placeholder="Country" />
-      </div>
-    </div>
 
-    <!-- Action Buttons -->
-    <p-button label="Update Profile" styleClass="w-full" [disabled]="profileForm.invalid" type="submit"></p-button>
-    <p-button label="Cancel" styleClass="w-full" (click)="loadUserProfile()" type="button"></p-button>
+
+    <button type="submit" class="btn btn-primary w-100 mb-2 me-2" [disabled]="profileForm.invalid">
+      Update Profile
+    </button>
+    <button type="button" class="btn btn-secondary w-100 mb-2" (click)="loadUserProfile()">
+      Cancel
+    </button>
+
   </p-card>
 </form>
+</div>

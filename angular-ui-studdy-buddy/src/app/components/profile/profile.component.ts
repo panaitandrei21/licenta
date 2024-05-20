@@ -19,13 +19,6 @@ export class ProfileComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', Validators.required],
-      address: this.fb.group({
-        street: ['', Validators.required],
-        city: ['', Validators.required],
-        zipCode: ['', Validators.required],
-        country: ['', Validators.required]
-      })
     });
 
     this.loadUserProfile();

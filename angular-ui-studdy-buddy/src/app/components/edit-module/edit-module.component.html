@@ -1,13 +1,57 @@
-<div class="container">
-  <form [formGroup]="moduleForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="title">Title</label>
-      <input type="text" id="title" class="form-control" formControlName="title">
+<app-nav-bar></app-nav-bar>
+<div class="d-flex vh-100 justify-content-center align-items-center">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <form [formGroup]="moduleForm" (ngSubmit)="onSubmit()">
+          <div class="card">
+            <div class="card-header">Update Module</div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="title">Title:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="title"
+                  id="title"
+                  placeholder="Enter module title"
+                />
+                <small
+                  *ngIf="title?.invalid && (title?.dirty || title?.touched)"
+                  class="form-text text-danger"
+                >
+                  <div *ngIf="title?.errors?.['required']">Title is required.</div>
+                </small>
+              </div>
+              <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea
+                  class="form-control"
+                  formControlName="description"
+                  id="description"
+                  placeholder="Enter module description"
+                ></textarea>
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="moduleForm.invalid"
+              >
+                Update Module
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="onCancel()"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea id="description" class="form-control" formControlName="description"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Update Module</button>
-  </form>
+  </div>
 </div>
