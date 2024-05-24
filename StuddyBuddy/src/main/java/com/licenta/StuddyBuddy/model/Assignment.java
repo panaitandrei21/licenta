@@ -1,11 +1,11 @@
 package com.licenta.StuddyBuddy.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -31,13 +31,10 @@ public class Assignment {
 
     @ManyToOne
     @JsonBackReference
-    private Module module;
-
-    @ManyToOne
-    @JsonBackReference
     private User createdby;
 
-    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
-    private List<AssignmentSubmission> submissions;
+    @OneToMany(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<AssignmentInstance> assignmentInstances;
+
 }

@@ -113,4 +113,9 @@ export class CourseService {
     return this.http.get(`${this.baseUrl}/api/course/get/assignments`, {params: httpParams});
 
   }
+
+  addHomework(moduleId: string, formValue: any) {
+    return this.http.post(`${this.baseUrl}/api/course/add/homework/${moduleId}`, formValue);
+  }
+
 }

@@ -2,6 +2,7 @@ import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {CourseService} from "../../services/course.service";
 import {ModuleRequest} from "../../interfaces/module-request";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-moduleform',
@@ -13,8 +14,9 @@ export class ModuleformComponent implements OnInit {
   showModuleForm: boolean = false;
   @Input() courseId!: string;
   @Output() moduleAdded = new EventEmitter<ModuleRequest>();
+  @Output() popupClosed = new EventEmitter<void>();
 
-  constructor(private fb: FormBuilder, private courseService: CourseService) { }
+  constructor(private fb: FormBuilder, private courseService: CourseService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.moduleForm = this.fb.group({
@@ -28,6 +30,8 @@ export class ModuleformComponent implements OnInit {
       (res: ModuleRequest) => {
         console.log(res);
         this.moduleAdded.emit(res);
+        this.toastr.success('Module added successfully', 'Succes');
+        this.closePopup();
       }
     );
   }
@@ -45,5 +49,6 @@ export class ModuleformComponent implements OnInit {
   }
   closePopup(): void {
     this.moduleForm.reset();
+    this.popupClosed.emit();
   }
 }

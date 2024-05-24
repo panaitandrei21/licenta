@@ -64,13 +64,21 @@ public class AssignmentService {
                 .createdDate(Date.from(assignment.getCreatedDate()))
                 .createdBy(assignment.getCreatedby().getEmail())
                 .category(assignment.getCategory())
+                .solution(assignment.getSolution())
                 .build();
     }
 
-    public AssignmentDTO getAssignmentById(String assignmentId) {
+    public AssignmentDTO getAssignmentDTOById(String assignmentId) {
         Optional<Assignment> assignmentOpt = assignmentRepository.findById(assignmentId);
         if (assignmentOpt.isPresent()) {
             return mapToDTO(assignmentOpt.get());
+        }
+        throw new AssignmentNotFoundException("Assignment not found for id: " + assignmentId);
+    }
+    public Assignment getAssignmentById(String assignmentId) {
+        Optional<Assignment> assignmentOpt = assignmentRepository.findById(assignmentId);
+        if (assignmentOpt.isPresent()) {
+            return assignmentOpt.get();
         }
         throw new AssignmentNotFoundException("Assignment not found for id: " + assignmentId);
     }

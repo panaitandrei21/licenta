@@ -1,17 +1,18 @@
-import {Component, OnInit} from '@angular/core';
-import {HttpClient, HttpEvent, HttpEventType} from "@angular/common/http";
-import {CourseService} from "../../services/course.service";
-import {ActivatedRoute} from "@angular/router";
-import {FilePath, ModuleRequest} from "../../interfaces/module-request";
+import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpEvent, HttpEventType } from "@angular/common/http";
+import { CourseService } from "../../services/course.service";
+import { ActivatedRoute } from "@angular/router";
+import { FilePath, ModuleRequest } from "../../interfaces/module-request";
 import { saveAs } from 'file-saver';
-import {Course} from "../../interfaces/course";
-import {AuthService} from "../../services/auth.service";
+import { Course } from "../../interfaces/course";
+import { AuthService } from "../../services/auth.service";
+
 @Component({
   selector: 'app-course',
   templateUrl: './course.component.html',
-  styleUrl: './course.component.css'
+  styleUrls: ['./course.component.css']
 })
-export class CourseComponent implements OnInit{
+export class CourseComponent implements OnInit {
   showModuleForm: boolean = false;
   courseDetails: Course | undefined;
   userRole: string = this.authService.user!.role;
@@ -23,6 +24,8 @@ export class CourseComponent implements OnInit{
     filenames: [] as string[]
   };
   modules!: ModuleRequest[];
+  showHomeworkForm: any;
+  selectedHomeworkTitle: string | null = null;
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private courseService: CourseService, private authService: AuthService) {}
 
@@ -41,7 +44,6 @@ export class CourseComponent implements OnInit{
       this.loadModules();
     });
   }
-
 
   loadModules() {
     this.courseService.getCourseDetails(this.courseId).subscribe(
@@ -69,9 +71,9 @@ export class CourseComponent implements OnInit{
   private updateModuleFiles(moduleId: string, moduleData: ModuleRequest): void {
     let index = this.modules.findIndex(mod => mod.moduleId === moduleId);
     if (index !== -1) {
+      moduleData.assignmentInstances = this.modules[index].assignmentInstances;
       this.modules[index] = moduleData;
     } else {
-      // Optionally handle the case where the module isn't found
       console.error('Module not found:', moduleId);
     }
   }
@@ -84,6 +86,7 @@ export class CourseComponent implements OnInit{
       error => console.error('Error downloading the file!', error.message)
     );
   }
+
   private resportProgress(httpEvent: HttpEvent<any>): void {
     switch (httpEvent.type) {
       case HttpEventType.UploadProgress:
@@ -120,23 +123,18 @@ export class CourseComponent implements OnInit{
     this.fileStatus.percent = 0;
   }
 
-
-
   private updateStatus(loaded: number, total: number, requestType: string): void {
     this.fileStatus.status = 'progress';
     this.fileStatus.requestType = requestType;
     this.fileStatus.percent = Math.round(100 * loaded / total);
   }
 
-  editModule(module: any) {
-
-  }
+  editModule(module: any) {}
 
   deleteModule(module: ModuleRequest): void {
     this.courseService.deleteModule(module.moduleId).subscribe({
       next: (response) => {
         console.log('Module deleted:', response);
-
         this.modules = this.modules.filter(m => m.moduleId !== module.moduleId);
       },
       error: (error) => {
@@ -146,22 +144,37 @@ export class CourseComponent implements OnInit{
   }
 
   deleteFile(filePath: FilePath, moduleId: string) {
-    this.courseService.deleteFile(filePath.fileDescriptionsId).subscribe(
-      {
-        next: (res) => {
-          const module = this.modules.find(m => m.moduleId === moduleId);
-          if (module) {
-            const index = module.filePath.findIndex(f => f.fileDescriptionsId === filePath.fileDescriptionsId);
-            if (index !== -1) {
-              module.filePath.splice(index, 1);
-            }
+    this.courseService.deleteFile(filePath.fileDescriptionsId).subscribe({
+      next: (res) => {
+        const module = this.modules.find(m => m.moduleId === moduleId);
+        if (module) {
+          const index = module.filePath.findIndex(f => f.fileDescriptionsId === filePath.fileDescriptionsId);
+          if (index !== -1) {
+            module.filePath.splice(index, 1);
           }
-          console.log('File deleted successfully', res);
-        },
-        error: (error) => {
-          console.error('Failed to delete module:', error);
         }
+        console.log('File deleted successfully', res);
+      },
+      error: (error) => {
+        console.error('Failed to delete module:', error);
       }
-    );
+    });
+  }
+
+  toggleHomeworkForm(moduleId: string) {
+    if (this.showHomeworkForm === moduleId) {
+      this.showHomeworkForm = null;
+    } else {
+      this.showHomeworkForm = moduleId;
+    }
+  }
+
+  onHomeworkAdded() {
+    this.loadModules();
+    this.selectedHomeworkTitle = null;
+  }
+
+  onPopupClosed() {
+    this.showModuleForm = false;
   }
 }

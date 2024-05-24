@@ -1,5 +1,6 @@
 package com.licenta.StuddyBuddy.dto;
 
+import com.licenta.StuddyBuddy.model.AssignmentInstance;
 import com.licenta.StuddyBuddy.model.FileDescriptions;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,4 +19,5 @@ public class ModuleResponse {
     private String title;
     private String description;
     private List<FileDescriptions> filePath;
+    private List<AssignmentInstanceResponse> assignmentInstances;
 }

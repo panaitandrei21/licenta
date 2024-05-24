@@ -11,8 +11,12 @@
           <textarea pInputTextarea formControlName="description" class="w-full" placeholder="Enter module description"></textarea>
         </div>
 
-        <p-button label="Add Module" styleClass="w-full" [disabled]="moduleForm.invalid" type="submit"></p-button>
-        <p-button label="Cancel" styleClass="w-full" (click)="closePopup()"></p-button>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="moduleForm.invalid">
+          Add Module
+        </button>
+        <button type="button" class="btn btn-secondary w-100 mt-2" (click)="closePopup()">
+          Cancel
+        </button>
       </p-card>
     </form>
   </div>

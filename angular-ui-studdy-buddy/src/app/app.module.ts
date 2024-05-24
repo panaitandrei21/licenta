@@ -40,7 +40,9 @@ import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
 import {QuillModule} from "ngx-quill";
 import { ViewProblemsComponent } from './components/view-problems/view-problems.component';
 import { EditAssignmentComponent } from './components/edit-assignment/edit-assignment.component';
-
+import { AddHomeworkComponent } from './components/add-homework/add-homework.component';
+import { ViewAssignmentInstanceComponent } from './components/view-assignment-instance/view-assignment-instance.component';
+import {ToastrModule} from "ngx-toastr";
 @NgModule({
   declarations: [
     AppComponent,
@@ -63,6 +65,8 @@ import { EditAssignmentComponent } from './components/edit-assignment/edit-assig
     AddProblemsComponent,
     ViewProblemsComponent,
     EditAssignmentComponent,
+    AddHomeworkComponent,
+    ViewAssignmentInstanceComponent
   ],
   imports: [
     BrowserModule,
@@ -85,6 +89,7 @@ import { EditAssignmentComponent } from './components/edit-assignment/edit-assig
     MatToolbar,
     EditorModule,
     QuillModule.forRoot(),
+    ToastrModule.forRoot()
   ],
   providers: [
     provideClientHydration(),

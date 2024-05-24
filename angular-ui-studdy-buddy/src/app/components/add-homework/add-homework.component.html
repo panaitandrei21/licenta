@@ -1,0 +1,20 @@
+<div class="card mt-3">
+  <div class="card-header">Add Homework</div>
+  <div class="card-body">
+    <form [formGroup]="homeworkForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="assignment" class="form-label">Assignment:</label>
+        <app-view-problems (assignmentSelected)="onAssignmentSelected($event)"></app-view-problems>
+        <div *ngIf="selectedAssignment">
+          <p>Selected Assignment: {{ selectedAssignment.title }}</p>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="dueDate" class="form-label">Due Date</label>
+        <input type="date" class="form-control" formControlName="dueDate">
+      </div>
+      <button type="submit" class="btn btn-primary w-2 mr-2" [disabled]="homeworkForm.invalid">Add Homework</button>
+      <button type="button" class="btn btn-secondary w-2" (click)="onPopupClosed()">Cancel</button>
+    </form>
+  </div>
+</div>

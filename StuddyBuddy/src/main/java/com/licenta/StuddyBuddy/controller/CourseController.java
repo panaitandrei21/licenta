@@ -1,6 +1,7 @@
 package com.licenta.StuddyBuddy.controller;
 
 import com.licenta.StuddyBuddy.dto.*;
+import com.licenta.StuddyBuddy.model.AssignmentInstance;
 import com.licenta.StuddyBuddy.model.FileDescriptions;
 import com.licenta.StuddyBuddy.model.Module;
 import com.licenta.StuddyBuddy.service.*;
@@ -43,6 +44,15 @@ public class CourseController {
     private final FileDescriptionsService descriptionsService;
     private final CourseService courseService;
     private final AssignmentService assignmentService;
+    private final AssignmentInstanceService assignmentInstanceService;
+
+    @PostMapping("/add/homework/{moduleId}")
+    public ResponseEntity<?> addHomeworkToModule(@PathVariable String moduleId, @RequestBody HomeworkRequest homeworkRequest) {
+        System.out.println("addHomeworkToModule called with moduleId: " + moduleId);
+
+        AssignmentInstance assignmentInstance = assignmentInstanceService.addAssignemntInstance(moduleId, homeworkRequest);
+        return ResponseEntity.ok(assignmentInstance);
+    }
     @GetMapping("/get/assignment/{assignmentId}")
     public AssignmentDTO getAssignmentById(@PathVariable String assignmentId) {
         AssignmentDTO assignmentDTO = assignmentService.getAssignmentMetadata(assignmentId);

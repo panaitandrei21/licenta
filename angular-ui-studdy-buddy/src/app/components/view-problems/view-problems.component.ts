@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SearchResults } from '../../interfaces/search-result';
 import { CourseService } from '../../services/course.service';
@@ -14,6 +14,7 @@ export class ViewProblemsComponent implements OnInit {
   searchResults: SearchResults;
   searchParams: Params = {};
   page: number = 0;
+  @Output() assignmentSelected = new EventEmitter<any>();  // Event emitter for selected assignment
 
   constructor(private courseService: CourseService, private fb: FormBuilder, private router: Router) {
     this.searchResults = {
@@ -55,11 +56,6 @@ export class ViewProblemsComponent implements OnInit {
       page: this.page
     };
   }
-
-  openEdit() {
-
-  }
-
   deleteItem() {
 
   }
@@ -68,4 +64,8 @@ export class ViewProblemsComponent implements OnInit {
     this.router.navigate(['/edit-assignment', id]);
   }
 
+  selectAssignment(assignment: any) {
+    console.log(assignment);
+    this.assignmentSelected.emit(assignment);
+  }
 }

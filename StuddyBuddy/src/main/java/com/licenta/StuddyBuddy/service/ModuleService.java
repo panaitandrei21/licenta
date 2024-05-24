@@ -1,7 +1,11 @@
 package com.licenta.StuddyBuddy.service;
 
+import com.licenta.StuddyBuddy.dto.AssignmentInstanceResponse;
+import com.licenta.StuddyBuddy.dto.AssignmentResponse;
 import com.licenta.StuddyBuddy.dto.ModuleRequest;
 import com.licenta.StuddyBuddy.dto.ModuleResponse;
+import com.licenta.StuddyBuddy.model.Assignment;
+import com.licenta.StuddyBuddy.model.AssignmentInstance;
 import com.licenta.StuddyBuddy.model.Course;
 import com.licenta.StuddyBuddy.model.Module;
 import com.licenta.StuddyBuddy.repository.ModuleRepository;
@@ -47,7 +51,25 @@ public class ModuleService {
                 module.getModuleId(),
                 module.getTitle(),
                 module.getDescription(),
-                module.getFilePath()
+                module.getFilePath(),
+                module.getAssignmentInstances().stream()
+                        .map(this::convertToAssignmentInstanceResponse)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    private AssignmentInstanceResponse convertToAssignmentInstanceResponse(AssignmentInstance instance) {
+        return new AssignmentInstanceResponse(
+                instance.getAssignmentInstanceId(),
+                convertToAssignmentResponse(instance.getAssignment()),
+                instance.getDueDate()
+        );
+    }
+
+    private AssignmentResponse convertToAssignmentResponse(Assignment assignment) {
+        return new AssignmentResponse(
+                assignment.getAssignmentId(),
+                assignment.getTitle()
         );
     }
 

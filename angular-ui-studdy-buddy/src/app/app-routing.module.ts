@@ -11,6 +11,9 @@ import {ProfileComponent} from "./components/profile/profile.component";
 import {EditModuleComponent} from "./components/edit-module/edit-module.component";
 import {EditCourseComponent} from "./components/edit-course/edit-course.component";
 import {EditAssignmentComponent} from "./components/edit-assignment/edit-assignment.component";
+import {
+  ViewAssignmentInstanceComponent
+} from "./components/view-assignment-instance/view-assignment-instance.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -36,6 +39,9 @@ const routes: Routes = [
     }},
   { path: 'edit-assignment/:id', component: EditAssignmentComponent,canActivate: [authGuard, hasRoleGuard],  data: {
       role: ['ROLE_ADMIN', 'ROLE_TEACHER'],
+    }},
+  { path: 'view/assignment/instance/:id', component: ViewAssignmentInstanceComponent,canActivate: [authGuard, hasRoleGuard],  data: {
+      role: ['ROLE_STUDENT', 'ROLE_TEACHER'],
     }},
 ];
 
