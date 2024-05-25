@@ -7,6 +7,7 @@ import {MessageService} from "primeng/api";
 import {AdminService} from "../../services/admin.service";
 import {MatDialog} from "@angular/material/dialog";
 import {Course} from "../../interfaces/course";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-admin-handle-courses',
@@ -20,10 +21,12 @@ export class AdminHandleCoursesComponent {
                private router: Router,
                private msgService: MessageService,
                private adminService: AdminService,
-               public dialog: MatDialog
+               public dialog: MatDialog,
+               private toastr: ToastrService
+
   ) { }
   courseForm = this.fb.group({
-    courseName: ['', [Validators.required, Validators.minLength(1)]], // Make sure it's initialized and required
+    courseName: ['', [Validators.required, Validators.minLength(1)]],
     description: [''],
     category: ['', Validators.required],
   });
@@ -43,9 +46,13 @@ export class AdminHandleCoursesComponent {
         category: this.courseForm.value.category!
       };
 
-      this.adminService.createCourse(courseData).subscribe(
-        response => {
-          console.log(response);
+      this.adminService.createCourse(courseData).subscribe( {
+        next: (res) => {
+          this.toastr.success('Course created successfully', 'Success');
+        },
+        error: (err) => {
+          this.toastr.error(err, 'Error');
+        }
         }
       );
     }

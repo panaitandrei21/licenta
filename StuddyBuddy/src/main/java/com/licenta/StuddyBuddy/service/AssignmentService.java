@@ -97,4 +97,26 @@ public class AssignmentService {
         byte[] contentBytes = assignmentRepository.getAssignmentSolution(assignmentId);
         return new ByteArrayInputStream(contentBytes);
     }
+    @Transactional
+    public void deleteAssignment(String assignmentId) {
+        assignmentRepository.deleteById(assignmentId);
+    }
+
+    public Assignment editAssignment(String assignmentId, AssignmentDTO assignmentDTO, MultipartFile file, MultipartFile solutionFiles) throws IOException {
+        Optional<Assignment> assignmentOpt = assignmentRepository.findById(assignmentId);
+        if (assignmentOpt.isEmpty())
+            throw new AssignmentNotFoundException("Assignment not found for id: " + assignmentId);
+
+        Assignment assignment = assignmentOpt.get();
+        if (assignmentDTO.getTitle() != null)
+            assignment.setTitle(assignmentDTO.getTitle());
+        if (assignmentDTO.getCategory() != null)
+            assignment.setCategory(assignmentDTO.getCategory());
+        if (file != null)
+            assignment.setContent(file.getBytes());
+        if (solutionFiles != null)
+            assignment.setSolution(solutionFiles.getBytes());
+
+        return assignmentRepository.save(assignment);
+    }
 }

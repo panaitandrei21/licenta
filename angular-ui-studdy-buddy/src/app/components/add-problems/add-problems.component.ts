@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CourseService} from "../../services/course.service";
 import {Assignment} from "../../interfaces/course";
+import {ToastrService} from "ngx-toastr";
+import {AssignmentService} from "../../services/assignment.service";
 
 
 @Component({
@@ -20,7 +22,7 @@ export class AddProblemsComponent implements OnInit{
   });
   editorContent!: string;
 
-  constructor(private fb: FormBuilder, private courseService: CourseService) {
+  constructor(private fb: FormBuilder, private assignmentService: AssignmentService, private toastr: ToastrService) {
     this.modules = {
       syntax: true,
       toolbar:[
@@ -54,7 +56,10 @@ export class AddProblemsComponent implements OnInit{
   onCreateAssignment() {
     const editor = this.assignmentForm.value;
 
-    this.courseService.addAssignment(editor as Assignment).subscribe(res => res)
+    this.assignmentService.addAssignment(editor as Assignment).subscribe({
+      next: res => this.toastr.success('Assignment edited successfully', 'Success'),
+      error: err => this.toastr.error(err, 'Error')
+    })
   }
   get title() {
     return this.assignmentForm.get('title');

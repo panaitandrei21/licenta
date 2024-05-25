@@ -1,9 +1,10 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { QuillEditorComponent } from 'ngx-quill';
-import {Assignment} from "../../interfaces/course";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AssignmentService} from "../../services/assignment.service";
+import { Assignment } from "../../interfaces/course";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { AssignmentService } from "../../services/assignment.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-edit-assignment',
@@ -13,10 +14,10 @@ import {AssignmentService} from "../../services/assignment.service";
 export class EditAssignmentComponent implements OnInit {
   editForm: FormGroup;
   @ViewChild(QuillEditorComponent, { static: true }) editor!: QuillEditorComponent;
-
+  assignmentId: string | null = '';
   modules = {
     syntax: true,
-    toolbar:[
+    toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
       ['blockquote', 'code-block'],
       [{ list: 'ordered' }, { list: 'bullet' }],
@@ -27,24 +28,26 @@ export class EditAssignmentComponent implements OnInit {
       ['image'],
       ['code-block']
     ],
-  }
+  };
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private assignmentService: AssignmentService
+    private assignmentService: AssignmentService,
+    private toastr: ToastrService
   ) {
     this.editForm = this.fb.group({
       title: ['', Validators.required],
       category: [''],
-      files: [],
-      solutionFiles: []
+      content: [''],
+      solution:[''],
     });
   }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
+    this.assignmentId = id;
     if (id) {
       this.assignmentService.getAssignmentById(id).subscribe((assignment: Assignment) => {
         console.log(assignment.createdDate);
@@ -52,8 +55,8 @@ export class EditAssignmentComponent implements OnInit {
         this.editForm.patchValue({
           title: assignment.title,
           category: assignment.category,
-          files: this.b64DecodeUnicode(assignment.content),
-          solutionFiles: this.b64DecodeUnicode(assignment.solution),
+          content: this.cleanBase64String(this.b64DecodeUnicode(assignment.content)),
+          solution: this.cleanBase64String(this.b64DecodeUnicode(assignment.solution)),
         });
       });
     }
@@ -69,11 +72,18 @@ export class EditAssignmentComponent implements OnInit {
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
   }
+
   saveChanges(): void {
+    console.log(this.editForm.value);
     if (this.editForm.valid) {
-      // this.assignmentService.updateAssignment(this.editForm.value).subscribe(() => {
-      //   this.router.navigate(['/admin']); // Navigate back to the admin page after saving
-      // });
+      this.assignmentService.updateAssignment(this.editForm.value as Assignment, this.assignmentId).subscribe({
+        next: res => {
+          this.toastr.success('Assignment added successfully', 'Success')
+          this.router.navigate(['/admin']);
+        },
+          error: err => this.toastr.error(err, 'Error')
+
+      });
     }
   }
 
@@ -85,6 +95,10 @@ export class EditAssignmentComponent implements OnInit {
     return cleaned;
   }
 
+  cleanBase64String(str: string): string {
+    return str.replace(/"image/g, 'image').replace(/"/g, '');
+  }
+
   goBack(): void {
     this.router.navigate(['/admin']);
   }
@@ -92,6 +106,4 @@ export class EditAssignmentComponent implements OnInit {
   get title() {
     return this.editForm.get('title');
   }
-
-
 }

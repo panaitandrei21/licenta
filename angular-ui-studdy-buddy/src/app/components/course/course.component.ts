@@ -174,7 +174,10 @@ export class CourseComponent implements OnInit {
     this.selectedHomeworkTitle = null;
   }
 
-  onPopupClosed() {
+  onModuleClosed() {
     this.showModuleForm = false;
+  }
+  onHomeworkClosed() {
+    this.showHomeworkForm = null;
   }
 }

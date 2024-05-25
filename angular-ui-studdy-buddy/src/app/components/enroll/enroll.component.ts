@@ -2,6 +2,7 @@ import {Component, Inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {AdminService} from "../../services/admin.service";
 import {Course} from "../../interfaces/course";
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-enroll',
@@ -12,7 +13,8 @@ export class EnrollComponent implements OnInit{
   courses: Course[] = []; // Define the courses property
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, // Injecting data passed to the dialog
               private dialogRef: MatDialogRef<EnrollComponent>,
-              private adminService: AdminService) {
+              private adminService: AdminService,
+              private toastr: ToastrService) {
   }
   fetchCourses(): void {
     this.adminService.getAllCourses().subscribe(
@@ -31,11 +33,11 @@ export class EnrollComponent implements OnInit{
     console.log(courseId)
     this.adminService.enrollUser(this.data.userId[0], courseId).subscribe(
       (response) => {
-        console.log('User enrolled successfully', response);
+        this.toastr.success('User enrolled successfully', 'Success');
         this.dialogRef.close(true);
       },
       (error) => {
-        console.log('Error enrolling user', error);
+        this.toastr.error(error, 'Error');
       }
     );
   }

@@ -1,9 +1,9 @@
 
-  <app-nav-bar></app-nav-bar>
-  <div class="container mt-5">
+<app-nav-bar></app-nav-bar>
+<div class="container mt-5">
   <!-- Module Form and Button -->
   <div *ngIf="showModuleForm && userRole === 'ROLE_TEACHER'">
-    <app-moduleform [courseId]="courseId" (moduleAdded)="loadModules()"></app-moduleform>
+    <app-moduleform [courseId]="courseId" (moduleAdded)="loadModules()" (popupClosed)="onModuleClosed()"></app-moduleform>
   </div>
 
   <button *ngIf="userRole === 'ROLE_TEACHER'" class="btn btn-primary btn-lg mt-3" (click)="toggleModuleForm()">
@@ -73,7 +73,7 @@
         <app-add-homework
           [moduleId]="module.moduleId"
           (homeworkAdded)="onHomeworkAdded()"
-          (popupClosed)="onPopupClosed()"></app-add-homework>
+          (popupClosed)="onHomeworkClosed()"></app-add-homework>
       </div>
       <div *ngIf="selectedHomeworkTitle && showHomeworkForm === module.moduleId">
         <p>Selected Homework: {{ selectedHomeworkTitle }}</p>

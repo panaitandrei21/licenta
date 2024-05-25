@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { SearchResults } from '../../interfaces/search-result';
 import { CourseService } from '../../services/course.service';
 import {Params, Router} from '@angular/router';
+import {ToastrService} from "ngx-toastr";
+import {AssignmentService} from "../../services/assignment.service";
 
 @Component({
   selector: 'app-view-problems',
@@ -14,9 +16,10 @@ export class ViewProblemsComponent implements OnInit {
   searchResults: SearchResults;
   searchParams: Params = {};
   page: number = 0;
-  @Output() assignmentSelected = new EventEmitter<any>();  // Event emitter for selected assignment
+  @Output() assignmentSelected = new EventEmitter<any>();
 
-  constructor(private courseService: CourseService, private fb: FormBuilder, private router: Router) {
+  constructor(private assignmentService: AssignmentService, private fb: FormBuilder, private router: Router,
+              private toastr: ToastrService) {
     this.searchResults = {
       assignments: [],
       totalPages: 1
@@ -38,7 +41,7 @@ export class ViewProblemsComponent implements OnInit {
   }
 
   searchAssignments() {
-    this.courseService.searchAssignments(this.appendSortAndPage()).subscribe({
+    this.assignmentService.searchAssignments(this.appendSortAndPage()).subscribe({
       next: (response => {
         console.log(response);
         this.searchResults = response as SearchResults;
@@ -56,8 +59,15 @@ export class ViewProblemsComponent implements OnInit {
       page: this.page
     };
   }
-  deleteItem() {
+  deleteItem(assignmentId: string) {
+    this.assignmentService.deleteAssignment(assignmentId).subscribe({
+      next: (response => {
+        this.searchResults.assignments = this.searchResults.assignments.filter(assignment => assignment.assignmentId !== assignmentId);
+        this.toastr.success(`Assignment deleted successfully ${assignmentId}`, 'Success');
+      }),
+      error: (err) => this.toastr.error(err, 'Error')
 
+    });
   }
 
   navigateToEdit(id: string): void {

@@ -46,6 +46,24 @@ public class CourseController {
     private final AssignmentService assignmentService;
     private final AssignmentInstanceService assignmentInstanceService;
 
+    @PutMapping("/edit/assignment/{assignmentId}")
+    public ResponseEntity<?> editAssignment(
+            @PathVariable("assignmentId") String assignmentId,
+            @RequestPart("assignment") AssignmentDTO assignmentDTO,
+            @RequestPart(value = "files", required = false) MultipartFile file,
+            @RequestPart(value = "solutionFiles", required = false) MultipartFile solutionFiles) throws IOException {
+
+        return ResponseEntity.status(HttpStatus.OK).body(assignmentService.editAssignment(assignmentId, assignmentDTO, file, solutionFiles));
+
+    }
+    @DeleteMapping("/delete/assignment/{assignmentId}")
+    public ResponseEntity<?> deleteAssignment(@PathVariable String assignmentId) {
+        assignmentService.deleteAssignment(assignmentId);
+        Map<String, String> res = new HashMap<>();
+        res.put("response", "Assignment deleted successfully");
+        return ResponseEntity.ok(res);
+    }
+
     @PostMapping("/add/homework/{moduleId}")
     public ResponseEntity<?> addHomeworkToModule(@PathVariable String moduleId, @RequestBody HomeworkRequest homeworkRequest) {
         System.out.println("addHomeworkToModule called with moduleId: " + moduleId);

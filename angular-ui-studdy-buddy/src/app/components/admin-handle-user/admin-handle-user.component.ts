@@ -11,6 +11,7 @@ import {Course} from "../../interfaces/course";
 import {MatDialog} from "@angular/material/dialog";
 import {EnrollComponent} from "../enroll/enroll.component";
 import {SeeUserCoursesComponent} from "../see-user-courses/see-user-courses.component";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-admin-handle-user',
@@ -38,7 +39,8 @@ export class AdminHandleUserComponent {
                private router: Router,
                private msgService: MessageService,
                private adminService: AdminService,
-               public dialog: MatDialog
+               public dialog: MatDialog,
+               private toastr: ToastrService
   ) { }
 
   fetchUsers(): void {
@@ -47,17 +49,6 @@ export class AdminHandleUserComponent {
       this.gridApi.refreshCells();
     });
   }
-  getSelectedRows() {
-    this.selectedData = this.ChargridApi?.getSelectedRows();
-    console.log(this.selectedData);
-
-  }
-  onGridReady(params: any) {
-    this.ChargridApi = params.api;
-    this.gridApi = params.api;
-  }
-
-
   get email() {
     return this.registerForm.controls['email'];
   }
@@ -86,11 +77,11 @@ export class AdminHandleUserComponent {
       console.log(user);
       this.authService.addTeacher(user).subscribe(
         (response: any) => {
-          console.log(response);
+          this.toastr.success('User added successfully', 'Success');
           this.fetchUsers();
         },
         (error) => {
-          this.msgService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong' });
+          this.toastr.error(error, 'Error');
         }
       );
     }

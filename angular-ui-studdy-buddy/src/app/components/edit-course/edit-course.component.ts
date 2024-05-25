@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CourseService } from "../../services/course.service";
-import { ActivatedRoute } from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-edit-course',
@@ -13,16 +14,16 @@ export class EditCourseComponent implements OnInit {
   imageForm!: FormGroup;
   imagePreview: string | ArrayBuffer | null = null;
 
-  constructor(private courseService: CourseService, private route: ActivatedRoute, private fb: FormBuilder) { }
+  constructor(private courseService: CourseService, private route: ActivatedRoute,
+              private fb: FormBuilder, private toastr: ToastrService, private router: Router) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.courseId = params['id'];
     });
 
-    // Initialize the form group and define the form control 'image'
     this.imageForm = this.fb.group({
-      image: new FormControl(null) // Use null as initial value
+      image: new FormControl(null)
     });
   }
 
@@ -36,11 +37,10 @@ export class EditCourseComponent implements OnInit {
       };
       reader.readAsDataURL(file);
 
-      // Update the form control with the file
       this.imageForm.patchValue({
         image: file
       });
-      this.imageForm.get('image')!.updateValueAndValidity(); // Ensure the control validity is updated
+      this.imageForm.get('image')!.updateValueAndValidity();
     }
   }
 
@@ -52,8 +52,11 @@ export class EditCourseComponent implements OnInit {
       formData.append('imageData', file);
 
       this.courseService.updateCourseImage(this.courseId, formData).subscribe({
-        next: (response) => console.log('Image saved successfully!'),
-        error: (error) => console.error('Error saving image', error)
+        next: (response) => {
+          this.toastr.success('Course image updated successfully', 'Success');
+          this.router.navigate(['/home'])
+          },
+        error: (error) => this.toastr.error(error, 'Error')
       });
     } else {
       console.error('No file selected');

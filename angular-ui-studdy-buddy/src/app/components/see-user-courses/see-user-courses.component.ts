@@ -4,6 +4,7 @@ import { CourseService } from "../../services/course.service";
 import { UserDTO } from "../../interfaces/user-dto";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {AdminService} from "../../services/admin.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-see-user-courses',
@@ -15,7 +16,8 @@ export class SeeUserCoursesComponent implements OnInit {
   courses: Course[] = [];
   constructor(private courseService: CourseService,
               @Inject(MAT_DIALOG_DATA) public data: any,
-              private adminService: AdminService) {}
+              private adminService: AdminService,
+              private toastr: ToastrService) {}
 
   ngOnInit(): void {
     if (this.user) {
@@ -39,8 +41,10 @@ export class SeeUserCoursesComponent implements OnInit {
   }
 
   removeFromCourse(courseId: string) {
-    this.adminService.removeUserFromCourse(courseId, this.user.id as string).subscribe(
-      res => console.log(res)
-    )
+    this.adminService.removeUserFromCourse(courseId, this.user.id as string).subscribe({
+      next: (res) => this.toastr.success('Module added successfully', 'Success'),
+      error: (err) => this.toastr.success('Module added successfully', 'Success')
+    }
+  )
   }
 }

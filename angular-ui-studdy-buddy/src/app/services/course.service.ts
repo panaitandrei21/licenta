@@ -81,41 +81,13 @@ export class CourseService {
   updateCourseImage(courseId: string, imageData: FormData): Observable<any> {
     return this.http.post(`${this.baseUrl}/api/course/photo/${courseId}`, imageData);
   }
-  addAssignment(assgnmentDTO: Assignment) {
-    const formData = this.buildMultipart(assgnmentDTO);
-    return this.http.post(`${this.baseUrl}/api/course/add/assignment`, formData);
 
-  }
-  private buildMultipart(assignment: Assignment) {
-    let formData = new FormData();
-    const assignmentObj = {
-      title: assignment?.title,
-      category: assignment?.category,
-    }
-    console.log(assignment);
-    const content = assignment?.content;
-    const solution = assignment?.solution
-    formData.append("assignment", new Blob([JSON.stringify(assignmentObj)], {type: 'application/json'}));
-    if (content) {
-      formData.append("files", new Blob([JSON.stringify(content.toString())], {type: 'text/html'}));
-    }
-    if (solution) {
-      formData.append("solutionFiles", new Blob([JSON.stringify(solution.toString())], {type: 'text/html'}));
-    }
-    return formData;
-  }
 
-  searchAssignments(searchParams: Params) {
-    let httpParams = new HttpParams();
-    for (const key of Object.keys(searchParams)) {
-      httpParams = httpParams.append(key, searchParams[key]);
-    }
-    return this.http.get(`${this.baseUrl}/api/course/get/assignments`, {params: httpParams});
 
-  }
 
   addHomework(moduleId: string, formValue: any) {
     return this.http.post(`${this.baseUrl}/api/course/add/homework/${moduleId}`, formValue);
   }
+
 
 }

@@ -26,15 +26,19 @@ export class ModuleformComponent implements OnInit {
   }
   addModule(module: ModuleRequest) {
     const moduleWithCourseId = { ...module, courseId: this.courseId };
-    this.courseService.addModuleToCourse(moduleWithCourseId).subscribe(
-      (res: ModuleRequest) => {
-        console.log(res);
+    this.courseService.addModuleToCourse(moduleWithCourseId).subscribe({
+      next: (res: ModuleRequest) => {
         this.moduleAdded.emit(res);
-        this.toastr.success('Module added successfully', 'Succes');
+        this.toastr.success('Module added successfully', 'Success');
         this.closePopup();
+      },
+      error: (err) => {
+        this.toastr.error(err, 'Error');
+        console.error(err);
       }
-    );
+    });
   }
+
   submitModule(): void {
     if (this.moduleForm.valid) {
       console.log('Submitting module:', this.moduleForm.value);
