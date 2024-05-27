@@ -1,1 +1,28 @@
-<p>view-assignment-instance works!</p>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h3>{{ assignment?.title }}</h3>
+          <div class="mb-3">
+            <label for="assignmentContent" class="form-label">Content</label>
+            <div [formGroup]="viewForm">
+              <quill-editor formControlName="content" [modules]="modules" [readOnly]="true" [style]="{'height':'auto'}"></quill-editor>
+            </div>
+          </div>
+          <!-- Display last submission if exists -->
+          <div *ngIf="submittedFilePath">
+            <p>Your last submission: {{ submittedFilePath }}</p>
+            <button (click)="downloadSubmission(submittedFilePath)" class="btn btn-info">Download Submission</button>
+          </div>
+          <!-- File Upload Section - Always available -->
+          <div class="mb-3">
+            <label for="fileUpload" class="form-label">Submit Assignment</label>
+            <input type="file" id="fileUpload" (change)="onFileSelected($event)" class="form-control">
+            <button (click)="onSubmit()" class="btn btn-primary mt-3">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

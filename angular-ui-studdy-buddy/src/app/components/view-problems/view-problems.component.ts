@@ -1,10 +1,11 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+// view-problems.component.ts
+
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SearchResults } from '../../interfaces/search-result';
-import { CourseService } from '../../services/course.service';
-import {Params, Router} from '@angular/router';
-import {ToastrService} from "ngx-toastr";
-import {AssignmentService} from "../../services/assignment.service";
+import { Params, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { AssignmentService } from '../../services/assignment.service';
 
 @Component({
   selector: 'app-view-problems',
@@ -16,6 +17,7 @@ export class ViewProblemsComponent implements OnInit {
   searchResults: SearchResults;
   searchParams: Params = {};
   page: number = 0;
+  pageSize: number = 20;
   @Output() assignmentSelected = new EventEmitter<any>();
 
   constructor(private assignmentService: AssignmentService, private fb: FormBuilder, private router: Router,
@@ -36,16 +38,17 @@ export class ViewProblemsComponent implements OnInit {
   search() {
     this.page = 0;
     this.searchParams = this.searchTableForm.value;
-    console.log(this.searchParams);
     this.searchAssignments();
   }
 
   searchAssignments() {
-    this.assignmentService.searchAssignments(this.appendSortAndPage()).subscribe({
-      next: (response => {
-        console.log(response);
-        this.searchResults = response as SearchResults;
-      })
+    this.assignmentService.searchAssignments(this.searchParams, this.page, this.pageSize).subscribe({
+      next: (response: any) => {
+        this.searchResults = response;
+      },
+      error: (err) => {
+        this.toastr.error(err.message, 'Error');
+      }
     });
   }
 
@@ -53,12 +56,6 @@ export class ViewProblemsComponent implements OnInit {
     this.searchAssignments();
   }
 
-  private appendSortAndPage() {
-    return {
-      ...this.searchParams,
-      page: this.page
-    };
-  }
   deleteItem(assignmentId: string) {
     this.assignmentService.deleteAssignment(assignmentId).subscribe({
       next: (response => {
@@ -66,7 +63,6 @@ export class ViewProblemsComponent implements OnInit {
         this.toastr.success(`Assignment deleted successfully ${assignmentId}`, 'Success');
       }),
       error: (err) => this.toastr.error(err, 'Error')
-
     });
   }
 
@@ -75,7 +71,11 @@ export class ViewProblemsComponent implements OnInit {
   }
 
   selectAssignment(assignment: any) {
-    console.log(assignment);
     this.assignmentSelected.emit(assignment);
+  }
+
+  goToPage(page: number) {
+    this.page = page;
+    this.searchAssignments();
   }
 }

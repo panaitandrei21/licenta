@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,4 +30,9 @@ public class AssignmentInstance {
     private Module module;
 
     private Date dueDate;
+
+    @OneToMany(mappedBy = "assignmentInstance", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<AssignmentSubmission> submissions;
 }
+

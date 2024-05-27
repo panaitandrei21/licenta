@@ -21,9 +21,13 @@ public class AssignmentSubmission {
     private LocalDateTime submissionDate;
 
     @ManyToOne
+    @JoinColumn(name = "assignment_instance_id")
     @JsonBackReference
-    private Assignment assignment;
+    private AssignmentInstance assignmentInstance;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String grade;
     private String feedback;

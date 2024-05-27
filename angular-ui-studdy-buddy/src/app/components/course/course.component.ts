@@ -79,7 +79,7 @@ export class CourseComponent implements OnInit {
   }
 
   downloadFile(filename: string) {
-    this.courseService.downloadFile(filename, this.courseId).subscribe(
+    this.courseService.downloadFile(filename).subscribe(
       event => {
         this.resportProgress(event);
       },

@@ -43,6 +43,8 @@ import { EditAssignmentComponent } from './components/edit-assignment/edit-assig
 import { AddHomeworkComponent } from './components/add-homework/add-homework.component';
 import { ViewAssignmentInstanceComponent } from './components/view-assignment-instance/view-assignment-instance.component';
 import {ToastrModule} from "ngx-toastr";
+import {NgxFileDropModule} from "ngx-file-drop";
+import {DragDropModule} from "@angular/cdk/drag-drop";
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,7 +68,7 @@ import {ToastrModule} from "ngx-toastr";
     ViewProblemsComponent,
     EditAssignmentComponent,
     AddHomeworkComponent,
-    ViewAssignmentInstanceComponent
+    ViewAssignmentInstanceComponent,
   ],
   imports: [
     BrowserModule,
@@ -89,7 +91,8 @@ import {ToastrModule} from "ngx-toastr";
     MatToolbar,
     EditorModule,
     QuillModule.forRoot(),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    DragDropModule
   ],
   providers: [
     provideClientHydration(),

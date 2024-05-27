@@ -85,6 +85,8 @@ public class AssignmentService {
 
     public AssignmentDTO getAssignmentMetadata(String assignmentId) {
         AssignmentDTO assignmentDTO = assignmentRepository.getAssignmentMetadata(assignmentId);
+        if (assignmentDTO == null)
+            throw new AssignmentNotFoundException("Assignment not found for id: " + assignmentId);
         return assignmentDTO;
     }
 

@@ -12,5 +12,6 @@ import lombok.*;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AssignmentResponse {
     private String assignmentId;
+    private byte[] content;
     private String title;
 }

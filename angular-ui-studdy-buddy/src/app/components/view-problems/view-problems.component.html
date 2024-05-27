@@ -1,3 +1,4 @@
+<!-- view-problems.component.html -->
 <div class="container my-5">
   <div class="row justify-content-center">
     <div class="col-lg-20">
@@ -75,6 +76,25 @@
               </table>
             </div>
           </div>
+
+          <!-- Pagination Controls -->
+          <nav aria-label="Page navigation" *ngIf="searchResults.totalPages > 1">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="page === 0">
+                <a class="page-link" (click)="goToPage(page - 1)" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li class="page-item" *ngFor="let pageNum of [].constructor(searchResults.totalPages); let idx = index" [class.active]="idx === page">
+                <a class="page-link" (click)="goToPage(idx)">{{ idx + 1 }}</a>
+              </li>
+              <li class="page-item" [class.disabled]="page === searchResults.totalPages - 1">
+                <a class="page-link" (click)="goToPage(page + 1)" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>

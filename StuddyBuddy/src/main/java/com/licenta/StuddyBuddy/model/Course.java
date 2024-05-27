@@ -29,4 +29,8 @@ public class Course {
     @OneToMany(mappedBy = "course")
     @JsonManagedReference
     private List<Module> modules;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Topic> topics;
 }

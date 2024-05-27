@@ -67,10 +67,10 @@ public class ModuleService {
     }
 
     private AssignmentResponse convertToAssignmentResponse(Assignment assignment) {
-        return new AssignmentResponse(
-                assignment.getAssignmentId(),
-                assignment.getTitle()
-        );
+        return AssignmentResponse.builder()
+                .assignmentId(assignment.getAssignmentId())
+                .title(assignment.getTitle())
+                .build();
     }
 
     public Optional<Module> getModuleByModuleId(String moduleId) {

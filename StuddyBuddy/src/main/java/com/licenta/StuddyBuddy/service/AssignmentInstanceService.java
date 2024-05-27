@@ -2,6 +2,7 @@ package com.licenta.StuddyBuddy.service;
 
 import com.licenta.StuddyBuddy.dto.AssignmentDTO;
 import com.licenta.StuddyBuddy.dto.HomeworkRequest;
+import com.licenta.StuddyBuddy.exception.AssignmentNotFoundException;
 import com.licenta.StuddyBuddy.exception.ModuleNotFoundException;
 import com.licenta.StuddyBuddy.model.Assignment;
 import com.licenta.StuddyBuddy.model.AssignmentInstance;
@@ -32,5 +33,18 @@ public class AssignmentInstanceService {
                 .assignment(assignment)
                 .build());
     }
+    public AssignmentDTO getAssignmentInstanceMetadata(String assignmentInstanceId) {
+        Optional<AssignmentInstance> assignmentInstanceOpt = assignmentInstanceRepository.findById(assignmentInstanceId);
+        if (assignmentInstanceOpt.isEmpty())
+            throw new AssignmentNotFoundException("Assignment not found for id: " + assignmentInstanceId);
 
+
+        AssignmentDTO assignment = assignmentService.getAssignmentMetadata(assignmentInstanceOpt.get().getAssignment().getAssignmentId());
+        return assignment;
+    }
+
+
+    public Optional<AssignmentInstance> getAssignmentInstanceById(String assignmentInstanceId) {
+        return assignmentInstanceRepository.findById(assignmentInstanceId);
+    }
 }

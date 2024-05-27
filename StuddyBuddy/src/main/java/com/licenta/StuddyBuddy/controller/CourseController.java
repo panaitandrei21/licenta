@@ -20,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,6 +44,7 @@ public class CourseController {
     private final CourseService courseService;
     private final AssignmentService assignmentService;
     private final AssignmentInstanceService assignmentInstanceService;
+    private final FileStorageService fileStorageService;
 
     @PutMapping("/edit/assignment/{assignmentId}")
     public ResponseEntity<?> editAssignment(
@@ -91,7 +91,7 @@ public class CourseController {
             @RequestPart("assignment") AssignmentDTO assignmentDTO,
             @RequestPart(value = "files", required = false) MultipartFile file,
             @RequestPart(value = "solutionFiles", required = false) MultipartFile solutionFiles) throws IOException {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();;
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.status(HttpStatus.CREATED).body(assignmentService.addAssignment(assignmentDTO, file, userDetails, solutionFiles));
     }
     @GetMapping ("/get/assignments")
@@ -100,10 +100,9 @@ public class CourseController {
             @ModelAttribute SearchAssignmentsDTO searchAssignmentsDTO) {
         System.out.println(searchAssignmentsDTO);
         long totalRecords = assignmentService.countAssignments(searchAssignmentsDTO);
-        long totalPages = (totalRecords + 100 - 1) / 100;
-        System.out.println(searchAssignmentsDTO);
+        long totalPages = (totalRecords + 20 - 1) / 20;
         SearchResultsPageDTO searchResultsPageDTO = new SearchResultsPageDTO();
-        List<AssignmentDTO> searchResults = assignmentService.getAllAssignments(searchAssignmentsDTO, page, 100L);
+        List<AssignmentDTO> searchResults = assignmentService.getAllAssignments(searchAssignmentsDTO, page, 20L);
         searchResultsPageDTO.setTotalPages(totalPages);
         searchResultsPageDTO.setAssignments(searchResults);
         return ResponseEntity.ok(searchResultsPageDTO);
@@ -125,21 +124,8 @@ public class CourseController {
             @RequestParam("file") MultipartFile file,
             @RequestParam("moduleId") String moduleId,
             @RequestParam("courseId") String courseId) {
-
-        String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        if (filename.contains("..")) {
-            return ResponseEntity.badRequest().body("Sorry! Filename contains invalid path sequence " + filename);
-        }
-
         try {
-            String uniqueFilename = courseId + "_" + filename;
-            Path targetLocation = DIRECTORY.resolve(uniqueFilename);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-
-            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/download/")
-                    .path(uniqueFilename)
-                    .toUriString();
+            String uniqueFilename = fileStorageService.storeFile(file, courseId);
 
             Optional<Module> optionalModule = moduleService.getModuleByModuleId(moduleId);
             if (optionalModule.isPresent()) {
@@ -155,7 +141,7 @@ public class CourseController {
                 return ResponseEntity.notFound().header("Module with ID " + moduleId + " not found!").build();
             }
         } catch (IOException ex) {
-            return ResponseEntity.internalServerError().body("Could not store file " + filename + ". Please try again!");
+            return ResponseEntity.internalServerError().body("Could not store file. Please try again!");
         }
     }
     @PostMapping("/add/module")

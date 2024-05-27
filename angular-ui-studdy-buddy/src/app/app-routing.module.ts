@@ -43,6 +43,9 @@ const routes: Routes = [
   { path: 'view/assignment/instance/:id', component: ViewAssignmentInstanceComponent,canActivate: [authGuard, hasRoleGuard],  data: {
       role: ['ROLE_STUDENT', 'ROLE_TEACHER'],
     }},
+  // { path: 'view/submissions/:id', component: ViewSubmissionComponent,canActivate: [authGuard, hasRoleGuard],  data: {
+  //     role: ['ROLE_STUDENT', 'ROLE_TEACHER'],
+  //   }},
 ];
 
 @NgModule({

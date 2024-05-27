@@ -55,7 +55,7 @@ public class CustomAssignmentRepositoryImpl implements CustomAssignmentRepositor
         }
 
         // Apply pagination
-        int pageSizeValue = (pageSize != null) ? pageSize.intValue() : 100;
+        int pageSizeValue = (pageSize != null) ? pageSize.intValue() : 20;
         int pageNumber = (page != null) ? page.intValue() : 0;
         int offset = pageNumber * pageSizeValue;
 

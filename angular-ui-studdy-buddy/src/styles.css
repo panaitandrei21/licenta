@@ -5,9 +5,9 @@
 @import 'ag-grid-community/styles/ag-theme-quartz.css';
 @import 'ngx-toastr/toastr';
 
-
 .background-image {
-  background-image: url('./assets/pieces-blue-stationery.jpg');
+  background-image: linear-gradient(#26beb1 50%, rgba(52, 225, 231, 0.3) 100%);
+  background-color: #1C1E32;
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;

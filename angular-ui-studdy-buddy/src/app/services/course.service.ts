@@ -49,7 +49,7 @@ export class CourseService {
     });
   }
 
-  downloadFile(filename: String, courseId: String): Observable<any> {
+  downloadFile(filename: String): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/course/download/${filename}`, {
       observe: 'response',
       responseType: 'blob' as 'json',
