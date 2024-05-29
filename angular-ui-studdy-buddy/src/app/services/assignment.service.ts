@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Assignment} from "../interfaces/course";
 import {Params} from "@angular/router";
+import {AssignmentSubmission} from "../interfaces/assignment-instance";
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +62,15 @@ export class AssignmentService {
     return this.http.delete(`${this.baseUrl}/api/course/delete/assignment/${assignmentId}`);
   }
 
+  searchSubmissions(searchParams: Params, page: number, size: number) {
+    let httpParams = new HttpParams();
+    for (const key of Object.keys(searchParams)) {
+      httpParams = httpParams.append(key, searchParams[key]);
+    }
+    httpParams = httpParams.append('page', page.toString());
+    httpParams = httpParams.append('size', size.toString());
+    return this.http.get(`${this.baseUrl}/api/assignment/course/submissions`, { params: httpParams });
+  }
   submitAssignment(formData: FormData) {
     return this.http.post(`${this.baseUrl}/api/assignment/submitAssignment`, formData);
   }
@@ -82,4 +92,6 @@ export class AssignmentService {
   reviewSubmission(submissionId: string, grade: string, feedback: string): Observable<any> {
     return this.http.put(`${this.baseUrl}/api/assignment/reviewSubmission/${submissionId}`, { grade, feedback });
   }
+
+
 }

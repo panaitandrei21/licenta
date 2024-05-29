@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpEvent, HttpEventType } from "@angular/common/http";
 import { CourseService } from "../../services/course.service";
-import { ActivatedRoute } from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import { FilePath, ModuleRequest } from "../../interfaces/module-request";
 import { saveAs } from 'file-saver';
 import { Course } from "../../interfaces/course";
@@ -27,7 +27,7 @@ export class CourseComponent implements OnInit {
   showHomeworkForm: any;
   selectedHomeworkTitle: string | null = null;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private courseService: CourseService, private authService: AuthService) {}
+  constructor(private router: Router,private route: ActivatedRoute, private http: HttpClient, private courseService: CourseService, private authService: AuthService) {}
 
   toggleModuleForm(): void {
     this.showModuleForm = !this.showModuleForm;
@@ -86,7 +86,9 @@ export class CourseComponent implements OnInit {
       error => console.error('Error downloading the file!', error.message)
     );
   }
-
+  navigateToAllSubmissions(): void {
+    this.router.navigate(['/course', this.courseId, 'submissions']);
+  }
   private resportProgress(httpEvent: HttpEvent<any>): void {
     switch (httpEvent.type) {
       case HttpEventType.UploadProgress:

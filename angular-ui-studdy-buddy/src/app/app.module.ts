@@ -8,7 +8,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
-import { ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import {HttpClientModule, provideHttpClient, withInterceptors} from '@angular/common/http';
 import { ToastModule } from 'primeng/toast';
@@ -45,6 +45,8 @@ import { ViewAssignmentInstanceComponent } from './components/view-assignment-in
 import {ToastrModule} from "ngx-toastr";
 import {NgxFileDropModule} from "ngx-file-drop";
 import {DragDropModule} from "@angular/cdk/drag-drop";
+import { ViewSubmissionsComponent } from './components/view-submissions/view-submissions.component';
+import { ReviewSubmissionComponent } from './components/review-submission/review-submission.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -69,6 +71,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     EditAssignmentComponent,
     AddHomeworkComponent,
     ViewAssignmentInstanceComponent,
+    ViewSubmissionsComponent,
+    ReviewSubmissionComponent,
   ],
   imports: [
     BrowserModule,
@@ -92,7 +96,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     EditorModule,
     QuillModule.forRoot(),
     ToastrModule.forRoot(),
-    DragDropModule
+    DragDropModule,
+    FormsModule
   ],
   providers: [
     provideClientHydration(),

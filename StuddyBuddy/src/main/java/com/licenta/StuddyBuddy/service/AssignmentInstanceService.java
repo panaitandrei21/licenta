@@ -1,6 +1,8 @@
 package com.licenta.StuddyBuddy.service;
 
 import com.licenta.StuddyBuddy.dto.AssignmentDTO;
+import com.licenta.StuddyBuddy.dto.AssignmentInstanceResponse;
+import com.licenta.StuddyBuddy.dto.AssignmentResponse;
 import com.licenta.StuddyBuddy.dto.HomeworkRequest;
 import com.licenta.StuddyBuddy.exception.AssignmentNotFoundException;
 import com.licenta.StuddyBuddy.exception.ModuleNotFoundException;
@@ -12,6 +14,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -33,14 +37,20 @@ public class AssignmentInstanceService {
                 .assignment(assignment)
                 .build());
     }
-    public AssignmentDTO getAssignmentInstanceMetadata(String assignmentInstanceId) {
+    public AssignmentInstanceResponse getAssignmentInstanceMetadata(String assignmentInstanceId) {
         Optional<AssignmentInstance> assignmentInstanceOpt = assignmentInstanceRepository.findById(assignmentInstanceId);
         if (assignmentInstanceOpt.isEmpty())
             throw new AssignmentNotFoundException("Assignment not found for id: " + assignmentInstanceId);
 
 
-        AssignmentDTO assignment = assignmentService.getAssignmentMetadata(assignmentInstanceOpt.get().getAssignment().getAssignmentId());
-        return assignment;
+        AssignmentDTO assignmentDTO = assignmentService.getAssignmentMetadata(assignmentInstanceOpt.get().getAssignment().getAssignmentId());
+        return AssignmentInstanceResponse.builder()
+                .assignment(AssignmentResponse.builder()
+                        .assignmentId(assignmentDTO.getAssignmentId())
+                        .title(assignmentDTO.getTitle())
+                        .build())
+                .dueDate(assignmentInstanceOpt.get().getDueDate())
+                .build();
     }
 
 

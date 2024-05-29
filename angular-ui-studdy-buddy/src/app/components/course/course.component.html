@@ -1,5 +1,5 @@
-<app-nav-bar></app-nav-bar>
 <div class="container mt-5">
+  <app-nav-bar></app-nav-bar>
   <!-- Module Form and Button -->
   <div *ngIf="showModuleForm && userRole === 'ROLE_TEACHER'">
     <app-moduleform [courseId]="courseId" (moduleAdded)="loadModules()" (popupClosed)="onModuleClosed()"></app-moduleform>
@@ -23,6 +23,11 @@
   <div *ngIf="fileStatus.status === 'done'">
     <p class="text-success">Operation completed successfully!</p>
   </div>
+
+  <!-- New Button to View All Submissions -->
+  <button *ngIf="userRole === 'ROLE_TEACHER'" class="btn btn-secondary btn-lg mt-3" (click)="navigateToAllSubmissions()">
+    See Student Submissions
+  </button>
 
   <div *ngFor="let module of modules" class="card mt-3">
     <div class="card-header">

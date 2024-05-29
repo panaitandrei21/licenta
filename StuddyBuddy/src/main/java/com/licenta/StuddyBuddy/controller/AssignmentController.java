@@ -1,7 +1,6 @@
 package com.licenta.StuddyBuddy.controller;
 
-import com.licenta.StuddyBuddy.dto.AssignmentDTO;
-import com.licenta.StuddyBuddy.dto.AssignmentSubmissionDTO;
+import com.licenta.StuddyBuddy.dto.*;
 import com.licenta.StuddyBuddy.model.AssignmentInstance;
 import com.licenta.StuddyBuddy.model.AssignmentSubmission;
 import com.licenta.StuddyBuddy.model.User;
@@ -31,10 +30,10 @@ public class AssignmentController {
     private final UserService userService;
 
     @GetMapping("/get/assignmentInstance/{assignmentInstanceId}")
-    public AssignmentDTO getAssignmentInstanceById(@PathVariable String assignmentInstanceId) {
-        AssignmentDTO assignmentDTO = assignmentInstanceService.getAssignmentInstanceMetadata(assignmentInstanceId);
-        try (InputStream assignmentContent = assignmentService.getAssignmentContent(assignmentDTO.getAssignmentId())) {
-            assignmentDTO.setContent(assignmentContent != null ? IOUtils.toByteArray(assignmentContent) : new byte[]{});
+    public AssignmentInstanceResponse getAssignmentInstanceById(@PathVariable String assignmentInstanceId) {
+        AssignmentInstanceResponse assignmentDTO = assignmentInstanceService.getAssignmentInstanceMetadata(assignmentInstanceId);
+        try (InputStream assignmentContent = assignmentService.getAssignmentContent(assignmentDTO.getAssignment().getAssignmentId())) {
+            assignmentDTO.getAssignment().setContent(assignmentContent != null ? IOUtils.toByteArray(assignmentContent) : new byte[]{});
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -78,6 +77,20 @@ public class AssignmentController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/course/submissions")
+    public ResponseEntity<?> searchSubmissions(
+            @RequestParam(name = "page", required = false, defaultValue = "0") Long page,
+            @ModelAttribute SearchSubmissionsDTO searchSubmissionsDTO) {
+
+        long totalRecords = assignmentSubmissionService.countSubmissions(searchSubmissionsDTO);
+        long totalPages = (totalRecords + 20 - 1) / 20;
+        SearchSubmissionResultsDTO searchResultsPageDTO = new SearchSubmissionResultsDTO();
+        List<AssignmentSubmissionDTO> searchResults = assignmentSubmissionService.searchSubmissions(searchSubmissionsDTO, page, 20L);
+        searchResultsPageDTO.setTotalPages(totalPages);
+        searchResultsPageDTO.setSubmissions(searchResults);
+
+        return ResponseEntity.ok(searchResultsPageDTO);
+    }
     @GetMapping("/get/submissions/{assignmentInstanceId}")
     public ResponseEntity<List<AssignmentSubmissionDTO>> getSubmissionsByAssignmentInstance(
             @PathVariable String assignmentInstanceId) {

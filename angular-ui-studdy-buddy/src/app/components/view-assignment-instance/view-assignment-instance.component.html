@@ -10,16 +10,24 @@
               <quill-editor formControlName="content" [modules]="modules" [readOnly]="true" [style]="{'height':'auto'}"></quill-editor>
             </div>
           </div>
+          <!-- Display the due date -->
+          <div class="mb-3">
+            <p>Due Date: {{ formatDate(assignment?.dueDate) }}</p>
+          </div>
           <!-- Display last submission if exists -->
           <div *ngIf="submittedFilePath">
             <p>Your last submission: {{ submittedFilePath }}</p>
             <button (click)="downloadSubmission(submittedFilePath)" class="btn btn-info">Download Submission</button>
           </div>
-          <!-- File Upload Section - Always available -->
-          <div class="mb-3">
+          <!-- File Upload Section - Conditional based on due date -->
+          <div class="mb-3" *ngIf="!isExpired()">
             <label for="fileUpload" class="form-label">Submit Assignment</label>
             <input type="file" id="fileUpload" (change)="onFileSelected($event)" class="form-control">
             <button (click)="onSubmit()" class="btn btn-primary mt-3">Submit</button>
+          </div>
+          <!-- Message if the assignment is expired -->
+          <div class="mb-3" *ngIf="isExpired()">
+            <p class="text-danger">The due date has passed. You cannot submit the assignment.</p>
           </div>
         </div>
       </div>

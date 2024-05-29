@@ -3,18 +3,14 @@ package com.licenta.StuddyBuddy.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
+import java.util.List;
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AssignmentResponse {
-    private String assignmentId;
-    private byte[] content;
-    private String title;
+public class SearchSubmissionResultsDTO {
+    private Long totalPages;
+    private List<AssignmentSubmissionDTO> submissions;
 }

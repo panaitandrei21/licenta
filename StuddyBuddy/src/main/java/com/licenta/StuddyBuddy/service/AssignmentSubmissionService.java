@@ -1,6 +1,8 @@
 package com.licenta.StuddyBuddy.service;
 
 import com.licenta.StuddyBuddy.dto.AssignmentSubmissionDTO;
+import com.licenta.StuddyBuddy.dto.SearchSubmissionsDTO;
+import com.licenta.StuddyBuddy.dto.UserDTO;
 import com.licenta.StuddyBuddy.model.AssignmentSubmission;
 import com.licenta.StuddyBuddy.model.User;
 import com.licenta.StuddyBuddy.repository.AssignmentSubmissionRepository;
@@ -49,15 +51,29 @@ public class AssignmentSubmissionService {
         return submissions.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
+    public List<AssignmentSubmissionDTO> searchSubmissions(SearchSubmissionsDTO dto, Long page, Long pageSize) {
+        List<AssignmentSubmission> submissions = submissionRepository.findSubmissionsByCriteria(dto, page, pageSize);
+        return submissions.stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
+
+    public long countSubmissions(SearchSubmissionsDTO dto) {
+        return submissionRepository.countSubmissionsByCriteria(dto);
+    }
+
     private AssignmentSubmissionDTO mapToDTO(AssignmentSubmission submission) {
+        UserDTO userDTO = UserDTO.builder()
+                .firstName(submission.getUser().getFirstName())
+                .id(submission.getUser().getUserId())
+                .email(submission.getUser().getEmail())
+                .lastName(submission.getUser().getLastName())
+                .build();
         return new AssignmentSubmissionDTO(
                 submission.getSubmissionId(),
                 submission.getSubmittedFilePath(),
                 submission.getSubmissionDate(),
                 submission.getAssignmentInstance().getAssignmentInstanceId(),
-                submission.getUser().getUserId(),
-                submission.getGrade(),
-                submission.getFeedback()
+                submission.getAssignmentInstance().getAssignment().getTitle(),
+                userDTO
         );
     }
 }

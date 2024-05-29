@@ -3,11 +3,11 @@ import { QuillEditorComponent } from 'ngx-quill';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AssignmentService } from '../../services/assignment.service';
-import { Assignment } from '../../interfaces/course';
-import { saveAs } from 'file-saver';
 import { CourseService } from '../../services/course.service';
-import { HttpEvent, HttpEventType, HttpHeaderResponse, HttpResponse } from '@angular/common/http';
-import {ToastrService} from "ngx-toastr";
+import { ToastrService } from 'ngx-toastr';
+import { AssignmentInstance } from '../../interfaces/assignment-instance';
+import { HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-view-assignment-instance',
@@ -17,7 +17,7 @@ import {ToastrService} from "ngx-toastr";
 export class ViewAssignmentInstanceComponent implements OnInit {
   @ViewChild(QuillEditorComponent, { static: true }) editor!: QuillEditorComponent;
   assignmentId: string | null = '';
-  assignment: Assignment | null = null;
+  assignment: AssignmentInstance | null = null;
   viewForm: FormGroup;
   modules = {
     syntax: true,
@@ -42,9 +42,10 @@ export class ViewAssignmentInstanceComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     this.assignmentId = id;
     if (id) {
-      this.assignmentService.getAssignmentInstanceById(id).subscribe((assignment: Assignment) => {
-        this.assignment = assignment;
-        const decodedContent = this.cleanBase64String(this.b64DecodeUnicode(assignment.content));
+      this.assignmentService.getAssignmentInstanceById(id).subscribe((assignmentInstance: any) => {
+        console.log(assignmentInstance);
+        this.assignment = assignmentInstance;
+        const decodedContent = this.cleanBase64String(this.b64DecodeUnicode(assignmentInstance.assignment.content));
         if (decodedContent !== null) {
           this.viewForm.patchValue({
             content: decodedContent
@@ -59,12 +60,14 @@ export class ViewAssignmentInstanceComponent implements OnInit {
 
   loadLatestSubmissionFilename(assignmentInstanceId: string | null): void {
     this.assignmentService.getLatestSubmission(assignmentInstanceId).subscribe({
-      next: filename => this.submittedFilePath = filename,
+      next: (res) => {
+        this.submittedFilePath = res as string;
+      },
       error: () => console.error('Failed to load the latest submission filename')
     });
   }
 
-  private formatDate(dateString: Date): string {
+  formatDate(dateString: Date | undefined): string {
     if (!dateString) {
       return '';
     }
@@ -95,11 +98,26 @@ export class ViewAssignmentInstanceComponent implements OnInit {
     }
   }
 
+  isExpired(): boolean {
+    if (!this.assignment || !this.assignment.dueDate) {
+      return false;
+    }
+    const dueDate = new Date(this.assignment.dueDate);
+    const currentDate = new Date();
+    return currentDate > dueDate;
+  }
+
   onSubmit(): void {
+    if (this.isExpired()) {
+      this.toastr.error('The due date has passed. You cannot submit the assignment.');
+      return;
+    }
+
     if (!this.selectedFile || !this.assignmentId) {
       console.error('File or assignment ID not provided!');
       return;
     }
+
     const formData = new FormData();
     formData.append('file', this.selectedFile);
     formData.append('assignmentInstanceId', this.assignmentId);

@@ -16,7 +16,7 @@ export interface Assignment {
   title?: string;
   content?: any[];
   solution?: any[];
-  dueDate?: string;
+  dueDate?: Date;
   createdBy?: string;
   createdDate?: Date;
   category?: string;

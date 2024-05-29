@@ -16,7 +16,6 @@ public class AssignmentSubmissionDTO {
     private String submittedFilePath;
     private LocalDateTime submissionDate;
     private String assignmentInstanceId;
-    private String userId;
-    private String grade;
-    private String feedback;
+    private String assignmentInstanceName;
+    private UserDTO user;
 }

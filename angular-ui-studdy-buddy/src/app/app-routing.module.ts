@@ -14,6 +14,7 @@ import {EditAssignmentComponent} from "./components/edit-assignment/edit-assignm
 import {
   ViewAssignmentInstanceComponent
 } from "./components/view-assignment-instance/view-assignment-instance.component";
+import {ViewSubmissionsComponent} from "./components/view-submissions/view-submissions.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -43,9 +44,14 @@ const routes: Routes = [
   { path: 'view/assignment/instance/:id', component: ViewAssignmentInstanceComponent,canActivate: [authGuard, hasRoleGuard],  data: {
       role: ['ROLE_STUDENT', 'ROLE_TEACHER'],
     }},
-  // { path: 'view/submissions/:id', component: ViewSubmissionComponent,canActivate: [authGuard, hasRoleGuard],  data: {
-  //     role: ['ROLE_STUDENT', 'ROLE_TEACHER'],
-  //   }},
+  {
+    path: 'view/submissions/:assignmentInstanceId',
+    component: ViewSubmissionsComponent,
+    canActivate: [authGuard, hasRoleGuard],
+    data: { role: ['ROLE_STUDENT', 'ROLE_TEACHER'] }
+  },
+  { path: 'course/:id/submissions', component: ViewSubmissionsComponent, canActivate: [authGuard, hasRoleGuard], data: { role: ['ROLE_TEACHER'] } },
+
 ];
 
 @NgModule({
