@@ -22,4 +22,6 @@ public interface EnrollRepository extends JpaRepository<Enroll, String> {
     @Query("DELETE FROM Enroll e WHERE e.user.userId = :userId AND e.course.courseId = :courseId")
     int deleteByUserIdAndCourseId(@Param("userId") String userId, @Param("courseId") String courseId);
 
+    void deleteByCourse_CourseId(String courseId);
+
 }

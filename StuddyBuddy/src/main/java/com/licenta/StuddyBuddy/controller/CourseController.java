@@ -23,15 +23,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import static java.nio.file.Paths.get;
-import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/course")
@@ -159,16 +155,21 @@ public class CourseController {
 
     @GetMapping("download/{filename}")
     public ResponseEntity<Resource> downloadFiles(@PathVariable String filename) throws IOException {
-        Path filePath = get(DIRECTORY.toUri()).toAbsolutePath().normalize().resolve(filename);
-        if(!Files.exists(filePath)) {
+        Path filePath = DIRECTORY.toAbsolutePath().normalize().resolve(filename);
+        if (!Files.exists(filePath)) {
             throw new FileNotFoundException(filename + " was not found on the server");
         }
         Resource resource = new UrlResource(filePath.toUri());
+        String encodedFilename = URLEncoder.encode(Objects.requireNonNull(resource.getFilename()), StandardCharsets.UTF_8);
+
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("File-Name", filename);
-        httpHeaders.add(CONTENT_DISPOSITION, "attachment;File-Name=" + resource.getFilename());
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(Files.probeContentType(filePath)))
-                .headers(httpHeaders).body(resource);
+        httpHeaders.add("File-Name", encodedFilename);
+        httpHeaders.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + encodedFilename + "\"");
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(Files.probeContentType(filePath)))
+                .headers(httpHeaders)
+                .body(resource);
     }
     @GetMapping("get/module/{moduleId}")
     public ResponseEntity<?> getModule(@PathVariable String moduleId) {
@@ -199,7 +200,9 @@ public class CourseController {
     @PostMapping("/photo/{courseId}")
     public ResponseEntity<?> addPhotoToCourse(@PathVariable String courseId, @RequestParam("imageData") MultipartFile imageData) throws IOException {
         courseService.updateCourseImage(courseId, imageData);
-        return ResponseEntity.ok("Saved");
+        Map<String, String> response = new HashMap<>();
+        response.put("response", "Photo updated succesfully");
+        return ResponseEntity.ok(response);
     }
 
 

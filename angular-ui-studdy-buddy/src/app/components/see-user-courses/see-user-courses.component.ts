@@ -42,8 +42,8 @@ export class SeeUserCoursesComponent implements OnInit {
 
   removeFromCourse(courseId: string) {
     this.adminService.removeUserFromCourse(courseId, this.user.id as string).subscribe({
-      next: (res) => this.toastr.success('Module added successfully', 'Success'),
-      error: (err) => this.toastr.success('Module added successfully', 'Success')
+      next: (res) => this.toastr.success('User removed from course succesfully', 'Success'),
+      error: (err) => this.toastr.error('error removing from course ', 'Error')
     }
   )
   }

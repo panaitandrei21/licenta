@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UserDTO} from "../../interfaces/user-dto";
 import {GridApi, GridOptions} from "ag-grid-community";
-import {EnrollComponent} from "../enroll/enroll.component";
 import {FormBuilder, Validators} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
 import {AuthService} from "../../services/auth.service";
@@ -9,26 +8,27 @@ import {Router} from "@angular/router";
 import {MessageService} from "primeng/api";
 import {AdminService} from "../../services/admin.service";
 import {MatDialog} from "@angular/material/dialog";
-import {SeeUserCoursesComponent} from "../see-user-courses/see-user-courses.component";
 import {ToastrService} from "ngx-toastr";
+import {EnrollComponent} from "../enroll/enroll.component";
+import {SeeUserCoursesComponent} from "../see-user-courses/see-user-courses.component";
+import {Course} from "../../interfaces/course";
 
 @Component({
-  selector: 'app-admin-user-course-details',
-  templateUrl: './admin-user-course-details.component.html',
-  styleUrl: './admin-user-course-details.component.css'
+  selector: 'app-handle-courses',
+  templateUrl: './handle-courses.component.html',
+  styleUrl: './handle-courses.component.css'
 })
-export class AdminUserCourseDetailsComponent implements OnInit {
-  users: UserDTO[] | undefined;
+export class HandleCoursesComponent implements OnInit {
+  courses!: Course[];
   private gridApi!: GridApi;
   private ChargridApi!: GridApi;
-  selectedData: UserDTO[] | undefined;
-  gridOptions: GridOptions<UserDTO> = {
+  selectedData: Course[] | undefined;
+  gridOptions: GridOptions = {
     columnDefs: [
-      { field: "id", checkboxSelection: true, headerCheckboxSelection: true},
-      { field: "firstName", filter: true, editable: true },
-      { field: "lastName", filter: true, editable: true },
-      { field: "email", filter: true, editable: true },
-      { field: "role", filter: true, editable: true },
+      { field: "courseId", checkboxSelection: true, headerCheckboxSelection: true},
+      { field: "category", filter: true, editable: true },
+      { field: "courseName", filter: true, editable: true },
+      { field: "description", filter: true, editable: true },
     ],
     rowSelection: "multiple",
     onRowSelected: event => this.getSelectedRows(),
@@ -37,7 +37,7 @@ export class AdminUserCourseDetailsComponent implements OnInit {
   openDialog(): void {
     const dialogRef = this.dialog.open(EnrollComponent, {
       width: 'fit-content',
-      data: { userId: this.selectedData?.map(value => value.id) }
+      data: { courseId: this.selectedData?.map(value => value.courseId) }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -56,11 +56,11 @@ export class AdminUserCourseDetailsComponent implements OnInit {
                private toastr: ToastrService
   ) { }
   ngOnInit(): void {
-    this.fetchUsers();
+    this.fetchCourses();
   }
-  fetchUsers(): void {
-    this.adminService.getTeachers().subscribe(res => {
-      this.users = res as UserDTO[];
+  fetchCourses(): void {
+    this.adminService.getAllCourses().subscribe(res => {
+      this.courses = res as Course[];
       this.gridApi.refreshCells();
     });
   }
@@ -77,33 +77,39 @@ export class AdminUserCourseDetailsComponent implements OnInit {
 
 
 
-  getCoursesForUserSelected() {
-    if (this.selectedData && this.selectedData.length > 0) {
-      const selectedUser = this.selectedData[0];
-      const dialogRef = this.dialog.open(SeeUserCoursesComponent, {
-        width: 'fit-content',
-        data: { user: selectedUser }
-      });
-      console.log(dialogRef)
+  // getCoursesForUserSelected() {
+  //   if (this.selectedData && this.selectedData.length > 0) {
+  //     const selectedUser = this.selectedData[0];
+  //     const dialogRef = this.dialog.open(SeeUserCoursesComponent, {
+  //       width: 'fit-content',
+  //       data: { user: selectedUser }
+  //     });
+  //     console.log(dialogRef)
+  //
+  //     dialogRef.afterClosed().subscribe(result => {
+  //       console.log('The dialog was closed', result);
+  //     });
+  //   }
+  // }
 
-      dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed', result);
+  deleteCourse() {
+    if (this.selectedData) {
+      const courseId = this.selectedData[0].courseId;
+      console.log(courseId);
+      this.adminService.deleteCourse(courseId).subscribe(res => {
+        console.log(res);
+        this.toastr.success("Course deleted succesfully");
+        this.fetchCourses()
       });
     }
-  }
 
-  deleteUser() {
-    this.adminService.deleteUsers(this.selectedData as UserDTO[]).subscribe(res => {
-      this.toastr.success("User deleted succesfully");
-      this.fetchUsers();
-    });
   }
   handleCellValueChange(event: any) {
     if (event.newValue !== event.oldValue) {
-      this.adminService.updateUser(event.data).subscribe(
+      this.adminService.updateCourse(event.data).subscribe(
         response => {
           console.log('Update successful', response);
-          this.toastr.success('User updated successfully');
+          this.toastr.success("Course updated succesfully");
         },
         error => {
           console.log('Update failed', error);

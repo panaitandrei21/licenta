@@ -11,6 +11,7 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class HomeComponent implements OnInit {
   courses: Course[] = [];
+  userRole: string = this.authService.user!.role;
 
   constructor(private courseService: CourseService,
               private authService: AuthService,

@@ -20,13 +20,17 @@ public class Module {
 
     private String title;
     private String description;
+
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FileDescriptions> filePath;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
-    @JsonBackReference
+    @JsonBackReference("course-module")
     private Course course;
+
     @OneToMany(mappedBy = "module", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("module-assignmentInstance")
     private List<AssignmentInstance> assignmentInstances;
 }
+

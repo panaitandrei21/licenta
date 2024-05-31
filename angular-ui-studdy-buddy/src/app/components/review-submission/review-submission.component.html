@@ -1,1 +1,42 @@
-<p>review-submission works!</p>
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <form [formGroup]="reviewForm" (ngSubmit)="onSubmitReview()">
+        <div class="card">
+          <div class="card-header">Review Submission</div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="submissionId" class="form-label">Submission Id:</label>
+              <input type="text" class="form-control form-control-lg" formControlName="submissionId" id="submissionId" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="title" class="form-label">Title:</label>
+              <input type="text" class="form-control form-control-lg" formControlName="title" id="title" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="filename" class="form-label">Filename:</label>
+              <a (click)="downloadFile(assignmentSubmission.submittedFilePath)" class="form-control form-control-lg" id="filename" style="cursor: pointer;">
+                {{ assignmentSubmission.submittedFilePath | removeUUID  }}
+              </a>
+            </div>
+            <div class="mb-3">
+              <label for="studentName" class="form-label">Student Name:</label>
+              <input type="text" class="form-control form-control-lg" formControlName="studentName" id="studentName" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="grade" class="form-label">Grade:</label>
+              <input type="number" class="form-control form-control-lg" formControlName="grade" id="grade" placeholder="Enter grade">
+            </div>
+            <div class="mb-3">
+              <label for="feedback" class="form-label">Feedback:</label>
+              <textarea class="form-control form-control-lg" formControlName="feedback" id="feedback" rows="5" placeholder="Enter feedback"></textarea>
+            </div>
+          </div>
+          <div class="card-footer text-center">
+            <button type="submit" class="btn btn-primary" [disabled]="reviewForm.invalid">Submit Review</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

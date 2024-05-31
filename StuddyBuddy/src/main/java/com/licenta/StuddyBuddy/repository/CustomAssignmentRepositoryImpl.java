@@ -18,11 +18,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Repository
 public class CustomAssignmentRepositoryImpl implements CustomAssignmentRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private static final Logger logger = LoggerFactory.getLogger(CustomAssignmentRepositoryImpl.class);
 
     @Override
     public List<Assignment> findAssignmentsByCriteria(SearchAssignmentsDTO dto, Long page, Long pageSize) {
@@ -39,7 +44,7 @@ public class CustomAssignmentRepositoryImpl implements CustomAssignmentRepositor
             predicates.add(cb.equal(assignment.get("category"), dto.getCategory()));
         }
         if (dto.getTitle() != null && !dto.getTitle().isEmpty()) {
-            predicates.add(cb.equal(assignment.get("title"), dto.getTitle()));
+            predicates.add(cb.like(cb.lower(assignment.get("title")), "%" + dto.getTitle().toLowerCase() + "%"));
         }
         if (dto.getCreatedBy() != null && !dto.getCreatedBy().isEmpty()) {
             predicates.add(cb.equal(assignment.get("createdBy"), dto.getCreatedBy()));
@@ -58,6 +63,9 @@ public class CustomAssignmentRepositoryImpl implements CustomAssignmentRepositor
         int pageSizeValue = (pageSize != null) ? pageSize.intValue() : 20;
         int pageNumber = (page != null) ? page.intValue() : 0;
         int offset = pageNumber * pageSizeValue;
+
+        // Log the query
+        logger.debug("Generated query: " + query.toString());
 
         return entityManager.createQuery(query)
                 .setFirstResult(offset)
@@ -80,7 +88,8 @@ public class CustomAssignmentRepositoryImpl implements CustomAssignmentRepositor
             predicates.add(cb.equal(assignment.get("category"), dto.getCategory()));
         }
         if (dto.getTitle() != null && !dto.getTitle().isEmpty()) {
-            predicates.add(cb.equal(assignment.get("title"), dto.getTitle()));
+            // Case insensitive comparison
+            predicates.add(cb.like(cb.lower(assignment.get("title")), "%" + dto.getTitle().toLowerCase() + "%"));
         }
         if (dto.getCreatedBy() != null && !dto.getCreatedBy().isEmpty()) {
             predicates.add(cb.equal(assignment.get("createdBy"), dto.getCreatedBy()));

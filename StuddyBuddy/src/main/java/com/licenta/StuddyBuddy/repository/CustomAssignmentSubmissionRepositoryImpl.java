@@ -36,10 +36,10 @@ public class CustomAssignmentSubmissionRepositoryImpl implements CustomAssignmen
             predicates.add(cb.like(cb.lower(submission.get("user").get("firstName")), "%" + dto.getStudentFirstName().toLowerCase() + "%"));
         }
         if (dto.getStudentLastName() != null && !dto.getStudentLastName().isEmpty()) {
-            predicates.add(cb.like(cb.lower(submission.get("user").get("firstName")), "%" + dto.getStudentLastName().toLowerCase() + "%"));
+            predicates.add(cb.like(cb.lower(submission.get("user").get("lastName")), "%" + dto.getStudentLastName().toLowerCase() + "%"));
         }
         if (dto.getAssignmentName() != null && !dto.getAssignmentName().isEmpty()) {
-            predicates.add(cb.like(cb.lower(submission.get("user").get("firstName")), "%" + dto.getAssignmentName().toLowerCase() + "%"));
+            predicates.add(cb.like(cb.lower(submission.get("assignmentInstance").get("assignment").get("title")), "%" + dto.getAssignmentName().toLowerCase() + "%"));
         }
         if (dto.getSubmissionDate() != null) {
             predicates.add(cb.equal(cb.function("date", Date.class, submission.get("submissionDate")), dto.getSubmissionDate()));
@@ -75,12 +75,14 @@ public class CustomAssignmentSubmissionRepositoryImpl implements CustomAssignmen
             predicates.add(cb.like(cb.lower(submission.get("user").get("firstName")), "%" + dto.getStudentFirstName().toLowerCase() + "%"));
         }
         if (dto.getStudentLastName() != null && !dto.getStudentLastName().isEmpty()) {
-            predicates.add(cb.like(cb.lower(submission.get("user").get("firstName")), "%" + dto.getStudentLastName().toLowerCase() + "%"));
+            predicates.add(cb.like(cb.lower(submission.get("user").get("lastName")), "%" + dto.getStudentLastName().toLowerCase() + "%"));
         }
         if (dto.getAssignmentName() != null && !dto.getAssignmentName().isEmpty()) {
-            predicates.add(cb.like(cb.lower(submission.get("user").get("firstName")), "%" + dto.getAssignmentName().toLowerCase() + "%"));
+            predicates.add(cb.like(cb.lower(submission.get("assignmentInstance").get("assignment").get("title")), "%" + dto.getAssignmentName().toLowerCase() + "%"));
         }
-
+        if (dto.getSubmissionDate() != null) {
+            predicates.add(cb.equal(cb.function("date", Date.class, submission.get("submissionDate")), dto.getSubmissionDate()));
+        }
         query.select(cb.count(submission)).where(predicates.toArray(new Predicate[0]));
         return entityManager.createQuery(query).getSingleResult();
     }

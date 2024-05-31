@@ -1,0 +1,21 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <ag-grid-angular
+        [rowData]="courses"
+        [gridOptions]="gridOptions"
+        class="ag-theme-quartz"
+        style="height: 50vh;"
+        (gridReady)="onGridReady($event)">
+      </ag-grid-angular>
+
+      <div class="d-flex justify-content-center mt-4">
+        <button pButton type="button" label="Delete" icon="pi pi-trash" class="p-button-danger me-3" (click)="deleteCourse()" [disabled]="!selectedData || selectedData.length === 0"></button>
+
+<!--        <button pButton type="button" label="Enroll to course" icon="pi pi-sign-in" class="p-button me-3" (click)="openDialog()" [disabled]="!selectedData || selectedData.length === 0"></button>-->
+
+<!--        <button pButton type="button" label="See courses for selected user" icon="pi pi-search" class="p-button me-3" (click)="getCoursesForUserSelected()" [disabled]="!selectedData || selectedData.length === 0"></button>-->
+      </div>
+    </div>
+  </div>
+</div>

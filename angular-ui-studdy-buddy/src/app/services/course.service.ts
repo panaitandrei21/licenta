@@ -90,4 +90,7 @@ export class CourseService {
   }
 
 
+  deleteAssignmentInstance(assignmentInstanceId: any) {
+    return this.http.delete(`${this.baseUrl}/api/assignment/delete/assignmentInstance/${assignmentInstanceId}`);
+  }
 }

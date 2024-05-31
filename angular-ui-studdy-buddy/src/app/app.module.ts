@@ -47,6 +47,7 @@ import {NgxFileDropModule} from "ngx-file-drop";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import { ViewSubmissionsComponent } from './components/view-submissions/view-submissions.component';
 import { ReviewSubmissionComponent } from './components/review-submission/review-submission.component';
+import { HandleCoursesComponent } from './components/handle-courses/handle-courses.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -73,6 +74,7 @@ import { ReviewSubmissionComponent } from './components/review-submission/review
     ViewAssignmentInstanceComponent,
     ViewSubmissionsComponent,
     ReviewSubmissionComponent,
+    HandleCoursesComponent,
   ],
   imports: [
     BrowserModule,

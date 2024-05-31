@@ -11,4 +11,5 @@ import java.util.List;
 public interface ModuleRepository extends JpaRepository<Module, String> {
     List<Module> findByCourseCourseId(String courseId);
 
+    void deleteByCourse_CourseId(String courseId);
 }

@@ -18,4 +18,6 @@ public class AssignmentSubmissionDTO {
     private String assignmentInstanceId;
     private String assignmentInstanceName;
     private UserDTO user;
+    private double grade;
+    private String feedback;
 }

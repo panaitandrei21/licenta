@@ -19,7 +19,7 @@
               </div>
               <div class="d-flex justify-content-end">
                 <a [routerLink]="['/course', course.courseId]" class="btn btn-primary btn-sm ripple me-2" mdbRippleInit>View More</a>
-                <button class="btn btn-outline-secondary btn-sm" [routerLink]="['/edit-course', course.courseId]">
+                <button *ngIf="userRole === 'ROLE_TEACHER'" class="btn btn-outline-secondary btn-sm" [routerLink]="['/edit-course', course.courseId]">
                   <i class="bi bi-pencil-fill"></i>
                 </button>
               </div>

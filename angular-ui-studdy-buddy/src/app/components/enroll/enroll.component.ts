@@ -10,8 +10,8 @@ import {ToastrService} from "ngx-toastr";
   styleUrl: './enroll.component.css'
 })
 export class EnrollComponent implements OnInit{
-  courses: Course[] = []; // Define the courses property
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, // Injecting data passed to the dialog
+  courses: Course[] = [];
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               private dialogRef: MatDialogRef<EnrollComponent>,
               private adminService: AdminService,
               private toastr: ToastrService) {
@@ -30,13 +30,14 @@ export class EnrollComponent implements OnInit{
     this.fetchCourses();
   }
   enrollUserInCourse(courseId: string | null) {
-    console.log(courseId)
     this.adminService.enrollUser(this.data.userId[0], courseId).subscribe(
       (response) => {
+        console.log(response);
         this.toastr.success('User enrolled successfully', 'Success');
         this.dialogRef.close(true);
       },
       (error) => {
+        console.log(error);
         this.toastr.error(error, 'Error');
       }
     );

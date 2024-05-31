@@ -16,7 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -72,9 +74,10 @@ public class AssignmentController {
     public ResponseEntity<?> getLatestSubmissionFileName(@PathVariable String assignmentInstanceId) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findUser(userDetails.getUsername());
-        Optional<AssignmentSubmission> latestSubmission = assignmentSubmissionService.findLatestByAssignmentInstanceIdAndUsername(assignmentInstanceId, user.getUserId());
-        return latestSubmission.map(submission -> ResponseEntity.ok(submission.getSubmittedFilePath()))
-                .orElse(ResponseEntity.notFound().build());
+        AssignmentSubmissionDTO latestSubmission = assignmentSubmissionService.findLatestByAssignmentInstanceIdAndUsername(assignmentInstanceId, user.getUserId());
+
+
+        return ResponseEntity.ok(latestSubmission.getSubmittedFilePath());
     }
 
     @GetMapping("/course/submissions")
@@ -97,5 +100,47 @@ public class AssignmentController {
         List<AssignmentSubmissionDTO> submissions = assignmentSubmissionService.getSubmissionsByAssignmentInstance(assignmentInstanceId);
         return ResponseEntity.ok(submissions);
     }
+    @GetMapping("/get/submission/{submissionId}")
+    public ResponseEntity<?> getSubmission(
+            @PathVariable String submissionId) {
+        AssignmentSubmissionDTO submission = assignmentSubmissionService.getSubmissionBySubmissionId(submissionId);
+        return ResponseEntity.ok(submission);
+    }
+    @PostMapping("/add/submission/review/{submissionId}")
+    public ResponseEntity<?> addSubmission(
+            @PathVariable String submissionId,
+            @RequestBody AssignmentSubmissionDTO assignmentSubmissionDTO) {
 
+        return ResponseEntity.ok(assignmentSubmissionService.addSubmissionReview(submissionId, assignmentSubmissionDTO));
+    }
+    @GetMapping("/get/assignment/solved/{submissionId}")
+    public ResponseEntity<?> getAssignmentSolvedIfGraded(@PathVariable String submissionId) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findUser(userDetails.getUsername());
+        AssignmentSubmissionDTO assignmentSubmission = assignmentSubmissionService.findLatestByAssignmentInstanceIdAndUsername(submissionId, user.getUserId());
+        AssignmentSubmissionFeedback assignmentDTO = new AssignmentSubmissionFeedback();
+        assignmentDTO.setGrade(assignmentSubmission.getGrade());
+        assignmentDTO.setFeedback(assignmentSubmission.getFeedback());
+        if (assignmentSubmission.getFeedback() != null) {
+            try (InputStream assignmentContent = assignmentInstanceService.getAssignmentSolvedIfGraded(submissionId)) {
+                assignmentDTO.setSolution(assignmentContent != null ? IOUtils.toByteArray(assignmentContent) : new byte[]{});
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return ResponseEntity.ok(assignmentDTO);
+        }
+        Map<String, String> response = new HashMap<>();
+        response.put("response", "Assignment did not get feedback yet");
+        return ResponseEntity.ok(response);
+    }
+    @DeleteMapping("/delete/assignmentInstance/{assignmentInstanceId}")
+    public ResponseEntity<?> deleteAssignmentInstance(@PathVariable String assignmentInstanceId) {
+        assignmentInstanceService.deleteAssignmentInstance(assignmentInstanceId);
+
+
+
+        Map<String, String> response = new HashMap<>();
+        response.put("response", "Assignment did not get feedback yet");
+        return ResponseEntity.ok(response);
+    }
 }

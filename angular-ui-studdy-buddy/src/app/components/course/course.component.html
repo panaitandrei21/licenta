@@ -1,14 +1,18 @@
+<app-nav-bar></app-nav-bar>
+
 <div class="container mt-5">
-  <app-nav-bar></app-nav-bar>
   <!-- Module Form and Button -->
   <div *ngIf="showModuleForm && userRole === 'ROLE_TEACHER'">
     <app-moduleform [courseId]="courseId" (moduleAdded)="loadModules()" (popupClosed)="onModuleClosed()"></app-moduleform>
   </div>
 
-  <button *ngIf="userRole === 'ROLE_TEACHER'" class="btn btn-primary btn-lg mt-3" (click)="toggleModuleForm()">
+  <button *ngIf="userRole === 'ROLE_TEACHER'" class="btn btn-primary btn-lg mt-3 mr-3" (click)="toggleModuleForm()">
     {{ showModuleForm ? 'Close Module Form' : 'Add Module' }}
   </button>
-
+  <!-- New Button to View All Submissions -->
+  <button *ngIf="userRole === 'ROLE_TEACHER'" class="btn btn-secondary btn-lg mt-3" (click)="navigateToAllSubmissions()">
+    See Student Submissions
+  </button>
   <h1 class="mt-4">{{courseDetails?.courseName}}</h1>
 
   <!-- Progress bar and status messages -->
@@ -24,10 +28,7 @@
     <p class="text-success">Operation completed successfully!</p>
   </div>
 
-  <!-- New Button to View All Submissions -->
-  <button *ngIf="userRole === 'ROLE_TEACHER'" class="btn btn-secondary btn-lg mt-3" (click)="navigateToAllSubmissions()">
-    See Student Submissions
-  </button>
+
 
   <div *ngFor="let module of modules" class="card mt-3">
     <div class="card-header">
@@ -43,15 +44,20 @@
         </div>
 
         <div *ngFor="let assignmentInstance of module.assignmentInstances">
-          <div class="card-body p-2">
-            <a *ngIf="userRole === 'ROLE_TEACHER'" [routerLink]="['/view/submissions', assignmentInstance.assignmentInstanceId]" class="link">
-              <i class="bi bi-file-earmark-text fs-3"></i>
-              <span class="fs-5">Assignment Title: {{ assignmentInstance?.assignment?.title }}</span>
-            </a>
-            <a *ngIf="userRole === 'ROLE_STUDENT'" [routerLink]="['/view/assignment/instance', assignmentInstance.assignmentInstanceId]" class="link">
-              <i class="bi bi-file-earmark-text fs-3"></i>
-              <span class="fs-5">Assignment Title: {{ assignmentInstance?.assignment?.title }}</span>
-            </a>
+          <div class="card-body p-2 d-flex justify-content-between align-items-center">
+            <div>
+              <a *ngIf="userRole === 'ROLE_TEACHER' && assignmentInstance!.assignment!.title" (click)="navigateToSubmissionsWithSearch(assignmentInstance.assignment.title)" class="link">
+                <i class="bi bi-file-earmark-text fs-3"></i>
+                <span class="fs-5">Assignment Title: {{ assignmentInstance?.assignment?.title }}</span>
+              </a>
+              <a *ngIf="userRole === 'ROLE_STUDENT'" [routerLink]="['/view/assignment/instance', assignmentInstance.assignmentInstanceId]" class="link">
+                <i class="bi bi-file-earmark-text fs-3"></i>
+                <span class="fs-5">Assignment Title: {{ assignmentInstance?.assignment?.title }}</span>
+              </a>
+            </div>
+            <button *ngIf="userRole === 'ROLE_TEACHER'" class="btn btn-outline-danger btn-sm" (click)="deleteAssignment(assignmentInstance.assignmentInstanceId)">
+              <i class="bi bi-trash"></i>
+            </button>
           </div>
           <div class="card-footer">
             <p class="card-text mb-0">Due Date: {{ assignmentInstance?.dueDate | date }}</p>

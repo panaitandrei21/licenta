@@ -182,4 +182,19 @@ export class CourseComponent implements OnInit {
   onHomeworkClosed() {
     this.showHomeworkForm = null;
   }
+
+  deleteAssignment(assignmentInstanceId: any) {
+    this.courseService.deleteAssignmentInstance(assignmentInstanceId).subscribe({
+      next: (res) => {
+
+      },
+      error: (err) => {
+
+      }
+    })
+  }
+
+  navigateToSubmissionsWithSearch(assignmentTitle: string): void {
+    this.router.navigate(['/course', this.courseId, 'submissions'], { queryParams: { assignmentName: assignmentTitle } });
+  }
 }

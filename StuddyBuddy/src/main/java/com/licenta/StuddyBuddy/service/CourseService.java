@@ -1,8 +1,13 @@
 package com.licenta.StuddyBuddy.service;
 
 import com.licenta.StuddyBuddy.dto.CourseDTO;
+import com.licenta.StuddyBuddy.dto.UserDTO;
 import com.licenta.StuddyBuddy.model.Course;
+import com.licenta.StuddyBuddy.model.User;
 import com.licenta.StuddyBuddy.repository.CourseRepository;
+import com.licenta.StuddyBuddy.repository.EnrollRepository;
+import com.licenta.StuddyBuddy.repository.ModuleRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.stereotype.Service;
@@ -17,6 +22,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseService {
     private final CourseRepository courseRepository;
+    private final ModuleRepository moduleRepository;
+    private final EnrollRepository enrollRepository;
     public void addCourse(Course course) {
         courseRepository.save(course);
     }
@@ -42,13 +49,27 @@ public class CourseService {
         }
         return false;
     }
-    private byte[] resizeImage(byte[] originalImage, int targetWidth, int targetHeight) throws IOException {
-        ByteArrayInputStream inStream = new ByteArrayInputStream(originalImage);
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        Thumbnails.of(inStream)
-                .size(targetWidth, targetHeight)
-                .outputFormat("JPEG")
-                .toOutputStream(outStream);
-        return outStream.toByteArray();
+
+    @Transactional
+    public void deleteCourse(String courseId) {
+        enrollRepository.deleteByCourse_CourseId(courseId);
+
+        moduleRepository.deleteByCourse_CourseId(courseId);
+
+        courseRepository.deleteById(courseId);
+    }
+
+    public void updateCourse(Course course) {
+        Course existingCourse = courseRepository.findByCourseId(course.getCourseId());
+
+        if (existingCourse != null) {
+            if (!existingCourse.getCourseName().equals(course.getCourseName()))
+                course.setCourseName(course.getCourseName());
+            if (!existingCourse.getCategory().equals(course.getCategory()))
+                existingCourse.setCategory(course.getCategory());
+            if (!existingCourse.getDescription().equals(course.getDescription()))
+                existingCourse.setDescription(course.getDescription());
+            courseRepository.save(existingCourse);
+        }
     }
 }

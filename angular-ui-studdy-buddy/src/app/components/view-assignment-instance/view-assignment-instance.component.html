@@ -1,3 +1,4 @@
+<app-nav-bar></app-nav-bar>
 <div class="container my-5">
   <div class="row justify-content-center">
     <div class="col-lg-8">
@@ -16,7 +17,7 @@
           </div>
           <!-- Display last submission if exists -->
           <div *ngIf="submittedFilePath">
-            <p>Your last submission: {{ submittedFilePath }}</p>
+            <p>Your last submission: {{ submittedFilePath | removeUUID }}</p>
             <button (click)="downloadSubmission(submittedFilePath)" class="btn btn-info">Download Submission</button>
           </div>
           <!-- File Upload Section - Conditional based on due date -->
@@ -28,6 +29,25 @@
           <!-- Message if the assignment is expired -->
           <div class="mb-3" *ngIf="isExpired()">
             <p class="text-danger">The due date has passed. You cannot submit the assignment.</p>
+          </div>
+        </div>
+      </div>
+      <!-- New card to display grade, feedback, and solution if available -->
+      <div *ngIf="grade !== undefined || feedback !== undefined || solutionContent" class="card mt-4">
+        <div class="card-body">
+          <div *ngIf="grade !== undefined">
+            <h4>Grade:</h4>
+            <p>{{ grade }}</p>
+          </div>
+          <div *ngIf="feedback !== undefined">
+            <h4>Feedback:</h4>
+            <p>{{ feedback }}</p>
+          </div>
+          <div *ngIf="solutionContent">
+            <h4>Solution</h4>
+            <div [formGroup]="solutionForm">
+              <quill-editor formControlName="solution" [modules]="modules" [readOnly]="true" [style]="{'height':'auto'}"></quill-editor>
+            </div>
           </div>
         </div>
       </div>

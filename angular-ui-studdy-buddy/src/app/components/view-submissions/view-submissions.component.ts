@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AssignmentService } from '../../services/assignment.service';
 import { CourseService } from '../../services/course.service';
 import { ToastrService } from 'ngx-toastr';
-import { AssignmentSubmission } from '../../interfaces/assignment-instance';
 import { HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
 import { saveAs } from 'file-saver';
-import {SearchResults, SearchSubmissionResults} from '../../interfaces/search-result';
+import { SearchResults, SearchSubmissionResults } from '../../interfaces/search-result';
 
 @Component({
   selector: 'app-view-submissions',
@@ -43,13 +42,22 @@ export class ViewSubmissionsComponent implements OnInit {
       totalPages: 1
     }
   }
+
+  ngOnInit(): void {
+    this.courseId = this.route.snapshot.paramMap.get('id');
+    this.route.queryParams.subscribe(params => {
+      if (params['assignmentName']) {
+        this.searchTableForm.patchValue({ assignmentName: params['assignmentName'] });
+        this.searchParams = this.searchTableForm.value;
+        this.searchAssignmentSubmissions();
+      }
+    });
+    this.searchAssignmentSubmissions();
+  }
+
   search() {
     this.page = 0;
     this.searchParams = this.searchTableForm.value;
-    this.searchAssignmentSubmissions();
-  }
-  ngOnInit(): void {
-    this.courseId = this.route.snapshot.paramMap.get('id');
     this.searchAssignmentSubmissions();
   }
 
@@ -64,7 +72,6 @@ export class ViewSubmissionsComponent implements OnInit {
       }
     });
   }
-
 
   downloadFile(filename: string): void {
     this.courseService.downloadFile(filename).subscribe(
@@ -91,8 +98,8 @@ export class ViewSubmissionsComponent implements OnInit {
     this.searchAssignmentSubmissions();
   }
 
-  onReviewClick() {
+  onReviewClick(submissionId: string) {
     this.toastr.info('Navigating to the review page!', 'Info');
-    this.router.navigate(['/review']);
+    this.router.navigate([`/course/${this.courseId}/submissions/${submissionId}`]);
   }
 }

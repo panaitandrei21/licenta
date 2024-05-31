@@ -20,17 +20,12 @@ public class Course {
 
     private String courseName;
     private String description;
-
     private String category;
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private byte[] logo;
 
     @OneToMany(mappedBy = "course")
-    @JsonManagedReference
+    @JsonManagedReference("course-module")
     private List<Module> modules;
-
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Topic> topics;
 }

@@ -10,7 +10,8 @@
             <button class="btn btn-primary w-100 mb-3" (click)="selectedOption = 'users'">Add Users</button>
             <button class="btn btn-primary w-100 mb-3" (click)="selectedOption = 'handle-users'">Handle Users</button>
             <button class="btn btn-primary w-100 mb-3" (click)="selectedOption = 'add-problems'">Add Problems</button>
-            <button class="btn btn-primary w-100" (click)="selectedOption = 'view-problems'">View Problems</button>
+            <button class="btn btn-primary w-100 mb-3" (click)="selectedOption = 'view-problems'">View Problems</button>
+            <button class="btn btn-primary w-100" (click)="selectedOption = 'handle-courses'">Handle Courses</button>
           </div>
         </div>
 
@@ -26,6 +27,9 @@
           </div>
           <div *ngIf="selectedOption === 'add-problems'">
             <app-add-problems></app-add-problems>
+          </div>
+          <div *ngIf="selectedOption === 'handle-courses'">
+            <app-handle-courses></app-handle-courses>
           </div>
         </div>
       </div>

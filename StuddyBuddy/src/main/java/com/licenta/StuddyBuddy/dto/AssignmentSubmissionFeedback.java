@@ -3,8 +3,6 @@ package com.licenta.StuddyBuddy.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,10 +10,8 @@ import java.util.Date;
 @Builder
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AssignmentInstanceResponse {
-    private String assignmentInstanceId;
-    private AssignmentResponse assignment;
-    private Date dueDate;
-
-
+public class AssignmentSubmissionFeedback {
+    private byte[] solution;
+    private double grade;
+    private String feedback;
 }

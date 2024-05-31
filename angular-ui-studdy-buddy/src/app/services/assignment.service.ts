@@ -94,4 +94,15 @@ export class AssignmentService {
   }
 
 
+  getSubmissionDetails(submissionId: string) {
+    return this.http.get(`${this.baseUrl}/api/assignment/get/submission/${submissionId}`);
+  }
+
+  submitReview(submissionId: string | null, reviewData: any) {
+    return this.http.post(`${this.baseUrl}/api/assignment/add/submission/review/${submissionId}`, reviewData);
+  }
+
+  getSolvedAssignment(submissionId: string) {
+    return this.http.get(`${this.baseUrl}/api/assignment/get/assignment/solved/${submissionId}`)
+  }
 }

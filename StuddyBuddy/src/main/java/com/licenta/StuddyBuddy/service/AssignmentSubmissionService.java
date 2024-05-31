@@ -3,6 +3,7 @@ package com.licenta.StuddyBuddy.service;
 import com.licenta.StuddyBuddy.dto.AssignmentSubmissionDTO;
 import com.licenta.StuddyBuddy.dto.SearchSubmissionsDTO;
 import com.licenta.StuddyBuddy.dto.UserDTO;
+import com.licenta.StuddyBuddy.exception.AssignmentNotFoundException;
 import com.licenta.StuddyBuddy.model.AssignmentSubmission;
 import com.licenta.StuddyBuddy.model.User;
 import com.licenta.StuddyBuddy.repository.AssignmentSubmissionRepository;
@@ -43,8 +44,12 @@ public class AssignmentSubmissionService {
     }
 
 
-    public Optional<AssignmentSubmission> findLatestByAssignmentInstanceIdAndUsername(String assignmentInstanceId, String userId) {
-        return Optional.ofNullable(submissionRepository.findSubmissionsByInstanceIdAndUsername(assignmentInstanceId, userId));
+    public AssignmentSubmissionDTO findLatestByAssignmentInstanceIdAndUsername(String assignmentInstanceId, String userId) {
+        AssignmentSubmission assignmentSubmissionOptional = submissionRepository.findSubmissionsByInstanceIdAndUsername(assignmentInstanceId, userId);
+
+
+
+        return mapToDTO(assignmentSubmissionOptional);
     }
     public List<AssignmentSubmissionDTO> getSubmissionsByAssignmentInstance(String assignmentInstanceId) {
         List<AssignmentSubmission> submissions = submissionRepository.findByAssignmentInstance_AssignmentInstanceId(assignmentInstanceId);
@@ -67,13 +72,39 @@ public class AssignmentSubmissionService {
                 .email(submission.getUser().getEmail())
                 .lastName(submission.getUser().getLastName())
                 .build();
+
+        // Handle null values for grade and feedback
+        Double grade = submission.getGrade() != null ? submission.getGrade() : 0.0;
+        String feedback = submission.getFeedback() != null ? submission.getFeedback() : "No feedback";
+
         return new AssignmentSubmissionDTO(
                 submission.getSubmissionId(),
                 submission.getSubmittedFilePath(),
                 submission.getSubmissionDate(),
                 submission.getAssignmentInstance().getAssignmentInstanceId(),
                 submission.getAssignmentInstance().getAssignment().getTitle(),
-                userDTO
+                userDTO,
+                grade,
+                feedback
         );
+    }
+
+    public AssignmentSubmissionDTO getSubmissionBySubmissionId(String submissionId) {
+        Optional<AssignmentSubmission> assignmentSubmissionOptional = submissionRepository.findById(submissionId);
+        if (assignmentSubmissionOptional.isEmpty())
+            throw new AssignmentNotFoundException("AssignmentSubmission not found");
+
+        return mapToDTO(assignmentSubmissionOptional.get());
+    }
+
+    public AssignmentSubmission addSubmissionReview(String submissionId, AssignmentSubmissionDTO assignmentSubmissionDTO) {
+        Optional<AssignmentSubmission> assignmentSubmissionOptional = submissionRepository.findById(submissionId);
+        if (assignmentSubmissionOptional.isEmpty())
+            throw new AssignmentNotFoundException("AssignmentSubmission not found");
+
+        AssignmentSubmission assignmentSubmission = assignmentSubmissionOptional.get();
+        assignmentSubmission.setFeedback(assignmentSubmissionDTO.getFeedback());
+        assignmentSubmission.setGrade(assignmentSubmissionDTO.getGrade());
+        return submissionRepository.save(assignmentSubmission);
     }
 }

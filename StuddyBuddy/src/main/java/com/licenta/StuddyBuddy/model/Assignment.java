@@ -22,19 +22,20 @@ public class Assignment {
     private String title;
     private Instant createdDate;
     private String category;
+
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private byte[] content;
+
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private byte[] solution;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference("user-assignment")
     private User createdby;
 
     @OneToMany(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("assignment-assignmentInstance")
     private List<AssignmentInstance> assignmentInstances;
-
 }

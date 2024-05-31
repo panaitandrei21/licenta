@@ -21,18 +21,17 @@ public class AssignmentInstance {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assignment_id")
-    @JsonBackReference
+    @JsonBackReference("assignment-assignmentInstance")
     private Assignment assignment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "module_id")
-    @JsonBackReference
+    @JsonBackReference("module-assignmentInstance")
     private Module module;
 
     private Date dueDate;
 
     @OneToMany(mappedBy = "assignmentInstance", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonManagedReference("assignmentInstance-submission")
     private List<AssignmentSubmission> submissions;
 }
-

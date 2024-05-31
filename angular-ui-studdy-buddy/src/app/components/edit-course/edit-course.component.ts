@@ -46,17 +46,21 @@ export class EditCourseComponent implements OnInit {
 
   saveImage(): void {
     const formData = new FormData();
-    const file = this.imageForm.get('image')!.value;  // Ensure this retrieves the file correctly
+    const file = this.imageForm.get('image')!.value;
 
     if (file) {
       formData.append('imageData', file);
 
       this.courseService.updateCourseImage(this.courseId, formData).subscribe({
         next: (response) => {
+          console.log(response);
           this.toastr.success('Course image updated successfully', 'Success');
           this.router.navigate(['/home'])
           },
-        error: (error) => this.toastr.error(error, 'Error')
+        error: (error) =>  {
+          console.log(error);
+          this.toastr.error(error, 'Error')
+        }
       });
     } else {
       console.error('No file selected');

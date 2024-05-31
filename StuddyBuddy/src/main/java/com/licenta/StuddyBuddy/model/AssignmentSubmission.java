@@ -22,13 +22,13 @@ public class AssignmentSubmission {
 
     @ManyToOne
     @JoinColumn(name = "assignment_instance_id")
-    @JsonBackReference
+    @JsonBackReference("assignmentInstance-submission")
     private AssignmentInstance assignmentInstance;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String grade;
+    private Double grade;
     private String feedback;
 }

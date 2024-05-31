@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AssignmentInstance } from '../../interfaces/assignment-instance';
 import { HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
 import { saveAs } from 'file-saver';
+import {Assignment} from "../../interfaces/course";
 
 @Component({
   selector: 'app-view-assignment-instance',
@@ -19,12 +20,16 @@ export class ViewAssignmentInstanceComponent implements OnInit {
   assignmentId: string | null = '';
   assignment: AssignmentInstance | null = null;
   viewForm: FormGroup;
+  solutionForm: FormGroup;
   modules = {
     syntax: true,
     toolbar: false
   };
   selectedFile: File | null = null;
   submittedFilePath: string | undefined;
+  solutionContent: string | undefined;
+  grade: number | undefined; // Variable to store the grade
+  feedback: string | undefined; // Variable to store the feedback
 
   constructor(
     private route: ActivatedRoute,
@@ -35,6 +40,9 @@ export class ViewAssignmentInstanceComponent implements OnInit {
   ) {
     this.viewForm = this.fb.group({
       content: [{ value: '', disabled: true }]
+    });
+    this.solutionForm = this.fb.group({
+      solution: [{ value: '', disabled: true }]
     });
   }
 
@@ -56,14 +64,39 @@ export class ViewAssignmentInstanceComponent implements OnInit {
       });
     }
     this.loadLatestSubmissionFilename(this.assignmentId);
+    this.loadSolutionContent(this.assignmentId);
   }
 
   loadLatestSubmissionFilename(assignmentInstanceId: string | null): void {
     this.assignmentService.getLatestSubmission(assignmentInstanceId).subscribe({
       next: (res) => {
+        console.log(res);
         this.submittedFilePath = res as string;
       },
       error: () => console.error('Failed to load the latest submission filename')
+    });
+  }
+
+  loadSolutionContent(assignmentInstanceId: string | null): void {
+    this.assignmentService.getSolvedAssignment(assignmentInstanceId!).subscribe({
+      next: (res) => {
+        const assignment = res as Assignment;
+        console.log(assignment);
+        this.grade = assignment.grade;
+        this.feedback = assignment.feedback;
+        const decodedSolution = this.cleanBase64String(this.b64DecodeUnicode(assignment.solution));
+        if (decodedSolution !== null) {
+          this.solutionForm.patchValue({
+            solution: decodedSolution,
+            feedback: assignment.feedback,
+            grade: assignment.grade
+          });
+          this.solutionContent = decodedSolution;
+        } else {
+          console.error('Failed to decode solution content');
+        }
+      },
+      error: () => console.error('Failed to load the solution content')
     });
   }
 
@@ -123,8 +156,11 @@ export class ViewAssignmentInstanceComponent implements OnInit {
     formData.append('assignmentInstanceId', this.assignmentId);
 
     this.assignmentService.submitAssignment(formData).subscribe({
-      next: (response) => console.log('Submission successful', response),
-      error: (error) => console.error('Submission failed', error)
+      next: (response) => {
+        this.toastr.success('Assignment submitted successfully', 'Success');
+        this.loadLatestSubmissionFilename(this.assignmentId);
+      },
+      error: (error) => this.toastr.error('Submission failed', error)
     });
   }
 
@@ -143,7 +179,6 @@ export class ViewAssignmentInstanceComponent implements OnInit {
     this.courseService.downloadFile(filename).subscribe({
       next: (event) => {
         this.reportProgress(event);
-        this.toastr.success('Submitted successfully', 'Success');
       },
       error: (error) => console.error('Error downloading the file!', error)
     });

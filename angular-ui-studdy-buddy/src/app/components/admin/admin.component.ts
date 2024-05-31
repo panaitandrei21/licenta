@@ -13,7 +13,8 @@ export class AdminComponent {
     { label: 'Users', value: 'users' },
     { label: 'Handle Users', value: 'handle-users' },
     { label: 'Add Problems', value: 'add-problems' },
-    { label: 'View Problems', value: 'view-problems' }
+    { label: 'View Problems', value: 'view-problems' },
+    { label: 'Handle Courses', value: 'handle-courses' }
   ];
 
   onOptionChange(event: any) {

@@ -14,6 +14,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
@@ -56,5 +58,16 @@ public class AssignmentInstanceService {
 
     public Optional<AssignmentInstance> getAssignmentInstanceById(String assignmentInstanceId) {
         return assignmentInstanceRepository.findById(assignmentInstanceId);
+    }
+    public InputStream getAssignmentSolvedIfGraded(String submissionId) {
+        Optional<AssignmentInstance> assignmentInstance = assignmentInstanceRepository.findById(submissionId);
+        if (assignmentInstance.isEmpty())
+            throw new AssignmentNotFoundException("Assignment not found for id: " + submissionId);
+
+        return assignmentService.getAssignmentSolution(assignmentInstance.get().getAssignment().getAssignmentId());
+    }
+
+    public void deleteAssignmentInstance(String assignmentInstanceId) {
+        assignmentInstanceRepository.deleteById(assignmentInstanceId);
     }
 }

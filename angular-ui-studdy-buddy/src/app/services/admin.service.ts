@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {UserDTO} from "../interfaces/user-dto";
 import {Course} from "../interfaces/course";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,9 @@ export class AdminService {
   createCourse(course: Course) {
     return this.http.post( `${this.baseUrl}/api/admin/create/course`, course);
   }
-
+  deleteCourse(courseId: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/api/admin/delete/course/${courseId}`);
+  }
   getAllCourses() {
     return this.http.get( `${this.baseUrl}/api/admin/get/courses`);
   }
@@ -38,6 +41,9 @@ export class AdminService {
 
   updateUser(user: UserDTO) {
     return this.http.put(`${this.baseUrl}/api/admin/update/user`, user);
+  }
+  updateCourse(course: Course) {
+    return this.http.put(`${this.baseUrl}/api/admin/update/course`, course);
   }
 
   removeUserFromCourse(courseId: string, userId: string) {

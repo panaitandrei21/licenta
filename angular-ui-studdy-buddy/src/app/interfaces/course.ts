@@ -20,4 +20,6 @@ export interface Assignment {
   createdBy?: string;
   createdDate?: Date;
   category?: string;
+  feedback?: string;
+  grade?: number;
 }

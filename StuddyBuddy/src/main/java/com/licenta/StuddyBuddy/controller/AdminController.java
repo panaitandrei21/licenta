@@ -68,7 +68,9 @@ public class AdminController {
     public ResponseEntity<?> enrollUserToCourse(@RequestBody EnrollRequest enrollRequest) {
         try {
             enrollService.enrollUser(enrollRequest.getUserId(), enrollRequest.getCourseId());
-            return ResponseEntity.ok().body("User enrolled successfully");
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "User have been enrolled succesfully");
+            return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error enrolling user: " + e.getMessage());
         }
@@ -78,12 +80,25 @@ public class AdminController {
 
         try {
             userService.updateUserProfile(user);
-            return ResponseEntity.ok().body("User profile updated successfully");
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "User have been updated succesfully");
+            return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("User profile updated: " + e.getMessage());
         }
     }
+    @PutMapping("/update/course")
+    public ResponseEntity<?> updateCourse(@RequestBody Course course) {
 
+        try {
+            courseService.updateCourse(course);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Course have been updated succesfully");
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("User profile updated: " + e.getMessage());
+        }
+    }
     @DeleteMapping("/users/{userId}/courses/{courseId}")
     public ResponseEntity<?> removeUserFromCourse(@PathVariable String userId, @PathVariable String courseId) {
         try {
@@ -97,5 +112,12 @@ public class AdminController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error removing course from user: " + e.getMessage());
         }
+    }
+    @DeleteMapping("/delete/course/{courseId}")
+    public ResponseEntity<?> deleteCourse(@PathVariable String courseId) throws Exception {
+        courseService.deleteCourse(courseId);
+        Map<String, String> response = new HashMap<>();
+        response.put("response", "Course deleted successfully");
+        return ResponseEntity.ok(response);
     }
 }
