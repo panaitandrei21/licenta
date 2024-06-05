@@ -16,6 +16,7 @@ import {
 } from "./components/view-assignment-instance/view-assignment-instance.component";
 import {ViewSubmissionsComponent} from "./components/view-submissions/view-submissions.component";
 import {ReviewSubmissionComponent} from "./components/review-submission/review-submission.component";
+import {AddProblemsComponent} from "./components/add-problems/add-problems.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -53,6 +54,7 @@ const routes: Routes = [
   },
   { path: 'course/:id/submissions', component: ViewSubmissionsComponent, canActivate: [authGuard, hasRoleGuard], data: { role: ['ROLE_TEACHER'] } },
   { path: 'course/:id/submissions/:submissionId', component: ReviewSubmissionComponent, canActivate: [authGuard, hasRoleGuard], data: { role: ['ROLE_TEACHER'] } },
+  { path: 'add/problem', component: AddProblemsComponent, canActivate: [authGuard, hasRoleGuard], data: { role: ['ROLE_TEACHER'] } },
 
 ];
 

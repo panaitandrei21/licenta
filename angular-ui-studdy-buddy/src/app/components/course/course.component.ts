@@ -197,4 +197,9 @@ export class CourseComponent implements OnInit {
   navigateToSubmissionsWithSearch(assignmentTitle: string): void {
     this.router.navigate(['/course', this.courseId, 'submissions'], { queryParams: { assignmentName: assignmentTitle } });
   }
+
+  navigateToAddProblem() {
+    this.router.navigate(['/add/problem']);
+
+  }
 }

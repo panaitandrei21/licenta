@@ -10,8 +10,12 @@
     {{ showModuleForm ? 'Close Module Form' : 'Add Module' }}
   </button>
   <!-- New Button to View All Submissions -->
-  <button *ngIf="userRole === 'ROLE_TEACHER'" class="btn btn-secondary btn-lg mt-3" (click)="navigateToAllSubmissions()">
+  <button *ngIf="userRole === 'ROLE_TEACHER'" class="btn btn-secondary btn-lg mt-3 mr-3" (click)="navigateToAllSubmissions()">
     See Student Submissions
+  </button>
+
+  <button *ngIf="userRole === 'ROLE_TEACHER'" class="btn btn-secondary btn-lg mt-3" (click)="navigateToAddProblem()">
+    Add Problem
   </button>
   <h1 class="mt-4">{{courseDetails?.courseName}}</h1>
 
