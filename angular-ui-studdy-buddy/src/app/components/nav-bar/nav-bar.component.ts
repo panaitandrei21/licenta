@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
   styleUrl: './nav-bar.component.css'
 })
 export class NavBarComponent implements OnDestroy {
-  isLoggedIn = false;  // This is public and can be used directly in the template
+  isLoggedIn = false;
   private authSubscription!: Subscription;
 
   constructor(private authService: AuthService, private router: Router) {

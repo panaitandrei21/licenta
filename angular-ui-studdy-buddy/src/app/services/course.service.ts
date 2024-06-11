@@ -19,7 +19,12 @@ export class CourseService {
   setCurrentCourseId(id: string) {
     this.courseId = id;
   }
-
+  getAllCourses() {
+    return this.http.get(`${this.baseUrl}/api/course/get/all/courses`);
+  }
+  enrollUser(courseId: string | null) {
+    return this.http.get(`${this.baseUrl}/api/course/enroll-user-to-course/${courseId}`);
+  }
   getCurrentCourseId(): string {
     return <string>this.courseId;
   }

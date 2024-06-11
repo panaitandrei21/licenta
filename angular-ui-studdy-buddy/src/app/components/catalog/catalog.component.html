@@ -1,0 +1,67 @@
+<app-nav-bar></app-nav-bar>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="searchTableForm" (ngSubmit)="search()">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="courseName">Course Name</label>
+                    <input type="text" id="courseName" formControlName="courseName" class="form-control">
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary mt-3">Search</button>
+            </div>
+          </form>
+
+          <hr>
+
+          <div class="row mt-4">
+            <div class="col-12">
+              <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                  <th scope="col" style="width: 20%">Feedback</th>
+                  <th scope="col" style="width: 15%">Grade</th>
+                  <th scope="col" style="width: 15%">Course</th>
+                  <th scope="col" style="width: 20%">Category</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let review of searchResults.content">
+                  <td>{{ review.feedback }}</td>
+                  <td>{{ review.grade }}</td>
+                  <td>{{ review.courseDTO.courseName }}</td>
+                  <td>{{ review.courseDTO.category }}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <nav aria-label="Page navigation" *ngIf="searchResults.totalPages > 1">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="page === 0">
+                <a class="page-link" (click)="goToPage(page - 1)" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li class="page-item" *ngFor="let pageNum of [].constructor(searchResults.totalPages); let idx = index" [class.active]="idx === page">
+                <a class="page-link" (click)="goToPage(idx)">{{ idx + 1 }}</a>
+              </li>
+              <li class="page-item" [class.disabled]="page === searchResults.totalPages - 1">
+                <a class="page-link" (click)="goToPage(page + 1)" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

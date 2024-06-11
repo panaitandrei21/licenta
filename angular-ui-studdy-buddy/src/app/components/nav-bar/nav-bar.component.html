@@ -15,11 +15,12 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarButtonsExample">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <!-- Additional nav items can go here if needed -->
       </ul>
       <div class="d-flex">
         <!-- Profile Link -->
         <a *ngIf="isLoggedIn" class="btn btn-outline-primary me-2" href="/profile">Go to Profile</a>
+        <a *ngIf="isLoggedIn" class="btn btn-outline-primary me-2" href="/catalog">Go to Catalog</a>
+        <a *ngIf="isLoggedIn" class="btn btn-outline-primary me-2" href="/enroll/to/course">See all courses</a>
         <!-- Log Out Button -->
         <button *ngIf="isLoggedIn" class="btn btn-outline-danger" (click)="onLogout()">Log Out</button>
       </div>

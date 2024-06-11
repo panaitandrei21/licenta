@@ -61,7 +61,7 @@ public class AdminController {
 
     @GetMapping("/get/courses")
     public ResponseEntity<?> getAllCourses() {
-        List<Course> courses = courseService.getAllCourses();
+        List<Course> courses = courseService.getAllCoursesAdmin();
         return ResponseEntity.ok(courses);
     }
     @PostMapping("/enroll-user-to-course")

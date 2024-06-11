@@ -4,6 +4,7 @@ import com.licenta.StuddyBuddy.dto.*;
 import com.licenta.StuddyBuddy.model.AssignmentInstance;
 import com.licenta.StuddyBuddy.model.FileDescriptions;
 import com.licenta.StuddyBuddy.model.Module;
+import com.licenta.StuddyBuddy.model.User;
 import com.licenta.StuddyBuddy.service.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
@@ -34,6 +35,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class CourseController {
     public static final Path DIRECTORY = Path.of("upload");
+    private final UserService userService;
 
     private final EnrollService enrollService;
     private final ModuleService moduleService;
@@ -205,5 +207,23 @@ public class CourseController {
         return ResponseEntity.ok(response);
     }
 
-
+    @GetMapping("/get/all/courses")
+    public ResponseEntity<?> getAllCourses() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findUser(userDetails.getUsername());
+        return ResponseEntity.ok(courseService.getAllCourses(user.getEmail()));
+    }
+    @GetMapping("/enroll-user-to-course/{courseId}")
+    public ResponseEntity<?> enrollUserToCourse(@PathVariable String courseId) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findUser(userDetails.getUsername());
+        try {
+            enrollService.enrollUser(user.getUserId(), courseId);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "User have been enrolled succesfully");
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error enrolling user: " + e.getMessage());
+        }
+    }
 }

@@ -50,7 +50,6 @@ public class CustomAssignmentRepositoryImpl implements CustomAssignmentRepositor
             predicates.add(cb.equal(assignment.get("createdBy"), dto.getCreatedBy()));
         }
         if (dto.getCreatedDate() != null) {
-            // Convert Date to LocalDate
             LocalDate createdDateLocal = dto.getCreatedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             predicates.add(cb.equal(cb.function("date", LocalDate.class, assignment.get("createdDate")), createdDateLocal));
         }
@@ -59,13 +58,10 @@ public class CustomAssignmentRepositoryImpl implements CustomAssignmentRepositor
             query.where(predicates.toArray(new Predicate[0]));
         }
 
-        // Apply pagination
         int pageSizeValue = (pageSize != null) ? pageSize.intValue() : 20;
         int pageNumber = (page != null) ? page.intValue() : 0;
         int offset = pageNumber * pageSizeValue;
 
-        // Log the query
-        logger.debug("Generated query: " + query.toString());
 
         return entityManager.createQuery(query)
                 .setFirstResult(offset)
@@ -88,14 +84,12 @@ public class CustomAssignmentRepositoryImpl implements CustomAssignmentRepositor
             predicates.add(cb.equal(assignment.get("category"), dto.getCategory()));
         }
         if (dto.getTitle() != null && !dto.getTitle().isEmpty()) {
-            // Case insensitive comparison
             predicates.add(cb.like(cb.lower(assignment.get("title")), "%" + dto.getTitle().toLowerCase() + "%"));
         }
         if (dto.getCreatedBy() != null && !dto.getCreatedBy().isEmpty()) {
             predicates.add(cb.equal(assignment.get("createdBy"), dto.getCreatedBy()));
         }
         if (dto.getCreatedDate() != null) {
-            // Convert Date to LocalDate
             LocalDate createdDateLocal = dto.getCreatedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             predicates.add(cb.equal(cb.function("date", LocalDate.class, assignment.get("createdDate")), createdDateLocal));
         }

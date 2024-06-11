@@ -16,7 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,10 +30,15 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public List<Course> getAllCourses() {
+    public List<Course> getAllCoursesAdmin() {
         return courseRepository.findAll();
     }
-
+    public List<CourseDTO> getAllCourses(String email) {
+        List<Course> courses = courseRepository.findCoursesUserIsNotEnrolledTo(email);
+        return courses.stream()
+                .map(this::convertToCourseDTO)
+                .collect(Collectors.toList());
+    }
     public Course findByCourseId(String courseId) {
         return courseRepository.findByCourseId(courseId);
     }
@@ -72,4 +79,23 @@ public class CourseService {
             courseRepository.save(existingCourse);
         }
     }
+    private String encodeToBase64(byte[] imageBytes) {
+        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+        return "data:image/jpeg;base64," + base64Image;
+    }
+    private CourseDTO convertToCourseDTO(Course course) {
+        String base64Encoded = "";
+        if (course.getLogo() != null) {
+            base64Encoded = encodeToBase64(course.getLogo());
+        }
+        return new CourseDTO(
+                course.getCourseId(),
+                course.getCourseName(),
+                course.getDescription(),
+                course.getCategory(),
+                base64Encoded,
+                course.getModules()
+        );
+    }
+
 }

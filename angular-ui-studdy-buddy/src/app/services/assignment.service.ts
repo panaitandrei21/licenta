@@ -58,6 +58,15 @@ export class AssignmentService {
     httpParams = httpParams.append('size', size.toString());
     return this.http.get(`${this.baseUrl}/api/course/get/assignments`, { params: httpParams });
   }
+  searchReview(searchParams: Params, page: number, size: number) {
+    let httpParams = new HttpParams();
+    for (const key of Object.keys(searchParams)) {
+      httpParams = httpParams.append(key, searchParams[key]);
+    }
+    httpParams = httpParams.append('page', page.toString());
+    httpParams = httpParams.append('size', size.toString());
+    return this.http.post(`${this.baseUrl}/api/assignment/get/grades`, searchParams, { params: httpParams });
+  }
   deleteAssignment(assignmentId: string) {
     return this.http.delete(`${this.baseUrl}/api/course/delete/assignment/${assignmentId}`);
   }

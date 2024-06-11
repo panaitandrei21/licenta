@@ -7,6 +7,9 @@ import com.licenta.StuddyBuddy.model.User;
 import com.licenta.StuddyBuddy.service.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -142,5 +145,13 @@ public class AssignmentController {
         Map<String, String> response = new HashMap<>();
         response.put("response", "Assignment did not get feedback yet");
         return ResponseEntity.ok(response);
+    }
+    @PostMapping("/get/grades")
+    public Page<AssignmentReviewDTO> searchReviews(
+            @RequestBody SearchReviewDTO searchReviewDTO,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return assignmentSubmissionService.searchReviews(searchReviewDTO, pageable);
     }
 }
