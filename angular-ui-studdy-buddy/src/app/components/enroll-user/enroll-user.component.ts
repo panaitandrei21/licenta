@@ -20,9 +20,7 @@ export class EnrollUserComponent implements OnInit {
               private toastr: ToastrService) { }
 
   ngOnInit() {
-    console.log(this.authService.user)
     this.courseService.getAllCourses().subscribe(data => {
-      console.log(data);
       this.courses = data as Course[];
     });
   }
@@ -31,11 +29,9 @@ export class EnrollUserComponent implements OnInit {
   enrollToCourse(courseId: any) {
     this.courseService.enrollUser(courseId).subscribe(
       (response) => {
-        console.log(response);
         this.toastr.success('User enrolled successfully', 'Success');
       },
       (error) => {
-        console.log(error);
         this.toastr.error(error, 'Error');
       }
     );

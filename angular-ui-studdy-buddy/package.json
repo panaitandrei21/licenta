@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:angular-ui-studdy-buddy": "node dist/angular-ui-studdy-buddy/server/server.mjs"
+    "serve:ssr:angular-ui-studdy-buddy": "node dist/angular-ui-studdy-buddy/server/server.mjs",
+    "postbuild": "gulp compress"
   },
   "private": true,
   "dependencies": {
@@ -29,9 +30,11 @@
     "ag-grid-enterprise": "~31.1.1",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "compression": "^1.7.4",
     "express": "^4.18.2",
     "file-saver": "^2.0.5",
     "font-awesome": "^4.7.0",
+    "gulp": "^5.0.0",
     "jwt-decode": "^4.0.0",
     "ngx-file-drop": "^16.0.0",
     "ngx-quill": "^25.3.2",
@@ -55,6 +58,7 @@
     "@types/file-saver": "^2.0.7",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^18.18.0",
+    "gulp-gzip": "^1.4.2",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

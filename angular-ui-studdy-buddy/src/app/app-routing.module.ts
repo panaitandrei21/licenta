@@ -17,6 +17,8 @@ import {
 import {ViewSubmissionsComponent} from "./components/view-submissions/view-submissions.component";
 import {ReviewSubmissionComponent} from "./components/review-submission/review-submission.component";
 import {AddProblemsComponent} from "./components/add-problems/add-problems.component";
+import {CatalogComponent} from "./components/catalog/catalog.component";
+import {EnrollUserComponent} from "./components/enroll-user/enroll-user.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -52,9 +54,16 @@ const routes: Routes = [
     canActivate: [authGuard, hasRoleGuard],
     data: { role: ['ROLE_STUDENT', 'ROLE_TEACHER'] }
   },
+  {
+    path: 'catalog',
+    component: CatalogComponent,
+    canActivate: [authGuard, hasRoleGuard],
+    data: { role: ['ROLE_STUDENT', 'ROLE_TEACHER'] }
+  },
   { path: 'course/:id/submissions', component: ViewSubmissionsComponent, canActivate: [authGuard, hasRoleGuard], data: { role: ['ROLE_TEACHER'] } },
   { path: 'course/:id/submissions/:submissionId', component: ReviewSubmissionComponent, canActivate: [authGuard, hasRoleGuard], data: { role: ['ROLE_TEACHER'] } },
   { path: 'add/problem', component: AddProblemsComponent, canActivate: [authGuard, hasRoleGuard], data: { role: ['ROLE_TEACHER'] } },
+  { path: 'enroll/to/course', component: EnrollUserComponent, canActivate: [authGuard, hasRoleGuard], data: { role: ['ROLE_STUDENT'] } },
 
 ];
 

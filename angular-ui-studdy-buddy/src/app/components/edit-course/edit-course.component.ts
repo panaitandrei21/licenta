@@ -53,12 +53,10 @@ export class EditCourseComponent implements OnInit {
 
       this.courseService.updateCourseImage(this.courseId, formData).subscribe({
         next: (response) => {
-          console.log(response);
           this.toastr.success('Course image updated successfully', 'Success');
           this.router.navigate(['/home'])
           },
         error: (error) =>  {
-          console.log(error);
           this.toastr.error(error, 'Error')
         }
       });

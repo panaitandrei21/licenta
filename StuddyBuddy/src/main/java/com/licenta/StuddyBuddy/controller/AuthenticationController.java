@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import com.licenta.StuddyBuddy.dto.AuthenticationResponse;
 import com.licenta.StuddyBuddy.dto.RegisterRequest;
 import com.licenta.StuddyBuddy.dto.AuthenticationRequest;
+
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor

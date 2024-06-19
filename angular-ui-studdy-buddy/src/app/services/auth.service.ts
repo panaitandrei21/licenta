@@ -44,7 +44,6 @@ export class AuthService {
       tap((response: any) =>{
         this._isLoggedIn$.next(true);
         this.user = this.getUser(response.token);
-        console.log(this.user)
       })
     );
   }
@@ -79,5 +78,9 @@ export class AuthService {
     };
 
     return this.http.put(`${this.baseUrl}/api/profile/update`, updateUser, httpOptions);
+  }
+
+  forgotPassword(email: string) {
+    return this.http.post(`${this.baseUrl}/api/auth/forgot/password`, email);
   }
 }

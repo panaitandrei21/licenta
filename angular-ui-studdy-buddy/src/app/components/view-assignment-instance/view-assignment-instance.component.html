@@ -6,45 +6,40 @@
         <div class="card-body">
           <h3>{{ assignment?.title }}</h3>
           <div class="mb-3">
-            <label for="assignmentContent" class="form-label">Content</label>
             <div [formGroup]="viewForm">
               <quill-editor formControlName="content" [modules]="modules" [readOnly]="true" [style]="{'height':'auto'}"></quill-editor>
             </div>
           </div>
           <!-- Display the due date -->
           <div class="mb-3">
-            <p>Due Date: {{ formatDate(assignment?.dueDate) }}</p>
+            <p>Termen limită: {{ formatDate(assignment?.dueDate) }}</p>
           </div>
-          <!-- Display last submission if exists -->
           <div *ngIf="submittedFilePath">
-            <p>Your last submission: {{ submittedFilePath | removeUUID }}</p>
-            <button (click)="downloadSubmission(submittedFilePath)" class="btn btn-info">Download Submission</button>
+            <p>Ultima incărcare a temei: {{ submittedFilePath | removeUUID }}</p>
+            <button (click)="downloadSubmission(submittedFilePath)" class="btn btn-info">Descarca tema</button>
           </div>
-          <!-- File Upload Section - Conditional based on due date -->
           <div class="mb-3" *ngIf="!isExpired()">
-            <label for="fileUpload" class="form-label">Submit Assignment</label>
+            <label for="fileUpload" class="form-label">Încarca tema</label>
             <input type="file" id="fileUpload" (change)="onFileSelected($event)" class="form-control">
-            <button (click)="onSubmit()" class="btn btn-primary mt-3">Submit</button>
+            <button (click)="onSubmit()" class="btn btn-primary mt-3">Încarca</button>
           </div>
-          <!-- Message if the assignment is expired -->
           <div class="mb-3" *ngIf="isExpired()">
             <p class="text-danger">The due date has passed. You cannot submit the assignment.</p>
           </div>
         </div>
       </div>
-      <!-- New card to display grade, feedback, and solution if available -->
       <div *ngIf="grade !== undefined || feedback !== undefined || solutionContent" class="card mt-4">
         <div class="card-body">
           <div *ngIf="grade !== undefined">
-            <h4>Grade:</h4>
+            <h4>Nota:</h4>
             <p>{{ grade }}</p>
           </div>
           <div *ngIf="feedback !== undefined">
-            <h4>Feedback:</h4>
+            <h4>Recenzia temei:</h4>
             <p>{{ feedback }}</p>
           </div>
           <div *ngIf="solutionContent">
-            <h4>Solution</h4>
+            <h4>Rezolvarea corectă</h4>
             <div [formGroup]="solutionForm">
               <quill-editor formControlName="solution" [modules]="modules" [readOnly]="true" [style]="{'height':'auto'}"></quill-editor>
             </div>

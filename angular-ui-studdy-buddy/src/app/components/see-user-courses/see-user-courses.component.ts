@@ -28,11 +28,9 @@ export class SeeUserCoursesComponent implements OnInit {
   }
 
   fetchCourses(): void {
-    console.log(this.user);
     this.courseService.getCoursesForUser(this.user.email).subscribe(
       (res) => {
         this.courses = res as Course[];
-        console.log(this.courses);
       },
       error => {
         console.error('Error fetching courses', error);

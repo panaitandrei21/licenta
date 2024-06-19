@@ -11,6 +11,7 @@ import {Router} from "@angular/router";
 export class NavBarComponent implements OnDestroy {
   isLoggedIn = false;
   private authSubscription!: Subscription;
+  role: string | undefined;
 
   constructor(private authService: AuthService, private router: Router) {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
@@ -18,6 +19,7 @@ export class NavBarComponent implements OnDestroy {
         this.isLoggedIn = loggedIn;
       }
     );
+    this.role = authService.user?.role;
   }
 
   ngOnDestroy(): void {

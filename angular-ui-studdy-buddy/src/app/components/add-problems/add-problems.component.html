@@ -3,17 +3,17 @@
     <div class="col-md-12">
       <form [formGroup]="assignmentForm" (ngSubmit)="onCreateAssignment()">
         <div class="card">
-          <div class="card-header">Create Assignment</div>
+          <div class="card-header">Creează exerciţiu</div>
           <div class="card-body">
             <div class="mb-3">
-              <label for="title" class="form-label">Title:</label>
+              <label for="title" class="form-label">Titlu:</label>
               <input type="text" class="form-control form-control-lg" formControlName="title" id="title" placeholder="Enter title">
               <small *ngIf="title?.invalid && (title?.dirty || title?.touched)" class="form-text text-danger">
                 <div *ngIf="title?.errors?.['required']">Title is required.</div>
               </small>
             </div>
             <div class="mb-3">
-              <label for="content" class="form-label">Content:</label> <br>
+              <label for="content" class="form-label">Cerinţă:</label> <br>
               <quill-editor
                 #editor
                 [formControl]="assignmentForm.controls['content']"
@@ -23,7 +23,7 @@
               </quill-editor>
             </div>
             <div class="mb-3">
-              <label for="solution" class="form-label">Solution:</label> <br>
+              <label for="solution" class="form-label">Rezolvarea corectă:</label> <br>
               <quill-editor
                 #editor
                 [formControl]="assignmentForm.controls['solution']"
@@ -33,12 +33,12 @@
               </quill-editor>
             </div>
             <div class="mb-3">
-              <label for="category" class="form-label">Category:</label>
+              <label for="category" class="form-label">Categorie:</label>
               <input type="category" class="form-control form-control-lg" formControlName="category" id="category">
             </div>
           </div>
           <div class="card-footer text-center">
-            <button type="submit" class="btn btn-primary" [disabled]="assignmentForm.invalid">Create Assignment</button>
+            <button type="submit" class="btn btn-primary" [disabled]="assignmentForm.invalid">Creează exerciţiu</button>
           </div>
         </div>
       </form>

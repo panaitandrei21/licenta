@@ -64,7 +64,6 @@ export class RegisterComponent {
             // You can use Angular's Router for navigation
             // Example: this.router.navigate(['/dashboard']);
             this.router.navigate(['/home']);
-            console.log('Login successful. Token:', responseData.token);
 
           } else {
             // No "token" property in the response, indicating incorrect username or password
@@ -82,7 +81,6 @@ export class RegisterComponent {
 
         }
       );
-      console.log(this.loginError);
     }
   }
 

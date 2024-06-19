@@ -51,7 +51,6 @@ export class ViewAssignmentInstanceComponent implements OnInit {
     this.assignmentId = id;
     if (id) {
       this.assignmentService.getAssignmentInstanceById(id).subscribe((assignmentInstance: any) => {
-        console.log(assignmentInstance);
         this.assignment = assignmentInstance;
         const decodedContent = this.cleanBase64String(this.b64DecodeUnicode(assignmentInstance.assignment.content));
         if (decodedContent !== null) {
@@ -70,7 +69,6 @@ export class ViewAssignmentInstanceComponent implements OnInit {
   loadLatestSubmissionFilename(assignmentInstanceId: string | null): void {
     this.assignmentService.getLatestSubmission(assignmentInstanceId).subscribe({
       next: (res) => {
-        console.log(res);
         this.submittedFilePath = res as string;
       },
       error: () => console.error('Failed to load the latest submission filename')
@@ -81,7 +79,6 @@ export class ViewAssignmentInstanceComponent implements OnInit {
     this.assignmentService.getSolvedAssignment(assignmentInstanceId!).subscribe({
       next: (res) => {
         const assignment = res as Assignment;
-        console.log(assignment);
         this.grade = assignment.grade;
         this.feedback = assignment.feedback;
         const decodedSolution = this.cleanBase64String(this.b64DecodeUnicode(assignment.solution));

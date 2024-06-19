@@ -66,7 +66,6 @@ export class HandleCoursesComponent implements OnInit {
   }
   getSelectedRows() {
     this.selectedData = this.ChargridApi?.getSelectedRows();
-    console.log(this.selectedData);
 
   }
   onGridReady(params: any) {
@@ -95,9 +94,7 @@ export class HandleCoursesComponent implements OnInit {
   deleteCourse() {
     if (this.selectedData) {
       const courseId = this.selectedData[0].courseId;
-      console.log(courseId);
       this.adminService.deleteCourse(courseId).subscribe(res => {
-        console.log(res);
         this.toastr.success("Course deleted succesfully");
         this.fetchCourses()
       });
@@ -108,15 +105,12 @@ export class HandleCoursesComponent implements OnInit {
     if (event.newValue !== event.oldValue) {
       this.adminService.updateCourse(event.data).subscribe(
         response => {
-          console.log('Update successful', response);
           this.toastr.success("Course updated succesfully");
         },
         error => {
-          console.log('Update failed', error);
           this.msgService.add({severity: 'error', summary: 'Error', detail: 'Update failed'});
         }
       );
-      console.log(event.newValue)
     }
   }
 }

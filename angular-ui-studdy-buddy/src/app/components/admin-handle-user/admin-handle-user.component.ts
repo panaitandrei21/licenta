@@ -74,7 +74,6 @@ export class AdminHandleUserComponent {
         email: email || '',
         password: password || '',
       };
-      console.log(user);
       this.authService.addTeacher(user).subscribe(
         (response: any) => {
           this.toastr.success('User added successfully', 'Success');

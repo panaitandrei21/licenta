@@ -34,7 +34,6 @@ export class CourseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.authService.user?.role)
     this.route.params.subscribe(params => {
       const id = params['id'];
       this.courseService.setCurrentCourseId(id);
@@ -104,7 +103,6 @@ export class CourseComponent implements OnInit {
 
         if (httpEvent.body instanceof Blob) {
           const filename = httpEvent.headers.get('File-Name')?.valueOf();
-          console.log(filename);
           saveAs(new File([httpEvent.body!], httpEvent.headers.get('File-Name')!,
             {type: `${httpEvent.headers.get('Content-Type')};charset=utf-8`}));
         }
@@ -114,7 +112,6 @@ export class CourseComponent implements OnInit {
         }, 3000);
         break;
       default:
-        console.log('Unhandled HTTP event:', httpEvent.type, httpEvent);
         break;
     }
   }
@@ -136,7 +133,6 @@ export class CourseComponent implements OnInit {
   deleteModule(module: ModuleRequest): void {
     this.courseService.deleteModule(module.moduleId).subscribe({
       next: (response) => {
-        console.log('Module deleted:', response);
         this.modules = this.modules.filter(m => m.moduleId !== module.moduleId);
       },
       error: (error) => {
@@ -155,7 +151,6 @@ export class CourseComponent implements OnInit {
             module.filePath.splice(index, 1);
           }
         }
-        console.log('File deleted successfully', res);
       },
       error: (error) => {
         console.error('Failed to delete module:', error);

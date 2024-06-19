@@ -48,7 +48,6 @@ export class AddProblemsComponent implements OnInit{
 
   publishProblem() {
     const editor = this.assignmentForm.value;
-    console.log(editor);
   }
 
 

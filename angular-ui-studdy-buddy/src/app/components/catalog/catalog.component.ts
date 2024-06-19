@@ -31,7 +31,6 @@ export class CatalogComponent implements OnInit {
   search() {
     this.page = 0;
     this.searchParams = this.searchTableForm.value;
-    console.log(this.searchParams);
     this.searchReview();
   }
 
@@ -39,7 +38,6 @@ export class CatalogComponent implements OnInit {
     this.assignmentService.searchReview(this.searchParams, this.page, this.pageSize).subscribe({
       next: (response) => {
         this.searchResults = response as SearchReviewResults;
-        console.log(this.searchResults);
       },
       error: (err) => {
         this.toastr.error(err.message, 'Error');

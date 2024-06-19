@@ -32,12 +32,10 @@ export class EnrollComponent implements OnInit{
   enrollUserInCourse(courseId: string | null) {
     this.adminService.enrollUser(this.data.userId[0], courseId).subscribe(
       (response) => {
-        console.log(response);
         this.toastr.success('User enrolled successfully', 'Success');
         this.dialogRef.close(true);
       },
       (error) => {
-        console.log(error);
         this.toastr.error(error, 'Error');
       }
     );

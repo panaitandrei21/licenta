@@ -43,11 +43,12 @@ import { EditAssignmentComponent } from './components/edit-assignment/edit-assig
 import { AddHomeworkComponent } from './components/add-homework/add-homework.component';
 import { ViewAssignmentInstanceComponent } from './components/view-assignment-instance/view-assignment-instance.component';
 import {ToastrModule} from "ngx-toastr";
-import {NgxFileDropModule} from "ngx-file-drop";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import { ViewSubmissionsComponent } from './components/view-submissions/view-submissions.component';
 import { ReviewSubmissionComponent } from './components/review-submission/review-submission.component';
 import { HandleCoursesComponent } from './components/handle-courses/handle-courses.component';
+import {CatalogComponent} from "./components/catalog/catalog.component";
+import {EnrollUserComponent} from "./components/enroll-user/enroll-user.component";
 @NgModule({
   declarations: [
     AppComponent,
@@ -75,6 +76,8 @@ import { HandleCoursesComponent } from './components/handle-courses/handle-cours
     ViewSubmissionsComponent,
     ReviewSubmissionComponent,
     HandleCoursesComponent,
+    CatalogComponent,
+    EnrollUserComponent
   ],
   imports: [
     BrowserModule,

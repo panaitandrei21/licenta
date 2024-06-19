@@ -50,7 +50,6 @@ export class EditAssignmentComponent implements OnInit {
     this.assignmentId = id;
     if (id) {
       this.assignmentService.getAssignmentById(id).subscribe((assignment: Assignment) => {
-        console.log(assignment.createdDate);
         assignment.createdDate ? this.formatDate(assignment.createdDate) : '';
         this.editForm.patchValue({
           title: assignment.title,
@@ -74,7 +73,6 @@ export class EditAssignmentComponent implements OnInit {
   }
 
   saveChanges(): void {
-    console.log(this.editForm.value);
     if (this.editForm.valid) {
       this.assignmentService.updateAssignment(this.editForm.value as Assignment, this.assignmentId).subscribe({
         next: res => {

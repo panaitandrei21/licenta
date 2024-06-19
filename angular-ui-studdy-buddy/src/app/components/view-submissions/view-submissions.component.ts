@@ -64,7 +64,6 @@ export class ViewSubmissionsComponent implements OnInit {
   searchAssignmentSubmissions(page: number = 0): void {
     this.assignmentService.searchSubmissions(this.searchParams, this.page, this.pageSize).subscribe({
       next: (response: any) => {
-        console.log(response);
         this.searchResults = response;
       },
       error: (err) => {

@@ -26,10 +26,7 @@ public class AdminController {
     private final UserService userService;
     private final CourseService courseService;
     private final EnrollService enrollService;
-    @GetMapping
-    public String getAdmin() {
-        return "admin aici";
-    }
+
     @PostMapping("/add/teacher")
     public ResponseEntity<AuthenticationResponse> addTeacher(@RequestBody RegisterRequest request) {
         AuthenticationResponse authenticationResponse = authenticationService.registerTeacher(request);

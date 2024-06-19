@@ -18,11 +18,11 @@
       </ul>
       <div class="d-flex">
         <!-- Profile Link -->
-        <a *ngIf="isLoggedIn" class="btn btn-outline-primary me-2" href="/profile">Go to Profile</a>
-        <a *ngIf="isLoggedIn" class="btn btn-outline-primary me-2" href="/catalog">Go to Catalog</a>
-        <a *ngIf="isLoggedIn" class="btn btn-outline-primary me-2" href="/enroll/to/course">See all courses</a>
+        <a *ngIf="isLoggedIn && (role === 'ROLE_STUDENT' || role === 'ROLE_TEACHER')" class="btn btn-outline-primary me-2" href="/profile">Profil</a>
+        <a *ngIf="isLoggedIn && role === 'ROLE_STUDENT'" class="btn btn-outline-primary me-2" href="catalog">Vizualizează catalogul</a>
+        <a *ngIf="isLoggedIn && role === 'ROLE_STUDENT'" class="btn btn-outline-primary me-2" href="/enroll/to/course">Vizualizează toate coursurile</a>
         <!-- Log Out Button -->
-        <button *ngIf="isLoggedIn" class="btn btn-outline-danger" (click)="onLogout()">Log Out</button>
+        <button *ngIf="isLoggedIn" class="btn btn-outline-danger" (click)="onLogout()">Deconectare</button>
       </div>
     </div>
   </div>

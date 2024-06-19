@@ -66,7 +66,6 @@ export class AdminUserCourseDetailsComponent implements OnInit {
   }
   getSelectedRows() {
     this.selectedData = this.ChargridApi?.getSelectedRows();
-    console.log(this.selectedData);
 
   }
   onGridReady(params: any) {
@@ -84,7 +83,6 @@ export class AdminUserCourseDetailsComponent implements OnInit {
         width: 'fit-content',
         data: { user: selectedUser }
       });
-      console.log(dialogRef)
 
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed', result);
@@ -102,15 +100,12 @@ export class AdminUserCourseDetailsComponent implements OnInit {
     if (event.newValue !== event.oldValue) {
       this.adminService.updateUser(event.data).subscribe(
         response => {
-          console.log('Update successful', response);
           this.toastr.success('User updated successfully');
         },
         error => {
-          console.log('Update failed', error);
           this.msgService.add({severity: 'error', summary: 'Error', detail: 'Update failed'});
         }
       );
-      console.log(event.newValue)
     }
   }
 }

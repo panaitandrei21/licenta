@@ -46,7 +46,6 @@ export class ReviewSubmissionComponent implements OnInit {
     if (this.submissionId) {
       this.assignmentService.getSubmissionDetails(this.submissionId).subscribe({
         next: (response) => {
-          console.log(response)
           this.assignmentSubmission = response as AssignmentSubmission;
           this.reviewForm.patchValue({
             title: this.assignmentSubmission.assignmentInstanceName,

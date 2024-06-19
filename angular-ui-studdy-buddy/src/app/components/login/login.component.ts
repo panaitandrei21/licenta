@@ -49,11 +49,9 @@ export class LoginComponent {
               if (role === 'ROLE_ADMIN') {
                 this.router.navigate(['/admin'])
               } else {
-                console.log(tokenInfo.role);
                 this.router.navigate(['/home']);
               }
 
-              console.log('Login successful. Token:', responseData.token);
 
             } else {
               this.loginError = true;
@@ -68,7 +66,6 @@ export class LoginComponent {
 
         }
       );
-      console.log(this.loginError);
     }
   }
 

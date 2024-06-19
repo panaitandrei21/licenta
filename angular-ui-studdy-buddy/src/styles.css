@@ -4,7 +4,11 @@
 @import 'ag-grid-community/styles/ag-grid.css';
 @import 'ag-grid-community/styles/ag-theme-quartz.css';
 @import 'ngx-toastr/toastr';
-
+@font-face {
+  font-family: 'Roboto';
+  src: url('https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu....woff2') format('woff2');
+  font-display: swap;
+}
 .background-image {
   background-image: linear-gradient(#7fbae0 50%, rgba(1, 24, 24, 0.3) 100%);
   background-color: #7fbae0;
